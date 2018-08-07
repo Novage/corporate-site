@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-123521518-1"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','UA-123521518-1');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <script src="/assets/script.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/assets/main.css">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+
+<title>P2P Media Loader</title>
+</head>
+<body onload="main()">
+<header>
+  <div class="container-fluid fixed-top shadow-sm bg-white">
+  <nav class="navbar navbar-expand-md navbar-light bg-white container">
+    <a class="navbar-brand" href="/">
+      <img src="/images/novage-logo.svg" class="d-inline-block align-top" alt="Novage logo"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">P2P MEDIA LOADER</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="/p2p-media-loader/demo.html">Demo</a>
+            <a class="dropdown-item" href="/p2p-media-loader/overview.html">Overview</a>
+            <a class="dropdown-item" href="/p2p-media-loader/technical-overview.html">Technical overview</a>
+            <a class="dropdown-item" href="https://github.com/novage/p2p-media-loader" target="blank">Sources &amp; documentation</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="" id="email">CONTACT</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  </div>
+</header>
+<div class="container-fluid" id="content"><section>
+<div class="row justify-content-center content-header">
+  <h1>P2P Media Loader<br>Technical Overview</h1>
+</div>
+<div class="row justify-content-center" style="margin-top: -1px;">
+  <svg width="50px" height="25px" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <polyline points="0,0 50,0 25,25" fill="#333333"></polyline>
+  </svg>
+</div>
+<div class="container content">
+  <h2>Key components of the P2P network</h2>
+  <div class="row">
+    <div class="col-md-7 col-sm-12 col-12">
+      <div class="imgblock"><a href="/images/p2p-media-loader-network.png" target="_self"><img src="/images/p2p-media-loader-network.png" alt="P2P Media Loader network"></a></div>
+    </div>
+    <div class="col-md-5 col-sm-12 col-12">
+      <p>All the components of the P2P network are free and open source.</p>
+      <p><strong>P2P Media Loader</strong> is open source JavaScript library that uses features of modern browsers (i.e. WebRTC)  to deliver media over P2P. It doesn’t require any browser plugins or addons to function.</p>
+      <p>Browser requirements are:</p>
+      <ul><li><strong>WebRTC Data Channels</strong> support to exchange data between peers</li>
+          <li><strong>Media Source Extensions</strong> are required by Hls.js and ShakaPlayer engines for media playback</li></ul>
+      <p><a href="https://en.wikipedia.org/wiki/STUN">STUN</a> server is used by <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API">WebRTC</a> to gather <a href="https://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment">ICE</a> candidates. 
+      There are many running public servers available on <a href="https://gist.github.com/mondain/b0ec1cf5f60ae726202e">Public STUN server list</a>.</p>
+      <p><a href="https://webtorrent.io/">WebTorrent</a> tracker is used for WebRTC signaling and to create swarms of peers that download the same media stream. Few running public trackers are available: <a href="https://openwebtorrent.com/">https://openwebtorrent.com/</a>.
+      It is possible to run personal WebTorrent tracker using open source implementations: <a href="https://github.com/webtorrent/bittorrent-tracker">bittorrent-tracker</a>, <a href="https://github.com/DiegoRBaquero/uWebTorrentTracker">uWebTorrentTracker</a>.</p>
+    </div>
+  </div>
+  <p>P2P Media Loader is configured to use public STUN and WebTorrent servers by default. It means that it is not required to run any server side software for the P2P network to function.</p>    
+  <h2>How it works</h2>
+  <p>A browser runs a player integrated with P2P Media Loader library. Instance of P2P Media Loader is called peer. Many peers create P2P network.</p>
+  <p>P2P Media Loader starts downloading initial media segments over HTTP(S) from source server or CDN. This allows to begin media playback faster. Also, in case of no peers, it will continue to download segments over HTTP(S) that will not differ from traditional media stream download over HTTP.</p>
+  <p>After that P2P Media Loader sends media stream details and its connection details (ICE candidates) to WebTorrent trackers and obtains from them list of other peers that are downloading the same media stream.</p>
+  <p>P2P Media Loader connects and starts to download media segments from the obtained peers as well as sharing already downloaded segments to them.</p>
+  <p>From time to time random peers from P2P swarm download new segments over HTTP(S) and share them to others over P2P.</p>
+
+</div>
+</section>
+</div>
+<footer>
+<div class="container">© 2018 Novage, LLC</div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,137 @@
+html {
+    background-color: #333333;
+}
+
+#content {
+    margin-top: 68px;
+}
+
+.content {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    color: #333333;
+}
+
+.navbar-brand img {
+    height: 48px;
+}
+
+footer {
+    background-color: #333333;
+    padding: 10px;
+    color: #f1f1f1;
+}
+
+p {
+    text-align: justify;
+}
+
+h1 {
+    text-align: center;
+    color: #f1f1f1;
+}
+
+h2 {
+    padding: 30px 0px 20px;
+}
+
+.content-header {
+    background-color: #333333; 
+    padding: 10px;
+}
+
+@media only screen and (min-width: 600px) {
+    .content-header {
+        padding: 50px;
+    }
+}
+
+.imgblock {
+    width: 100%;
+}
+
+.imgblock img {
+    max-width:100%;
+    height:auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.dropdown-item:active {
+    color: #fff;
+    text-decoration: none;
+    background-color: #333333;
+}
+
+.pictogramsize {
+    width: 170px;
+    height: 170px;
+    margin-bottom: 50px;
+}
+
+@media only screen and (max-width: 600px) {
+    .content{
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .pictogramsize{
+        margin-bottom: 0px;
+    }
+}
+
+/* Begin Demo styles */
+
+#video {
+    width: 100%;
+}
+
+#level {
+    width: auto;
+    float: right;
+}
+
+#graph {
+    max-width: 100%;
+    overflow: hidden;
+    margin: 3em auto;
+    border: 1px solid #eee;
+}
+
+#chart_container {
+    position: relative;
+    margin: 3em auto;
+    padding-left: 20px;
+    max-width: 100%;
+}
+
+#y_axis {
+    position: absolute;
+    top: 0;
+    width: 40px;
+    left: -20px;
+}
+
+#y_axis > svg {
+    overflow: visible;
+}
+
+#legend {
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    z-index: 1;
+}
+
+#legend-totals {
+    position: absolute;
+    bottom: 20px;
+    left: 40px;
+    z-index: 1;
+}
+
+.hide {
+    display: none;
+}
+
+/* End Demo styles */

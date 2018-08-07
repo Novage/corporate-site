@@ -16,7 +16,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
 
-<title>Novage</title>
+<title>P2P Media Loader</title>
 </head>
 <body onload="main()">
 <header>
@@ -47,55 +47,55 @@
   </div>
 </header>
 <div class="container-fluid" id="content"><section>
-  <div class="row justify-content-center content-header">
-    <h1>Consulting &amp; Full Development Cycle</h1>
-  </div>
-  <div class="row justify-content-center" style="margin-top: -1px;">
-    <svg width="50px" height="25px" xmlns="http://www.w3.org/2000/svg" version="1.1">
-      <polyline points="0,0 50,0 25,25" fill="#333333"></polyline>
-    </svg>
-  </div>
- 
-  <div class="container content">
-    <div class="row">
-      <div class="col-md-3 col-sm-6 col-6">
-        <div class="row justify-content-center"><img class="pictogramsize" src="/images/java.svg" alt="Java"></div>
-      </div>
-      <div class="col-md-3 col-sm-6 col-6">
-        <div class="row justify-content-center"><img class="pictogramsize" src="/images/typescript.svg" alt="TypeScript"></div>
-      </div>
-      <div class="col-md-3 col-sm-6 col-6">
-        <div class="row justify-content-center"><img class="pictogramsize" src="/images/c++.svg" alt="C++"></div>
-      </div>
-      <div class="col-md-3 col-sm-6 col-6">
-        <div class="row justify-content-center"><img class="pictogramsize" src="/images/php.svg" alt="PHP"></div>
-      </div>
-      <div class="col-md-3 col-sm-6 col-6">
-        <div class="row justify-content-center"><img class="pictogramsize" src="/images/wordpress.svg" alt="Wordpress"></div>
-      </div>
-      <div class="col-md-3 col-sm-6 col-6">
-        <div class="row justify-content-center"><img class="pictogramsize" src="/images/nodejs.svg" alt="Node.js"></div>
-      </div>
-      <div class="col-md-3 col-sm-6 col-6">
-        <div class="row justify-content-center"><img class="pictogramsize" src="/images/angular.svg" alt="Angular"></div>
-      </div>
-      <div class="col-md-3 col-sm-6 col-6">
-        <div class="row justify-content-center"><img class="pictogramsize" src="/images/react.svg" alt="React"></div>
-      </div>
-      <div class="col-md-3 col-sm-6 col-6">
-        <div class="row justify-content-center"><img class="pictogramsize" src="/images/express.svg" alt="Express"></div>
-      </div>
-      <div class="col-md-3 col-sm-6 col-6">
-        <div class="row justify-content-center"><img class="pictogramsize" src="/images/p2p.svg" alt="P2P"></div>
-      </div>
-      <div class="col-md-3 col-sm-6 col-6">
-        <div class="row justify-content-center"><img class="pictogramsize" src="/images/video-transcoding.svg" alt="Video Transcoding"></div>
-      </div>
-      <div class="col-md-3 col-sm-6 col-6">
-        <div class="row justify-content-center"><img class="pictogramsize" src="/images/web-rtc.svg" alt="WebRTC"></div>
-      </div>
+<div class="row justify-content-center content-header">
+  <h1>P2P Media Loader<br>Overview</h1>
+</div>
+<div class="row justify-content-center" style="margin-top: -1px;">
+  <svg width="50px" height="25px" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <polyline points="0,0 50,0 25,25" fill="#333333"></polyline>
+  </svg>
+</div>
+<div class="container content">
+  <h2>P2P Media Loader</h2>
+  <div class="row">
+    <div class="col-md-7 col-sm-12 col-12">
+      <div class="imgblock"><a href="/images/p2p-assisted-media-delivery.png" target="_self"><img src="/images/p2p-assisted-media-delivery.png" alt="P2P assisted media delivery"></a></div>
+    </div>
+    <div class="col-md-5 col-sm-12 col-12">
+      <p><strong>P2P Media Loader</strong> is open source JavaScript library that uses features of modern browsers to deliver media over P2P. It doesn’t require any browser plugins or addons to function.</p>
+      <p>It allows to create Peer-to-Peer network (also called P2P CDN or P2PTV) for traffic sharing between users (peers) that are watching  the same media stream live or VOD over HLS or DASH protocols.</p>
+      <p>It significantly reduces traditional CDN traffic and cost while delivering media streams to more users.</p>
     </div>
   </div>
+  <h2>Key features</h2>
+  <p><strong>Supports multiple player and engines</strong><br>
+  Engines: Hls.js, ShakaPlayer<br>
+  Players: JWPlayer, Clappr, Flowplayer, MediaElement, VideoJS</p>
+
+  <p><strong>Effective</strong><br>
+  P2P Media Loader allows to save up to 80% of CDN traffic.</p>
+
+  <p><strong>Versatile</strong><br>
+  Supports live and VOD streams over HLS or DASH protocols.</p>
+
+  <p><strong>Adaptive Bitrate</strong><br>
+  Supports adaptive bitrate streaming of HLS and DASH protocols.</p>
+
+  <p><strong>Free and Open Source</strong><br>
+  All components of P2P network are available as Open Source products:</p>
+  <ul><li>P2P Media Loader - <a href="https://github.com/novage/p2p-media-loader">https://github.com/novage/p2p-media-loader</a></li>
+      <li>STUN server - open specification with multiple open source implementations</li>
+      <li>WebTorrent tracker - <a href="https://github.com/webtorrent/bittorrent-tracker">bittorrent-tracker</a>, <a href="https://github.com/DiegoRBaquero/uWebTorrentTracker">uWebTorrentTracker</a></li></ul>
+
+  <p><strong>No need in server side software</strong><br>
+  By default P2P Media Loader uses publicly available servers:</p>
+  <ul><li>STUN servers - <a href="https://gist.github.com/mondain/b0ec1cf5f60ae726202e">Public STUN server list</a></li>
+      <li>WebTorrent trackers - <a href="https://openwebtorrent.com">https://openwebtorrent.com/</a></li></ul>
+
+  <p><strong>Privacy</strong><br>
+  For privacy reasons it is possible to run private instances of STUN server and WebTorrent tracker. In this case information about the P2P network and its peers will not be available to third parties.</p>
+
+</div>
 </section>
 </div>
 <footer>
