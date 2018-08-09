@@ -3,7 +3,7 @@ html {
 }
 
 #content {
-    margin-top: 68px;
+    margin-top: 74px;
 }
 
 .content {
@@ -18,8 +18,24 @@ html {
 
 footer {
     background-color: #333333;
-    padding: 10px;
+    padding: 30px;
     color: #f1f1f1;
+}
+
+#content a:link {
+    color: #972e2d;
+}
+
+#content a:visited {
+    color: #972e2d;
+}
+
+#content a:hover {
+    color: #d76e6d;
+}
+
+#content a:active {
+    color: #d76e6d;
 }
 
 p {
@@ -36,18 +52,13 @@ h2 {
 }
 
 .content-header {
-    background-color: #333333; 
+    background-color: #333333;
     padding: 10px;
-}
-
-@media only screen and (min-width: 600px) {
-    .content-header {
-        padding: 50px;
-    }
 }
 
 .imgblock {
     width: 100%;
+    padding-bottom: 20px;
 }
 
 .imgblock img {
@@ -63,20 +74,68 @@ h2 {
     background-color: #333333;
 }
 
+.btn-primary {
+    background-color: #972e2d;
+    border-color: #972e2d;
+    margin-bottom: 5px;
+}
+
+.btn-primary:hover {
+    background-color: #d76e6d;
+    border-color: #d76e6d;
+}
+
+.btn-primary:focus, .btn-primary.focus {
+    box-shadow: 0 0 0 0.2rem #d76e6d;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
+.show > .btn-primary.dropdown-toggle {
+    background-color: #972e2d;
+    border-color: #972e2d;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
+.show > .btn-primary.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem #d76e6d;
+}
+
 .pictogramsize {
     width: 170px;
     height: 170px;
     margin-bottom: 50px;
 }
 
+@media only screen and (min-width: 600px) {
+    .content-header {
+        padding: 50px;
+    }
+}
+
 @media only screen and (max-width: 600px) {
-    .content{
+    #content {
+        margin-top: 74px;
+    }
+
+    .content {
         margin-top: 10px;
         margin-bottom: 10px;
     }
 
-    .pictogramsize{
+    .content-header {
+        padding: 30px;
+    }
+
+    .pictogramsize {
         margin-bottom: 0px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 20px;
     }
 }
 
