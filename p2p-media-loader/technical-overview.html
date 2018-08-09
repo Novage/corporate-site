@@ -34,8 +34,8 @@
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink1">
             <a class="dropdown-item" href="/p2p-media-loader/demo.html">Demo</a>
             <a class="dropdown-item" href="/p2p-media-loader/overview.html">Overview</a>
-            <a class="dropdown-item" href="/p2p-media-loader/technical-overview.html">Technical overview</a>
-            <a class="dropdown-item" href="https://github.com/novage/p2p-media-loader" target="blank">Sources &amp; documentation</a>
+            <a class="dropdown-item" href="/p2p-media-loader/technical-overview.html">Technical Overview</a>
+            <a class="dropdown-item" href="https://github.com/novage/p2p-media-loader" target="blank">Source &amp; Documentation</a>
           </div>
         </li>
         <li class="nav-item dropdown">
@@ -65,18 +65,18 @@
       <div class="imgblock"><a href="/images/p2p-media-loader-network.png" target="_blank"><img src="/images/p2p-media-loader-network.png" alt="P2P Media Loader network"></a></div>
     </div>
     <div class="col-md-5 col-sm-12 col-12">
-      <p>All the components of the P2P network are free and open source.</p>
-      <p><strong>P2P Media Loader</strong> is open source JavaScript library that uses features of modern browsers (i.e. WebRTC)  to deliver media over P2P. It doesn’t require any browser plugins or addons to function.</p>
+      <p>All the components of the P2P network are free and open-source.</p>
+      <p><strong>P2P Media Loader</strong> is an open-source JavaScript library that uses features of modern browsers (i.e. WebRTC)  to deliver media over P2P. It doesn’t require any browser plugins or addons to function.</p>
       <p>Browser requirements are:</p>
       <ul><li><strong>WebRTC Data Channels</strong> support to exchange data between peers</li>
           <li><strong>Media Source Extensions</strong> are required by Hls.js and ShakaPlayer engines for media playback</li></ul>
-      <p><a href="https://en.wikipedia.org/wiki/STUN">STUN</a> server is used by <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API">WebRTC</a> to gather <a href="https://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment">ICE</a> candidates. 
+      <p><a href="https://en.wikipedia.org/wiki/STUN">STUN</a> server is used by <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API">WebRTC</a> to gather <a href="https://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment">ICE</a> candidates.
       There are many running public servers available on <a href="https://gist.github.com/mondain/b0ec1cf5f60ae726202e">Public STUN server list</a>.</p>
       <p><a href="https://webtorrent.io/">WebTorrent</a> tracker is used for WebRTC signaling and to create swarms of peers that download the same media stream. Few running public trackers are available: <a href="https://openwebtorrent.com/">https://openwebtorrent.com/</a>.
-      It is possible to run personal WebTorrent tracker using open source implementations: <a href="https://github.com/webtorrent/bittorrent-tracker">bittorrent-tracker</a>, <a href="https://github.com/DiegoRBaquero/uWebTorrentTracker">uWebTorrentTracker</a>.</p>
+      It is possible to run personal WebTorrent tracker using open-source implementations: <a href="https://github.com/webtorrent/bittorrent-tracker">bittorrent-tracker</a>, <a href="https://github.com/DiegoRBaquero/uWebTorrentTracker">uWebTorrentTracker</a>.</p>
     </div>
   </div>
-  <p>P2P Media Loader is configured to use public STUN and WebTorrent servers by default. It means that it is not required to run any server side software for the P2P network to function.</p>    
+  <p>P2P Media Loader is configured to use public STUN and WebTorrent servers by default. It means that it is not required to run any server side software for the P2P network to function.</p>
   <h2>How it works</h2>
   <p>A browser runs a player integrated with P2P Media Loader library. Instance of P2P Media Loader is called peer. Many peers create P2P network.</p>
   <p>P2P Media Loader starts downloading initial media segments over HTTP(S) from source server or CDN. This allows to begin media playback faster. Also, in case of no peers, it will continue to download segments over HTTP(S) that will not differ from traditional media stream download over HTTP.</p>
