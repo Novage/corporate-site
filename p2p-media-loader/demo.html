@@ -50,9 +50,9 @@
   </div>
 </header>
 <div class="container-fluid" id="content"><script src="/assets/p2p-graph.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@latest/build/p2p-media-loader-core.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@latest/build/p2p-media-loader-hlsjs.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-shaka@latest/build/p2p-media-loader-shaka.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@0.2.0/build/p2p-media-loader-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@0.2.0/build/p2p-media-loader-hlsjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-shaka@0.2.0/build/p2p-media-loader-shaka.min.js"></script>
 
 <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rickshaw/1.6.3/rickshaw.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
@@ -66,7 +66,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/2.4.4/shaka-player.compiled.js"></script>
 
 <!-- Clappr -->
-<script src="https://cdn.jsdelivr.net/npm/clappr@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/clappr@0.2.93"></script>
 <script src="https://cdn.jsdelivr.net/gh/clappr/dash-shaka-playback@latest/dist/dash-shaka-playback.external.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/clappr/clappr-level-selector-plugin@latest/dist/level-selector.min.js"></script>
 
@@ -200,7 +200,7 @@
 
         DemoApp.prototype.initForm = function () {
             var form = document.getElementById("videoUrlForm");
-            window.location.search.substr(1).split("&").forEach(function (e) {
+            window.location.search.substr(1).split("&").forEach((e) => {
                 var p = e.split("=");
                 if (p.length === 2) {
                     var name = p[0];
@@ -211,6 +211,9 @@
                             break;
                         case "type":
                             form.type.value = value;
+                            break;
+                        case "swarm":
+                            this.swarmId = value;
                             break;
                     }
                 }
@@ -227,44 +230,50 @@
                 this.videoContainer.removeChild(this.videoContainer.lastChild);
             }
 
+            const config = {
+                segments: {
+                    swarmId: this.swarmId
+                }
+            };
+
             switch (this.playerType) {
                 case "hlsjs":
-                    this.engine = new p2pml.hlsjs.Engine();
+                    this.engine = new p2pml.hlsjs.Engine(config);
                     this.initHlsJsPlayer();
                     break;
 
                 case "clappr":
-                    this.engine = new p2pml.hlsjs.Engine();
+                    this.engine = new p2pml.hlsjs.Engine(config);
                     this.initClapprPlayer();
                     break;
 
                 case "flowplayer":
-                    this.engine = new p2pml.hlsjs.Engine();
+                    this.engine = new p2pml.hlsjs.Engine(config);
                     this.initFlowplayerPlayer();
                     break;
 
                 case "mediaelement":
-                    this.engine = new p2pml.hlsjs.Engine();
+                    this.engine = new p2pml.hlsjs.Engine(config);
                     this.initMediaElementPlayer();
                     break;
 
                 case "videojs-contrib-hlsjs":
-                    this.engine = new p2pml.hlsjs.Engine();
+                    this.engine = new p2pml.hlsjs.Engine(config);
                     this.initVideoJsContribHlsJsPlayer();
                     break;
 
                 case "jwplayer":
-                    this.engine = new p2pml.hlsjs.Engine();
+                    this.engine = new p2pml.hlsjs.Engine(config);
                     this.initJwPlayer();
                     break;
 
                 case "shakaplayer":
-                    this.engine = new p2pml.shaka.Engine();
+                    this.engine = new p2pml.shaka.Engine(config);
                     this.initShakaPlayer();
                     break;
 
                 case "clappr-shaka":
-                    this.engine = new p2pml.shaka.Engine();
+                    this.engine = new p2pml.shaka.Engine(config);
                     this.initClapprPlayer(true);
                     break;
 
