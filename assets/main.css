@@ -102,9 +102,14 @@ h2 {
     margin-bottom: 50px;
 }
 
-.browsers-table table, th, td {
+.browsers-table th, td {
     border: solid 1px black;
     padding: 5px 10px;
+}
+
+.browsers-table {
+    overflow-x: auto;
+    display: block;
 }
 
 .browsers-table th {
