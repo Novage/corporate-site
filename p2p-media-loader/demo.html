@@ -376,7 +376,7 @@
 
             var hls = new Hls({
                 liveSyncDurationCount: this.liveSyncDurationCount,
-                loader: this.isP2PSupported ? this.engine.createLoaderClass() : undefined
+                loader: this.isP2PSupported ? this.engine.createLoaderClass() : Hls.DefaultConfig.loader
             });
 
             if (this.isP2PSupported) {
@@ -427,7 +427,7 @@
             } else {
                 setup.playback.hlsjsConfig = {
                     liveSyncDurationCount: this.liveSyncDurationCount,
-                    loader: this.isP2PSupported ? this.engine.createLoaderClass() : undefined
+                    loader: this.isP2PSupported ? this.engine.createLoaderClass() : Hls.DefaultConfig.loader
                 };
             }
 
@@ -460,7 +460,7 @@
                 startVolume: 0,
                 hls: {
                     liveSyncDurationCount: this.liveSyncDurationCount,
-                    loader: this.isP2PSupported ? this.engine.createLoaderClass() : undefined
+                    loader: this.isP2PSupported ? this.engine.createLoaderClass() : Hls.DefaultConfig.loader
                 },
                 success: (mediaElement) => {
                     if (this.isP2PSupported) {
@@ -499,7 +499,7 @@
                 },
                 hlsjs: {
                     liveSyncDurationCount: this.liveSyncDurationCount,
-                    loader: this.isP2PSupported ? this.engine.createLoaderClass() : undefined,
+                    loader: this.isP2PSupported ? this.engine.createLoaderClass() : Hls.DefaultConfig.loader,
                     safari: true
                 }
             });
@@ -535,7 +535,7 @@
                 html5: {
                     hlsjsConfig: {
                         liveSyncDurationCount: this.liveSyncDurationCount,
-                        loader: this.isP2PSupported ? this.engine.createLoaderClass() : undefined
+                        loader: this.isP2PSupported ? this.engine.createLoaderClass() : Hls.DefaultConfig.loader
                     }
                 }
             });
@@ -601,7 +601,9 @@
             this.videoContainer.appendChild(level);
 
             var player = new shaka.Player(video);
-            this.engine.initShakaPlayer(player);
+            if (this.isP2PSupported) {
+                this.engine.initShakaPlayer(player);
+            }
             this.shakaLevelSwitcher.init(player, level);
             player.load(this.videoUrl);
         }
@@ -820,8 +822,10 @@
                 }
             }
 
-            this.engine.on(p2pml.core.Events.PeerConnect, this.onPeerConnect.bind(this));
-            this.engine.on(p2pml.core.Events.PeerClose, this.onPeerClose.bind(this));
+            if (this.isP2PSupported) {
+                this.engine.on(p2pml.core.Events.PeerConnect, this.onPeerConnect.bind(this));
+                this.engine.on(p2pml.core.Events.PeerClose, this.onPeerClose.bind(this));
+            }
         }
 
         onPeerConnect(peer) {
