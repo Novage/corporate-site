@@ -204,7 +204,8 @@
         async init() {
             await waitForGlobalObject("p2pml", "core");
 
-            if (!p2pml.core.HybridLoader.isSupported()) {
+            this.isP2PSupported = p2pml.core.HybridLoader.isSupported();
+            if (!this.isP2PSupported) {
                 document.querySelector("#error-webrtc-data-channels").classList.remove("hide");
             }
 
@@ -285,7 +286,7 @@
                     }
 
                     await loadScript("https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@latest/build/p2p-media-loader-hlsjs.min.js");
-                    this.engine = new p2pml.hlsjs.Engine(config);
+                    this.engine = this.isP2PSupported ? new p2pml.hlsjs.Engine(config) : undefined;
                     break;
 
                 case "shakaplayer":
@@ -299,7 +300,7 @@
                     }
 
                     await loadScript("https://cdn.jsdelivr.net/npm/p2p-media-loader-shaka@latest/build/p2p-media-loader-shaka.min.js");
-                    this.engine = new p2pml.shaka.Engine(config);
+                    this.engine = this.isP2PSupported ? new p2pml.shaka.Engine(config) : undefined;
                     break;
 
                 default:
@@ -341,12 +342,14 @@
                     break;
             }
 
-            this.engine.on(p2pml.core.Events.PieceBytesDownloaded, this.onBytesDownloaded.bind(this));
-            this.engine.on(p2pml.core.Events.PieceBytesUploaded, this.onBytesUploaded.bind(this));
+            if (this.isP2PSupported) {
+                this.engine.on(p2pml.core.Events.PieceBytesDownloaded, this.onBytesDownloaded.bind(this));
+                this.engine.on(p2pml.core.Events.PieceBytesUploaded, this.onBytesUploaded.bind(this));
 
-            var trackerAnnounce = this.engine.getSettings().loader.trackerAnnounce;
-            if (Array.isArray(trackerAnnounce)) {
-                document.getElementById("announce").innerHTML = trackerAnnounce.join("<br />");
+                var trackerAnnounce = this.engine.getSettings().loader.trackerAnnounce;
+                if (Array.isArray(trackerAnnounce)) {
+                    document.getElementById("announce").innerHTML = trackerAnnounce.join("<br />");
+                }
             }
 
             this.refreshChart();
@@ -373,10 +376,12 @@
 
             var hls = new Hls({
                 liveSyncDurationCount: this.liveSyncDurationCount,
-                loader: this.engine.createLoaderClass()
+                loader: this.isP2PSupported ? this.engine.createLoaderClass() : undefined
             });
 
-            p2pml.hlsjs.initHlsJsPlayer(hls);
+            if (this.isP2PSupported) {
+                p2pml.hlsjs.initHlsJsPlayer(hls);
+            }
 
             hls.loadSource(this.videoUrl);
             hls.attachMedia(video);
@@ -415,18 +420,20 @@
                 await loadScript("https://cdn.jsdelivr.net/gh/clappr/dash-shaka-playback@latest/dist/dash-shaka-playback.external.js");
                 setup.plugins.push(DashShakaPlayback);
                 setup.shakaOnBeforeLoad = (shakaPlayerInstance) => {
-                    this.engine.initShakaPlayer(shakaPlayerInstance);
+                    if (this.isP2PSupported) {
+                        this.engine.initShakaPlayer(shakaPlayerInstance);
+                    }
                 };
             } else {
                 setup.playback.hlsjsConfig = {
                     liveSyncDurationCount: this.liveSyncDurationCount,
-                    loader: this.engine.createLoaderClass()
+                    loader: this.isP2PSupported ? this.engine.createLoaderClass() : undefined
                 };
             }
 
             var player = new Clappr.Player(setup);
 
-            if (!isShaka) {
+            if (!isShaka && this.isP2PSupported) {
                 p2pml.hlsjs.initClapprPlayer(player);
             }
         }
@@ -453,9 +460,13 @@
                 startVolume: 0,
                 hls: {
                     liveSyncDurationCount: this.liveSyncDurationCount,
-                    loader: this.engine.createLoaderClass()
+                    loader: this.isP2PSupported ? this.engine.createLoaderClass() : undefined
                 },
-                success: (mediaElement) => p2pml.hlsjs.initMediaElementJsPlayer(mediaElement)
+                success: (mediaElement) => {
+                    if (this.isP2PSupported) {
+                        p2pml.hlsjs.initMediaElementJsPlayer(mediaElement)
+                    }
+                }
             });
 
             player.setSrc(this.videoUrl);
@@ -488,12 +499,14 @@
                 },
                 hlsjs: {
                     liveSyncDurationCount: this.liveSyncDurationCount,
-                    loader: this.engine.createLoaderClass(),
+                    loader: this.isP2PSupported ? this.engine.createLoaderClass() : undefined,
                     safari: true
                 }
             });
 
-            p2pml.hlsjs.initFlowplayerHlsJsPlayer(player);
+            if (this.isP2PSupported) {
+                p2pml.hlsjs.initFlowplayerHlsJsPlayer(player);
+            }
         }
 
         async initVideoJsContribHlsJsPlayer() {
@@ -522,12 +535,14 @@
                 html5: {
                     hlsjsConfig: {
                         liveSyncDurationCount: this.liveSyncDurationCount,
-                        loader: this.engine.createLoaderClass()
+                        loader: this.isP2PSupported ? this.engine.createLoaderClass() : undefined
                     }
                 }
             });
 
-            p2pml.hlsjs.initVideoJsContribHlsJsPlayer(player);
+            if (this.isP2PSupported) {
+                p2pml.hlsjs.initVideoJsContribHlsJsPlayer(player);
+            }
 
             player.src({
                 type: "application/x-mpegURL",
@@ -558,10 +573,12 @@
             var provider = require("@hola.org/jwplayer-hlsjs");
             provider.attach();
 
-            p2pml.hlsjs.initJwPlayer(player, {
-                liveSyncDurationCount: this.liveSyncDurationCount,
-                loader: this.engine.createLoaderClass()
-            });
+            if (this.isP2PSupported) {
+                p2pml.hlsjs.initJwPlayer(player, {
+                    liveSyncDurationCount: this.liveSyncDurationCount,
+                    loader: this.engine.createLoaderClass()
+                });
+            }
         }
 
         initShakaPlayer() {
@@ -966,7 +983,8 @@
         }
     }
 
-    new DemoApp().init();
+    const demo = new DemoApp();
+    demo.init();
 
 </script>
 <!-- End demo copy-paste -->
