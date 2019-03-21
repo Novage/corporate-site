@@ -53,7 +53,7 @@
   </nav>
   </div>
 </header>
-<div class="container-fluid" id="content"><script async src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@latest/build/p2p-media-loader-core.min.js"></script>
+<div class="container-fluid" id="content"><script async src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@0.5.0/build/p2p-media-loader-core.min.js"></script>
 <script async src="/assets/p2p-graph.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
@@ -294,7 +294,7 @@
                         document.querySelector("#error-hls-js").classList.remove("hide");
                     }
 
-                    await loadScript("https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@latest/build/p2p-media-loader-hlsjs.min.js");
+                    await loadScript("https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@0.5.0/build/p2p-media-loader-hlsjs.min.js");
                     this.engine = this.isP2PSupported ? new p2pml.hlsjs.Engine(config) : undefined;
                     break;
 
@@ -308,7 +308,7 @@
                         document.querySelector("#error-shakaplayer").classList.remove("hide");
                     }
 
-                    await loadScript("https://cdn.jsdelivr.net/npm/p2p-media-loader-shaka@latest/build/p2p-media-loader-shaka.min.js");
+                    await loadScript("https://cdn.jsdelivr.net/npm/p2p-media-loader-shaka@0.5.0/build/p2p-media-loader-shaka.min.js");
                     this.engine = this.isP2PSupported ? new p2pml.shaka.Engine(config) : undefined;
                     break;
 
