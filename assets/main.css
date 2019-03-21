@@ -47,9 +47,99 @@ h2 {
     padding: 30px 0px 20px;
 }
 
+ul {
+    list-style: none;
+}
+
 .content-header {
     background-color: #333333;
+    padding: 50px;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.services {
+    width: 100%;
+    padding: 20px 5px;
+    margin: 20px 20px;
+    box-shadow: 0 2px 9px rgba(0, 0, 0, 0.2);
+    border-top: solid 3px #972e2d;
+}
+
+.services .title {
+    text-align: center;
     padding: 10px;
+}
+
+.services .list ul {
+    padding-left: 20px;
+}
+
+.services .list li {
+    position: relative;
+    display: block;
+    padding-left: 30px;
+    padding-bottom: 10px;
+    line-height: 1.4em;
+}
+
+.services .list li::before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 20px;
+    content: "\f058";
+    color: #972e2d;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.services .title h3 {
+    position: relative;
+    margin: 0px;
+}
+
+.services .title h3 span {
+    background: #ffffff;
+    padding: 0 1rem;
+}
+
+.services .title h3::after {
+    content: "";
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    top: .5em;
+    left: 0;
+    background: #d4dfe0;
+    z-index: -1;
+}
+
+.services .list {
+    padding-top: 10px;
+}
+
+.services .footer {
+    display: none;
+}
+
+.services .footer .pictogramsize {
+    width: 50px;
+    height: 50px;
+}
+
+.pictogram-block {
+    display: block;
+}
+
+.pictogram-block .pictogramsize {
+    width: 170px;
+    height: 170px;
+    margin-bottom: 50px;
 }
 
 .imgblock {
@@ -96,12 +186,6 @@ h2 {
     box-shadow: 0 0 0 0px #c60000;
 }
 
-.pictogramsize {
-    width: 170px;
-    height: 170px;
-    margin-bottom: 50px;
-}
-
 .browsers-table th, td {
     border: solid 1px black;
     padding: 5px 10px;
@@ -116,9 +200,30 @@ h2 {
     background-color: #E0E0E0;
 }
 
-@media only screen and (min-width: 600px) {
-    .content-header {
-        padding: 50px;
+@media only screen and (max-width: 992px) {
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .services {
+        margin: 20px 0px;
+    }
+
+    .services .title h3::after {
+        display: block;
+    }
+
+    .services .footer {
+        display: flex;
+        justify-content: space-around;
+        border-bottom: solid 1px #e5e5e5;
+        border-top: solid 1px #e5e5e5;
+        padding: 10px 0px;
+    }
+
+    .pictogram-block {
+        display: none;
     }
 }
 
@@ -133,11 +238,7 @@ h2 {
     }
 
     .content-header {
-        padding: 30px;
-    }
-
-    .pictogramsize {
-        margin-bottom: 0px;
+        padding: 10px;
     }
 
     h1 {
@@ -145,6 +246,10 @@ h2 {
     }
 
     h2 {
+        font-size: 20px;
+    }
+
+    h3 {
         font-size: 20px;
     }
 }
