@@ -1,3 +1,5 @@
+@import url(highlight.css);
+
 h1,
 h2,
 h3,
@@ -12,6 +14,8 @@ html {
 
 html.show {
     overflow: hidden;
+    position: fixed;
+    width: 100%;
 }
 
 body {
@@ -32,6 +36,8 @@ body {
     z-index: 100;
     background-color: #fff;
     box-shadow: 0 .25em .25em -.25em rgba(0,0,0,.5);
+    max-height: 100vh;
+    overflow: auto;
 }
 
 #navbar {
@@ -146,6 +152,16 @@ body {
 }
 
 @media (min-width: 768px) {
+    html.show {
+        overflow: unset;
+        position: unset;
+    }
+
+    .main-header {
+        max-height: unset;
+        overflow: unset;
+    }
+
     #navbar {
         justify-content: space-between;
         flex-direction: row;
@@ -162,6 +178,7 @@ body {
 
     #navbar .menu.show {
         flex-direction: row;
+        padding-top: 0;
     }
 
     #navbar .menu .menu-item {
@@ -446,6 +463,26 @@ body {
     }
 }
 
+.blog .post a:link,
+.single-post a:link {
+    color: #972e2d;
+}
+
+.blog .post a:visited,
+.single-post a:visited {
+    color: #972e2d;
+}
+
+.blog .post a:hover,
+.single-post a:hover {
+    color: #d76e6d;
+}
+
+.blog .post a:active,
+.single-post a:active {
+    color: #d76e6d;
+}
+
 .blog ul {
     list-style: none;
     padding: 0;
@@ -468,18 +505,13 @@ body {
     margin-block-end: 1em;
 }
 
-.blog .post a {
-    color: #333333;
+.blog .post a.title {
     text-decoration: none;
-}
-
-.blog .post .title {
     color: #333333;
     transition: color .3s ease;
-    text-align: center;
 }
 
-.blog .post .title:hover {
+.blog .post a.title:hover {
     color: #972e2d;
 }
 
@@ -490,22 +522,6 @@ body {
 
 .single-post {
     color: #333333;
-}
-
-.single-post a:link {
-    color: #972e2d;
-}
-
-.single-post a:visited {
-    color: #972e2d;
-}
-
-.single-post a:hover {
-    color: #d76e6d;
-}
-
-.single-post a:active {
-    color: #d76e6d;
 }
 
 .single-post p {
@@ -525,6 +541,11 @@ body {
     display: block;
     max-width: 100%;
     height: auto;
+}
+
+.single-post code {
+    display: block;
+    overflow-x: auto;
 }
 
 .single-post table {
