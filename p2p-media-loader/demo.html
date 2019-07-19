@@ -5,10 +5,10 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-123521518-1"></script>
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','UA-123521518-1');</script>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <script src="/assets/script.js"></script>
-    <link rel="stylesheet" type="text/css" href="/assets/main.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
+    <meta name="description" content="Consulting & Full Development Cycle">
+    <script async src="/assets/script.js"></script>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
     <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
@@ -20,7 +20,7 @@
     <nav id="navbar" class="container">
         <div class="toggle-wrapper">
             <a href="/"><img class="brand-logo" src="/images/novage-logo.svg" alt="Novage logo"></a>
-            <button class="navbar-toggle"><i class="fas fa-bars"></i></button>
+            <button class="navbar-toggle" aria-label="Toggle navigation"><i class="fas fa-bars"></i></button>
         </div>
         <ul class="menu">
             <li class="menu-item arrow">
@@ -45,13 +45,13 @@
         </ul>
     </nav>
 </header>
-<div id="content"><script async src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@latest/build/p2p-media-loader-core.min.js"></script>
+<div id="content"><script async src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@0.6.1/build/p2p-media-loader-core.min.js"></script>
 <script async src="/assets/p2p-graph.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
 <script async src="https://cdnjs.cloudflare.com/ajax/libs/rickshaw/1.6.3/rickshaw.min.js"></script>
 
-<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rickshaw/1.6.3/rickshaw.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rickshaw/1.6.3/rickshaw.min.css">
 
 <article>
 <header class="page-header">
@@ -110,11 +110,14 @@
                             <option value="flowplayer">Flowplayer</option>
                             <option value="mediaelement">MediaElement</option>
                             <option value="videojs-contrib-hlsjs">VideoJs-Contrib-HlsJs</option>
+                            <option value="videojs-hlsjs-plugin">VideoJs-HlsJs-Plugin</option>
                             <option value="jwplayer">JWPlayer</option>
+                            <option value="dplayer">DPlayer</option>
                         </optgroup>
                         <optgroup label="Shaka P2P Engine (HLS and DASH)">
                             <option value="shakaplayer">ShakaPlayer</option>
                             <option value="clappr-shaka">Clappr (DASH only)</option>
+                            <option value="dplayer-shaka">DPlayer</option>
                         </optgroup>
                     </select>
                 </div>
@@ -162,7 +165,6 @@
     function loadScript(src) {
         return new Promise((resolve, reject) => {
             const script= document.createElement('script');
-            script.type= 'text/javascript';
             script.onload = () => {
                 resolve();
             };
@@ -179,7 +181,6 @@
         return new Promise((resolve, reject) => {
             const link= document.createElement('link');
             link.rel = 'stylesheet';
-            link.type= 'text/css';
             link.onload = () => {
                 resolve();
             };
@@ -279,6 +280,8 @@
                 case "flowplayer":
                 case "mediaelement":
                 case "videojs-contrib-hlsjs":
+                case "videojs-hlsjs-plugin":
+                case "dplayer":
                 case "jwplayer":
                     await loadScript("https://cdn.jsdelivr.net/npm/hls.js@latest");
 
@@ -286,21 +289,24 @@
                         document.querySelector("#error-hls-js").classList.remove("hide");
                     }
 
-                    await loadScript("https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@latest/build/p2p-media-loader-hlsjs.min.js");
+                    await loadScript("https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@0.6.1/build/p2p-media-loader-hlsjs.min.js");
                     this.engine = this.isP2PSupported ? new p2pml.hlsjs.Engine(config) : undefined;
                     break;
 
                 case "shakaplayer":
+                case "dplayer-shaka":
                 case "clappr-shaka":
-                    await loadScript("https://github.com/videojs/mux.js/releases/download/v5.0.1/mux.js");
-                    await loadScript("https://cdnjs.cloudflare.com/ajax/libs/shaka-player/2.4.6/shaka-player.compiled.js");
+                    await Promise.all([
+                        loadScript("https://github.com/videojs/mux.js/releases/download/v5.1.2/mux.js"),
+                        loadScript("https://cdnjs.cloudflare.com/ajax/libs/shaka-player/2.5.1/shaka-player.compiled.js")
+                    ]);
 
                     shaka.polyfill.installAll();
                     if (!shaka.Player.isBrowserSupported()) {
                         document.querySelector("#error-shakaplayer").classList.remove("hide");
                     }
 
-                    await loadScript("https://cdn.jsdelivr.net/npm/p2p-media-loader-shaka@latest/build/p2p-media-loader-shaka.min.js");
+                    await loadScript("https://cdn.jsdelivr.net/npm/p2p-media-loader-shaka@0.6.1/build/p2p-media-loader-shaka.min.js");
                     this.engine = this.isP2PSupported ? new p2pml.shaka.Engine(config) : undefined;
                     break;
 
@@ -330,8 +336,16 @@
                     this.initVideoJsContribHlsJsPlayer();
                     break;
 
+                case "videojs-hlsjs-plugin":
+                    this.initVideoJsHlsJsPlugin();
+                    break;
+
                 case "jwplayer":
                     this.initJwPlayer();
+                    break;
+
+                case "dplayer":
+                    this.initDPlayerHlsJs();
                     break;
 
                 case "shakaplayer":
@@ -340,6 +354,10 @@
 
                 case "clappr-shaka":
                     this.initClapprPlayer(true);
+                    break;
+
+                case "dplayer-shaka":
+                    this.initDPlayerShaka();
                     break;
             }
 
@@ -392,8 +410,10 @@
         }
 
         async initClapprPlayer(isShaka) {
-            await loadScript("https://cdn.jsdelivr.net/npm/clappr@latest");
-            await loadScript("https://cdn.jsdelivr.net/gh/clappr/clappr-level-selector-plugin@latest/dist/level-selector.min.js");
+            const scriptsPromise = (async () => {
+                await loadScript("https://cdn.jsdelivr.net/npm/clappr@latest");
+                await loadScript("https://cdn.jsdelivr.net/gh/clappr/clappr-level-selector-plugin@latest/dist/level-selector.min.js");
+            })();
 
             var outer = document.createElement("div");
             outer.className = "embed-responsive embed-responsive-16by9";
@@ -405,7 +425,7 @@
 
             var setup = {
                 parentId: "#video",
-                plugins: [LevelSelector],
+                plugins: [],
                 source: this.videoUrl,
                 width: "100%",
                 height: "100%",
@@ -418,6 +438,7 @@
             };
 
             if (isShaka) {
+                await scriptsPromise;
                 await loadScript("https://cdn.jsdelivr.net/gh/clappr/dash-shaka-playback@latest/dist/dash-shaka-playback.external.js");
                 setup.plugins.push(DashShakaPlayback);
                 setup.shakaOnBeforeLoad = (shakaPlayerInstance) => {
@@ -432,6 +453,10 @@
                 };
             }
 
+            await scriptsPromise;
+
+            setup.plugins.push(LevelSelector);
+
             var player = new Clappr.Player(setup);
 
             if (!isShaka && this.isP2PSupported) {
@@ -440,13 +465,8 @@
         }
 
         async initMediaElementPlayer() {
-            await Promise.all([
-                loadStyle("https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelementplayer.min.css"),
-                loadScript("https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelement-and-player.min.js")
-            ]);
-
-            // allow only one supported renderer
-            mejs.Renderers.order = [ "native_hls" ];
+            const scriptPromise = loadScript("https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelement-and-player.min.js");
+            loadStyle("https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelementplayer.min.css");
 
             var video = document.createElement("video");
             video.id = "video";
@@ -455,6 +475,11 @@
             video.setAttribute("muted", "");
             video.setAttribute("autoplay", "");
             this.videoContainer.appendChild(video);
+
+            await scriptPromise;
+
+            // allow only one supported renderer
+            mejs.Renderers.order = ["native_hls"];
 
             var player = new MediaElementPlayer("video", {
                 stretching: "responsive",
@@ -478,15 +503,15 @@
         }
 
         async initFlowplayerPlayer() {
-            await Promise.all([
-                loadStyle("https://releases.flowplayer.org/7.2.7/skin/skin.css"),
-                loadScript("https://releases.flowplayer.org/7.2.7/flowplayer.min.js")
-            ]);
+            const scriptPromise = loadScript("https://releases.flowplayer.org/7.2.7/flowplayer.min.js");
+            loadStyle("https://releases.flowplayer.org/7.2.7/skin/skin.css");
 
             var video = document.createElement("div");
             video.id = "video";
             video.className = "fp-slim";
             this.videoContainer.appendChild(video);
+
+            await scriptPromise;
 
             var player = flowplayer("#video", {
                 autoplay: true,
@@ -511,12 +536,12 @@
         }
 
         async initVideoJsContribHlsJsPlayer() {
-            await Promise.all([
-                loadStyle("https://vjs.zencdn.net/7.2.0/video-js.css"),
-                loadScript("https://vjs.zencdn.net/7.2.0/video.js")
-            ]);
+            const scriptPromise = (async () => {
+                await loadScript("https://vjs.zencdn.net/7.6.0/video.js");
+                await loadScript("https://cdn.jsdelivr.net/npm/videojs-contrib-hls.js@latest");
+            })();
 
-            await loadScript("https://cdn.jsdelivr.net/npm/videojs-contrib-hls.js@latest");
+            loadStyle("https://vjs.zencdn.net/7.6.0/video-js.css");
 
             var outer = document.createElement("div");
             outer.className = "embed-responsive embed-responsive-16by9";
@@ -531,6 +556,8 @@
             video.setAttribute("controls", "");
             outer.appendChild(video);
             this.videoContainer.appendChild(outer);
+
+            await scriptPromise;
 
             var player = videojs("video", {
                 html5: {
@@ -556,9 +583,57 @@
             });
         }
 
+        async initVideoJsHlsJsPlugin() {
+            const scriptPromise = await (async () => {
+                await loadScript("https://vjs.zencdn.net/7.6.0/video.js");
+                await Promise.all([
+                    loadScript("https://cdn.streamroot.io/videojs-hlsjs-plugin/1/stable/videojs-hlsjs-plugin.js"),
+                    loadScript("https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@latest/dist/videojs-contrib-quality-levels.min.js"),
+                    loadScript("https://cdn.jsdelivr.net/npm/videojs-http-source-selector@latest/dist/videojs-http-source-selector.js")
+                ]);
+            })();
+
+            loadStyle("https://vjs.zencdn.net/7.6.0/video-js.css");
+
+            var outer = document.createElement("div");
+            outer.className = "embed-responsive embed-responsive-16by9";
+            var video = document.createElement("video");
+            video.id = "video";
+            video.className = "embed-responsive-item video-js vjs-default-skin";
+            video.setAttribute("muted", "");
+            video.setAttribute("autoplay", "");
+            video.setAttribute("controls", "");
+            outer.appendChild(video);
+            this.videoContainer.appendChild(outer);
+
+            await scriptPromise;
+
+            if (this.isP2PSupported) {
+                p2pml.hlsjs.initVideoJsHlsJsPlugin();
+            }
+
+            var player = videojs("video", {
+                html5: {
+                    hlsjsConfig: {
+                        liveSyncDurationCount: this.liveSyncDurationCount,
+                        loader: this.isP2PSupported ? this.engine.createLoaderClass() : Hls.DefaultConfig.loader
+                    }
+                }
+            });
+
+            player.httpSourceSelector();
+
+            player.src({
+                src: this.videoUrl,
+                type: "application/x-mpegURL"
+            });
+        }
+
         async initJwPlayer() {
-            await loadScript("https://content.jwplatform.com/libraries/aG3IMhIy.js");
-            await loadScript("/assets/hola-jwplayer-hlsjs.min.js");
+            const scriptPromise = await Promise.all([
+                loadScript("https://content.jwplatform.com/libraries/aG3IMhIy.js"),
+                loadScript("https://cdn.jsdelivr.net/npm/@hola.org/jwplayer-hlsjs@latest/dist/jwplayer.hlsjs.min.js")
+            ]);
 
             var video = document.createElement("div");
             video.id = "video";
@@ -568,11 +643,12 @@
             video.setAttribute("autoplay", "");
             this.videoContainer.appendChild(video);
 
+            await scriptPromise;
+
             var player = jwplayer("video");
             player.setup({ file: this.videoUrl, mute: true });
 
-            var provider = require("@hola.org/jwplayer-hlsjs");
-            provider.attach();
+            jwplayer_hls_provider.attach();
 
             if (this.isP2PSupported) {
                 p2pml.hlsjs.initJwPlayer(player, {
@@ -580,6 +656,78 @@
                     loader: this.engine.createLoaderClass()
                 });
             }
+        }
+
+        async initDPlayerHlsJs() {
+            if (!Hls.isSupported()) {
+                return;
+            }
+
+            const scriptPromise = loadScript("https://cdn.jsdelivr.net/npm/dplayer@latest");
+            loadStyle("https://cdn.jsdelivr.net/npm/p2p-dplayer@latest/dist/DPlayer.min.css");
+
+            var outer = document.createElement("div");
+            outer.id = "dplayer";
+            this.videoContainer.appendChild(outer);
+
+            await scriptPromise;
+
+            window.dp = new DPlayer({
+                container: document.getElementById("dplayer"),
+                video: {
+                    url: this.videoUrl,
+                    type: "customHls",
+                    customType: {
+                        "customHls": (video, player) => {
+                            const hls = new Hls({
+                                liveSyncDurationCount: 7, // To have at least 7 segments in queue
+                                loader: this.engine.createLoaderClass()
+                            });
+
+                            p2pml.hlsjs.initHlsJsPlayer(hls);
+
+                            hls.loadSource(video.src);
+                            hls.attachMedia(video);
+                        }
+                    }
+                }
+            });
+        }
+
+        async initDPlayerShaka() {
+            if (!shaka.Player.isBrowserSupported()) {
+                return;
+            }
+
+            const scriptPromise = loadScript("https://cdn.jsdelivr.net/npm/dplayer@latest");
+            loadStyle("https://cdn.jsdelivr.net/npm/p2p-dplayer@latest/dist/DPlayer.min.css");
+
+            var outer = document.createElement("div");
+            outer.id = "dplayer";
+            this.videoContainer.appendChild(outer);
+
+            await scriptPromise;
+
+            window.dp = new DPlayer({
+                container: document.getElementById("dplayer"),
+                video: {
+                    url: this.videoUrl,
+                    type: "customHlsOrDash",
+                    customType: {
+                        "customHlsOrDash": (video, player) => {
+                            const src = video.src; // Shaka Player changes video.src to blob URL
+                            const shakaPlayer = new shaka.Player(video);
+
+                            const onError = function(error) { console.error("Error code", error.code, "object", error); }
+                            shakaPlayer.addEventListener("error", function(event) { onError(event.detail); });
+
+                            this.engine.initShakaPlayer(shakaPlayer);
+
+                            shakaPlayer.load(src).catch(onError);
+                        }
+                    }
+                }
+            });
         }
 
         initShakaPlayer() {
