@@ -2,22 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <link rel="preload" href="https://use.fontawesome.com/releases/v5.9.0/webfonts/fa-solid-900.woff2">
-    <link rel="preconnect" href="https://www.google-analytics.com">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-123521518-1"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','UA-123521518-1');</script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Consulting & Full Development Cycle">
+    <link rel="preload" href="https://fonts.gstatic.com/s/titilliumweb/v7/NaPecZTIAOhVxoMyOr9n_E7fdMPmDQ.woff2" as="font" crossorigin>
+    <link rel="preload" href="https://use.fontawesome.com/releases/v5.9.0/webfonts/fa-solid-900.woff2" as="font" crossorigin>
     <script async src="/assets/script.js"></script>
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
+    <link rel="preconnect" href="https://www.google-analytics.com">
     <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
-
-<title>P2P Media Loader</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Consulting & Full Development Cycle">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-123521518-1"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','UA-123521518-1');</script>
+    <link rel="stylesheet" href="/css/main.css">
+    <title>P2P Media Loader</title>
 </head>
-<body onload="main()">
+<body>
 <header class="main-header">
     <nav id="navbar" class="container">
         <div class="toggle-wrapper">
@@ -47,7 +46,7 @@
         </ul>
     </nav>
 </header>
-<div id="content"><script async src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@0.6.1/build/p2p-media-loader-core.min.js"></script>
+<div id="content"><script async src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@latest/build/p2p-media-loader-core.min.js"></script>
 <script async src="/assets/p2p-graph.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
@@ -291,7 +290,7 @@
                         document.querySelector("#error-hls-js").classList.remove("hide");
                     }
 
-                    await loadScript("https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@0.6.1/build/p2p-media-loader-hlsjs.min.js");
+                    await loadScript("https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@latest/build/p2p-media-loader-hlsjs.min.js");
                     this.engine = this.isP2PSupported ? new p2pml.hlsjs.Engine(config) : undefined;
                     break;
 
@@ -308,7 +307,7 @@
                         document.querySelector("#error-shakaplayer").classList.remove("hide");
                     }
 
-                    await loadScript("https://cdn.jsdelivr.net/npm/p2p-media-loader-shaka@0.6.1/build/p2p-media-loader-shaka.min.js");
+                    await loadScript("https://cdn.jsdelivr.net/npm/p2p-media-loader-shaka@latest/build/p2p-media-loader-shaka.min.js");
                     this.engine = this.isP2PSupported ? new p2pml.shaka.Engine(config) : undefined;
                     break;
 
