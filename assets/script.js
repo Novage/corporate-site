@@ -1,4 +1,10 @@
-if (window.location.pathname.startsWith("/20")) {
+const isPost = window.location.pathname.startsWith("/20");
+
+if (window.location.pathname.startsWith("/blog/") || isPost) {
+    loadStyle("/css/blog.css");
+}
+
+if (isPost) {
     loadStyle("/css/highlight.css");
 }
 
