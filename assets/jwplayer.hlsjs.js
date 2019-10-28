@@ -435,6 +435,7 @@ function HlsProv(id){
         }
     }
     function hls_log(msg){
+        console.log('HLSlog', msg);
         var dbg;
         if (dbg = hls_params.debug)
             dbg.log(msg);
@@ -782,6 +783,7 @@ function HlsProv(id){
         };
     }
     hls.on(Hls.Events.ERROR, function(event, data){
+        console.log('HLSerror', event, data);
         if (!data.fatal)
             return;
         var msg;
@@ -823,6 +825,7 @@ function HlsProv(id){
         video.setAttribute('jw-loaded', 'init');
     };
     this.load = function(item){
+        console.log('load', item);
         if (!this.attached)
             return;
         var newsource = get_default_src(item.sources).file;
@@ -871,6 +874,7 @@ function HlsProv(id){
     this.volume = function(vol){ video.volume = Math.min(vol/100, 1.0); };
     this.mute = function(state){ video.muted = !!state; };
     this.seek = function(pos){
+        console.log('seek', pos);
         this._in_seek = true;
         if (this.hls_state=='ready')
         {
@@ -929,6 +933,7 @@ function HlsProv(id){
     this.checkComplete = function(){ return !!this.before_complete; };
     this.setControls = empty_fn('setControls');
     this.attachMedia = function(){
+        console.log('attachMedia');
         if (this.before_complete)
             return playback_complete();
         if (this.ad_count)
@@ -937,6 +942,7 @@ function HlsProv(id){
         hls.attachMedia(video);
     };
     this.detachMedia = function(){
+        console.log('detachMedia');
         hls.trigger(Hls.Events.BUFFER_RESET);
         hls.detachMedia();
         if (this.level_cb)
