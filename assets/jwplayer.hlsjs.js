@@ -611,12 +611,14 @@ function HlsProv(id){
     }
     function is_live(){
         var live, levels;
+        console.log('islive');
         try {
             if (!(levels = hls.streamController.levels))
                 return;
             var loaded_lvl = levels.find(function(lvl){ return lvl.details; });
             live = loaded_lvl && !!loaded_lvl.details.live;
         } catch(e){ hls_log('is_live failed with '+e); }
+        console.log(live);
         return live;
     }
     function get_buffered(){
