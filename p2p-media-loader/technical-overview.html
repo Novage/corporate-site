@@ -14,6 +14,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-123521518-1"></script>
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','UA-123521518-1');</script>
     <link rel="stylesheet" href="/css/main.css">
+    
     <title>P2P Media Loader</title>
 </head>
 <body>
@@ -71,7 +72,7 @@
             <p><a href="https://en.wikipedia.org/wiki/STUN">STUN</a> server is used by <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API">WebRTC</a> to gather <a href="https://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment">ICE</a> candidates.
             There are many running public servers available on <a href="https://gist.github.com/mondain/b0ec1cf5f60ae726202e">Public STUN server list</a>.</p>
             <p><a href="https://webtorrent.io/">WebTorrent</a> tracker is used for WebRTC signaling and to create swarms of peers that download the same media stream. Few running public trackers are available: <a href="https://openwebtorrent.com/">https://openwebtorrent.com/</a>.
-            It is possible to run personal WebTorrent tracker using open-source implementations: <a href="https://github.com/webtorrent/bittorrent-tracker">bittorrent-tracker</a>, <a href="https://github.com/DiegoRBaquero/uWebTorrentTracker">uWebTorrentTracker</a>.</p>
+            It is possible to run personal WebTorrent tracker using open-source implementations: <a href="https://github.com/webtorrent/bittorrent-tracker">bittorrent-tracker</a>, <a href="https://github.com/Novage/wt-tracker">wt-tracker</a>.</p>
         </div>
     </div>
     <p>P2P Media Loader is configured to use public STUN and WebTorrent servers by default. It means that it is not required to run any server-side software for the P2P network to function.</p>
@@ -91,7 +92,8 @@
                 <th>Chrome</th>
                 <th>Firefox</th>
                 <th>macOS Safari</th>
-                <th>iOS Safari</th>
+                <th>iOS 13+ Safari on iPad</th>
+                <th>iOS Safari on iPhone</th>
                 <th>IE</th>
                 <th>Edge</th>
             </tr>
@@ -99,6 +101,7 @@
         <tbody>
             <tr>
                 <td>WebRTC Data Channels</td>
+                <td>+</td>
                 <td>+</td>
                 <td>+</td>
                 <td>+</td>
@@ -111,12 +114,14 @@
                 <td>+</td>
                 <td>+</td>
                 <td>+</td>
+                <td>+</td>
                 <td>-</td>
                 <td>+</td>
                 <td>+</td>
             </tr>
             <tr>
                 <td><strong>P2P Media Loader</strong></td>
+                <td><strong>+</strong></td>
                 <td><strong>+</strong></td>
                 <td><strong>+</strong></td>
                 <td><strong>+</strong></td>
