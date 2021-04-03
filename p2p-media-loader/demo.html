@@ -295,7 +295,7 @@
                 case "dplayer":
                 case "jwplayer":
                 case "plyr":
-                    await loadScript("https://cdn.jsdelivr.net/npm/hls.js@latest");
+                    await loadScript("https://cdn.jsdelivr.net/npm/hls.js@0.14.17");
 
                     if (!Hls.isSupported()) {
                         document.querySelector("#error-hls-js").classList.remove("hide");
