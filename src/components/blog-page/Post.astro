@@ -1,0 +1,34 @@
+---
+import PageHeader from "../shared/PageHeader.astro";
+import Header from "../shared/Header.astro";
+import Footer from "../shared/Footer.astro";
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/blog.css";
+
+const post = Astro.props.frontmatter ?? Astro.props;
+---
+
+<Layout title={post.title}>
+  <Header />
+  <div id="content">
+    <article>
+      <PageHeader title={post.title} />
+      <div class="single-post container content">
+        <div class="content">
+          <slot />
+        </div>
+        <footer class="footer">
+          {
+            new Date(post.date).toLocaleDateString("en-GB", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          }{" "}
+          | {post.author}
+        </footer>
+      </div>
+    </article>
+  </div>
+  <Footer />
+</Layout>

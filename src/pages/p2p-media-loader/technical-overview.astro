@@ -1,0 +1,155 @@
+---
+import Footer from "../../components/shared/Footer.astro";
+import Header from "../../components/shared/Header.astro";
+import ImageBlock from "../../components/shared/ImageBlock.astro";
+import PageHeader from "../../components/shared/PageHeader.astro";
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="P2P Media Loader">
+  <Header />
+  <div id="content">
+    <article>
+      <PageHeader htmlTitle="P2P Media Loader<br>Technical Overview" />
+      <div class="page container content">
+        <h2>Key components of the P2P network</h2>
+        <ImageBlock
+          imgSrc="/images/p2p-media-loader-network.png"
+          alt="P2P Media Loader network"
+        >
+          <p>All the components of the P2P network are free and open-source.</p>
+          <p>
+            <strong>P2P Media Loader</strong> is an open-source JavaScript library
+            that uses features of modern web browsers (i.e. HTML5 video and WebRTC)
+            to deliver media over P2P and do playback via integrations with many
+            popular HTML5 video players. It doesn’t require any web browser plugins
+            or add-ons to function.
+          </p>
+          <p><strong>P2P Media Loader</strong> web browser requirements are:</p>
+          <ul>
+            <li>
+              <strong>WebRTC Data Channels</strong> support to exchange data between
+              peers
+            </li>
+            <li>
+              <strong>Media Source Extensions</strong> are required by Hls.js and
+              Shaka Player engines for media playback
+            </li>
+          </ul>
+          <p>
+            <a href="https://en.wikipedia.org/wiki/STUN">STUN</a> server is used
+            by <a
+              href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API"
+              >WebRTC</a
+            > to gather <a
+              href="https://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment"
+              >ICE</a
+            > candidates. There are many running public servers available on <a
+              href="https://gist.github.com/mondain/b0ec1cf5f60ae726202e"
+              >Public STUN server list</a
+            >.
+          </p>
+          <p>
+            <a href="https://webtorrent.io/">WebTorrent</a> tracker is used for WebRTC
+            signaling and to create swarms of peers that download the same media
+            stream. Few running public trackers are available:
+            <a href="https://openwebtorrent.com/">https://openwebtorrent.com/</a
+            >. It is possible to run personal WebTorrent tracker using
+            open-source implementations: <a
+              href="https://github.com/webtorrent/bittorrent-tracker"
+              >bittorrent-tracker</a
+            >, <a href="https://github.com/Novage/wt-tracker">wt-tracker</a>.
+          </p>
+        </ImageBlock>
+
+        <p>
+          P2P Media Loader is configured to use public STUN and WebTorrent
+          servers by default. It means that it is not required to run any
+          server-side software for the P2P network to function.
+        </p>
+        <h2>How it works</h2>
+        <p>
+          A web browser runs a video player integrated with P2P Media Loader
+          library. An instance of P2P Media Loader is called peer. Many peers
+          form the P2P network.
+        </p>
+        <p>
+          P2P Media Loader starts to download initial media segments over
+          HTTP(S) from source server or CDN. This allows beginning media
+          playback faster. Also, in case of no peers, it will continue to
+          download segments over HTTP(S) that will not differ from traditional
+          media stream download over HTTP.
+        </p>
+        <p>
+          After that P2P Media Loader sends media stream details and its
+          connection details (ICE candidates) to WebTorrent trackers and obtains
+          from them list of other peers that are downloading the same media
+          stream.
+        </p>
+        <p>
+          P2P Media Loader connects and starts to download media segments from
+          the obtained peers as well as sharing already downloaded segments to
+          them.
+        </p>
+        <p>
+          From time to time random peers from the P2P swarm download new
+          segments over HTTP(S) and share them to others over P2P.
+        </p>
+        <h2>Limitations</h2>
+        <p>
+          Only one media track is delivered over P2P. If video and audio tracks
+          in HLS or MPEG-DASH go separately, just video is going to be shared
+          over the P2P network.
+        </p>
+        <h2>Web browsers support</h2>
+        <table class="browsers-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Chrome</th>
+              <th>Firefox</th>
+              <th>macOS Safari</th>
+              <th>iPadOS Safari (iPad)</th>
+              <th>iOS Safari (iPhone)</th>
+              <th>IE</th>
+              <th>Edge</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>WebRTC Data Channels</td>
+              <td>+</td>
+              <td>+</td>
+              <td>+</td>
+              <td>+</td>
+              <td>+</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td>Media Source Extensions</td>
+              <td>+</td>
+              <td>+</td>
+              <td>+</td>
+              <td>+</td>
+              <td>-</td>
+              <td>+</td>
+              <td>+</td>
+            </tr>
+            <tr>
+              <td><strong>P2P Media Loader</strong></td>
+              <td><strong>+</strong></td>
+              <td><strong>+</strong></td>
+              <td><strong>+</strong></td>
+              <td><strong>+</strong></td>
+              <td><strong>-</strong></td>
+              <td><strong>-</strong></td>
+              <td><strong>-</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </div>
+  <Footer />
+</Layout>

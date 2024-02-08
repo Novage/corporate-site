@@ -1,0 +1,50 @@
+---
+import { getCollection } from "astro:content";
+import Footer from "../../components/shared/Footer.astro";
+import Header from "../../components/shared/Header.astro";
+import PageHeader from "../../components/shared/PageHeader.astro";
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/blog.css";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf(),
+);
+---
+
+<Layout title="Novage Blog">
+  <Header />
+  <div id="content">
+    <article>
+      <PageHeader title="Blog" />
+      <div class="blog container content">
+        <ul>
+          {
+            posts.map((post) => {
+              return (
+                <li class="post">
+                  <a href={`/blog/${post.slug}`} class="title">
+                    <h2>{post.data.title}</h2>
+                  </a>
+
+                  <div class="excerpt">
+                    <p set:html={post.data.description} />
+                  </div>
+
+                  <div class="footer">
+                    {new Date(post.data.date).toLocaleDateString("en-GB", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}{" "}
+                    | {post.data.author}
+                  </div>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
+    </article>
+  </div>
+  <Footer />
+</Layout>
