@@ -1,0 +1,14 @@
+<footer id="footer">
+  <div class="container" id="copyright">
+    © {new Date().getFullYear()} Novage, LLC
+  </div>
+</footer>
+
+<script is:inline>
+  function changeYear(copyright) {
+    const year = Math.max(new Date().getFullYear(), 2024);
+    copyright.innerHTML = copyright.innerHTML.replace(/\d{4}/, year);
+  }
+
+  changeYear(document.getElementById("copyright"));
+</script>

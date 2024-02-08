@@ -1,0 +1,17 @@
+---
+interface Props {
+  imgSrc: string;
+  alt: string;
+}
+
+const { imgSrc, alt } = Astro.props;
+---
+
+<div class="image-block">
+  <div class="image">
+    <a href={imgSrc} target="_blank"><img src={imgSrc} alt={alt} /></a>
+  </div>
+  <div>
+    <slot />
+  </div>
+</div>

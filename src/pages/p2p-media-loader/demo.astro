@@ -1,0 +1,60 @@
+---
+import P2PDemo from "../../components/demo-page-components/P2PDemo.astro";
+import Footer from "../../components/shared/Footer.astro";
+import Header from "../../components/shared/Header.astro";
+import PageHeader from "../../components/shared/PageHeader.astro";
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/demo.css";
+---
+
+<Layout title="P2P Media Loader">
+  <Header />
+
+  <div id="content">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/rickshaw/1.6.3/rickshaw.min.css"
+    />
+    <script is:inline>
+      function loadScript(url) {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = url;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+      }
+
+      async function loadScripts() {
+        await loadScript(
+          "https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js",
+        );
+        await loadScript(
+          "https://cdnjs.cloudflare.com/ajax/libs/rickshaw/1.6.3/rickshaw.min.js",
+        );
+      }
+
+      loadScripts();
+    </script>
+    <script
+      async
+      src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@latest/build/p2p-media-loader-core.min.js"
+    ></script>
+    <script async src="/js/p2p-graph.js"></script>
+
+    <article>
+      <PageHeader htmlTitle="P2P Media Loader<br>Demo" />
+      <div id="demo" class="container content">
+        <iframe
+          src="https://ghbtns.com/github-btn.html?user=novage&repo=p2p-media-loader&type=star&count=true&size=large"
+          style="width: 160px; height: 30px; border: none; overflow: scroll;"
+        ></iframe>
+
+        <P2PDemo />
+      </div>
+    </article>
+  </div>
+
+  <Footer />
+</Layout>

@@ -1,0 +1,114 @@
+---
+import Footer from "../../components/shared/Footer.astro";
+import Header from "../../components/shared/Header.astro";
+import ImageBlock from "../../components/shared/ImageBlock.astro";
+import PageHeader from "../../components/shared/PageHeader.astro";
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="P2P Media Loader">
+  <Header />
+  <div id="content">
+    <article>
+      <PageHeader htmlTitle="P2P Media Loader<br/> Overview" />
+      <div class="page container content">
+        <ImageBlock
+          imgSrc="/images/p2p-assisted-media-delivery.png"
+          alt="P2P assisted media delivery"
+        >
+          <p>
+            <strong>P2P Media Loader</strong> is an open-source JavaScript library
+            that uses features of modern web browsers (i.e. HTML5 video and WebRTC)
+            to deliver media over P2P and do playback via integrations with many
+            popular HTML5 video players. It doesn’t require any web browser plugins
+            or add-ons to function.
+          </p>
+          <p>
+            It allows creating Peer-to-Peer network (also called P2P CDN or
+            P2PTV) for traffic sharing between users (peers) that are watching
+            the same media stream live or VOD over HLS or MPEG-DASH protocols.
+          </p>
+          <p>
+            It significantly reduces traditional CDN traffic and cost while
+            delivering media streams to more users.
+          </p>
+        </ImageBlock>
+
+        <h2>Key features</h2>
+
+        <p>
+          <strong>Supports multiple HTML5 video players and engines:</strong><br
+          />
+          Engines: Hls.js, Shaka Player<br />
+          Players: JWPlayer, Clappr, Flowplayer, MediaElement, VideoJS
+        </p>
+
+        <p>
+          <strong>Effective</strong><br />
+          P2P Media Loader allows to save up to 80% of CDN traffic.
+        </p>
+
+        <p>
+          <strong>Versatile</strong><br />
+          Supports live and VOD streams over HLS or MPEG-DASH protocols.
+        </p>
+
+        <p>
+          <strong>Adaptive Bitrate</strong><br />
+          Supports adaptive bitrate streaming of HLS and MPEG-DASH protocols.
+        </p>
+
+        <p>
+          <strong>Free and open-source</strong><br />
+          All components of P2P network are available as open-source products:
+        </p>
+        <ul>
+          <li>
+            P2P Media Loader - <a
+              href="https://github.com/novage/p2p-media-loader"
+              >https://github.com/novage/p2p-media-loader</a
+            >
+          </li>
+          <li>
+            STUN server - open specification with multiple open-source
+            implementations
+          </li>
+          <li>
+            WebTorrent tracker - <a
+              href="https://github.com/webtorrent/bittorrent-tracker"
+              >bittorrent-tracker</a
+            >, <a href="https://github.com/Novage/wt-tracker">wt-tracker</a>
+          </li>
+        </ul>
+
+        <p>
+          <strong>No need in server-side software</strong><br />
+          By default P2P Media Loader uses publicly available servers:
+        </p>
+        <ul>
+          <li>
+            STUN servers - <a
+              href="https://gist.github.com/mondain/b0ec1cf5f60ae726202e"
+              >Public STUN server list</a
+            >
+          </li>
+          <li>
+            WebTorrent trackers - <a href="https://openwebtorrent.com"
+              >https://openwebtorrent.com</a
+            >, <a href="https://tracker.novage.com.ua"
+              >https://tracker.novage.com.ua</a
+            >
+          </li>
+        </ul>
+
+        <p>
+          <strong>Privacy</strong><br />
+          For privacy reasons it is possible to run private instances of STUN server
+          and WebTorrent tracker. In this case information about the P2P network
+          and its peers will not be available to third parties.
+        </p>
+      </div>
+    </article>
+  </div>
+  <Footer />
+</Layout>

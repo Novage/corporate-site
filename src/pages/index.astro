@@ -1,0 +1,20 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/shared/Header.astro";
+import ServicesList from "../components/index-page-components/ServicesList.astro";
+import TechnologiesList from "../components/index-page-components/TechnologiesList.astro";
+import Footer from "../components/shared/Footer.astro";
+import PageHeader from "../components/shared/PageHeader.astro";
+---
+
+<Layout title="Novage">
+  <Header />
+  <div id="content">
+    <article>
+      <PageHeader title="Consulting & Full Development Cycle" />
+      <ServicesList />
+      <TechnologiesList />
+    </article>
+  </div>
+  <Footer />
+</Layout>

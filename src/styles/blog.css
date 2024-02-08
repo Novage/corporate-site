@@ -1,0 +1,109 @@
+/*Blog styles*/
+
+
+.blog .post a:link,
+.single-post a:link {
+    color: #972e2d;
+}
+
+.blog .post a:visited,
+.single-post a:visited {
+    color: #972e2d;
+}
+
+.blog .post a:hover,
+.single-post a:hover {
+    color: #d76e6d;
+}
+
+.blog .post a:active,
+.single-post a:active {
+    color: #d76e6d;
+}
+
+.blog ul {
+    list-style: none;
+    padding: 0;
+}
+
+.blog .post {
+    border-bottom: #b1b1b1 1px solid;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.blog .post .excerpt p {
+    line-height: 1.5em;
+    text-align: justify;
+}
+
+.blog .post .excerpt h2 {
+    line-height: 1.5em;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+}
+
+.blog .post a.title {
+    display: block;
+    text-decoration: none;
+    color: #333333;
+    transition: color .3s ease;
+}
+
+.blog .post a.title:hover {
+    color: #972e2d;
+}
+
+.blog .post .footer {
+    font-weight: bold;
+    font-size: .75em;
+}
+
+.single-post {
+    color: #333333;
+}
+
+.single-post p {
+    line-height: 1.5em;
+    text-align: justify;
+}
+
+.single-post li {
+    line-height: 1.5em;
+}
+
+.single-post h2 {
+    margin: 30px 0 20px;
+}
+
+.single-post img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.single-post code {
+    display: block;
+    overflow-x: auto;
+}
+
+.single-post table {
+    display: block;
+    overflow-x: auto;
+    border-collapse: collapse;
+}
+
+.single-post table th, td {
+    border: solid 1px black;
+    padding: 5px 10px;
+}
+
+.single-post table th {
+    background-color: #E0E0E0;
+}
+
+.single-post .footer {
+    text-align: right;
+    font-weight: bold;
+}
+

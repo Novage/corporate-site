@@ -1,0 +1,80 @@
+<header class="main-header">
+  <nav id="navbar" class="container">
+    <div class="toggle-wrapper">
+      <a href="/"
+        ><img
+          class="brand-logo"
+          src="/images/novage-logo.svg"
+          alt="Novage logo"
+        />
+      </a>
+      <button class="navbar-toggle" aria-label="Toggle navigation"
+        ><i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <ul class="menu">
+      <li class="menu-item arrow">
+        <a><span>P2P Media Loader</span></a>
+        <ul class="sub-menu">
+          <li class="sub-menu-item">
+            <a href="/p2p-media-loader/demo"><span>Demo</span></a>
+          </li>
+          <li class="sub-menu-item">
+            <a href="https://github.com/novage/p2p-media-loader" target="blank"
+              ><span>Source Code &amp; Documentation</span></a
+            >
+          </li>
+          <li class="sub-menu-item">
+            <a href="/p2p-media-loader/overview"><span>Overview</span></a>
+          </li>
+          <li class="sub-menu-item">
+            <a href="/p2p-media-loader/technical-overview"
+              ><span>Technical Overview</span></a
+            >
+          </li>
+          <li class="sub-menu-item">
+            <a href="https://github.com/Novage/wt-tracker" target="blank"
+              ><span>High-performance WebTorrent tracker</span></a
+            >
+          </li>
+        </ul>
+      </li>
+      <li class="menu-item">
+        <a href="/blog"><span>Blog</span></a>
+      </li>
+      <li class="menu-item arrow">
+        <a><span>Contact</span></a>
+        <ul class="sub-menu">
+          <li class="sub-menu-item"><a href="" id="email"><span></span></a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const email =
+    window.atob("bWFpbA==") +
+    window.atob("dG86Y29udGFjdA==") +
+    window.atob("QG5vdmFnZS5jb20udWE=");
+  const emailElement = document.getElementById("email") as HTMLAnchorElement;
+  emailElement.href = email;
+  emailElement.querySelector("span")!.innerHTML = email.replace("mailto:", "");
+
+  document
+    .querySelector("#navbar .navbar-toggle")
+    ?.addEventListener("click", function () {
+      const menu = document.querySelector("#navbar .menu");
+      menu?.classList.toggle("show");
+      const html = document.querySelector("html");
+      html?.classList.toggle("show");
+    });
+
+  document.querySelectorAll("#navbar .menu-item").forEach((item) =>
+    item.addEventListener("click", function () {
+      const subMenu = item.querySelector(".sub-menu");
+      subMenu?.classList.toggle("show");
+      item.classList.toggle("switch");
+    }),
+  );
+</script>
