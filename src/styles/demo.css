@@ -1,188 +1,155 @@
-/* Begin Demo styles */
-
-/*
-.container {
-    padding: 0 15px;
-    margin: 0 auto;
-}
-
-@media (min-width: 576px) {
-    .container {
-        max-width: 540px;
-    }
-}
-
-@media (min-width: 768px) {
-    .container {
-        max-width: 720px;
-    }
-}
-
-@media (min-width: 992px) {
-    .container {
-        max-width: 960px;
-    }
-}
-
-@media (min-width: 1200px) {
-    .container {
-        max-width: 1140px;
-    }
-}
-*/
-
-#main-view *, ::after, ::before {
-    box-sizing: border-box;
+#main-view *,
+::after,
+::before {
+  box-sizing: border-box;
 }
 
 #main-view .wrapper {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 #main-view .wrapper .column-1,
 #main-view .wrapper .column-2 {
-    width: 100%;
+  width: 100%;
 }
 
 @media (min-width: 768px) {
-    #main-view .wrapper .column-1 {
-        flex: 0 0 66.666667%;
-        max-width: 66.666667%;
-        padding-right: 30px;
-    }
+  #main-view .wrapper .column-1 {
+    flex: 0 0 66.666667%;
+    max-width: 66.666667%;
+    padding-right: 30px;
+  }
 
-    #main-view .wrapper .column-2 {
-        flex: 0 0 33.333333%;
-        max-width: 33.333333%;
-    }
+  #main-view .wrapper .column-2 {
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+  }
 }
 
 #video {
-    width: 100%;
+  width: 100%;
 }
 
 .embed-responsive {
-    position: relative;
-    display: block;
-    width: 100%;
-    padding: 0;
-    overflow: hidden;
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
 }
 
 #main-view .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1em;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1em;
 }
 
 #main-view .form-group label {
-    margin-bottom: .5em;
+  margin-bottom: 0.5em;
 }
 
 #main-view .form-control {
-    display: block;
-    width: 100%;
-    height: calc(2.25em + 2px);
-    padding: .375em .75em;
-    font-size: 1em;
-    line-height: 1.5em;
-    color: #495057;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: .25em;
+  display: block;
+  width: 100%;
+  height: calc(2.25em + 2px);
+  padding: 0.375em 0.75em;
+  font-size: 1em;
+  line-height: 1.5em;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25em;
 }
 
 #main-view .form-button {
-    text-align: center;
-    white-space: nowrap;
-    border: 1px solid transparent;
-    padding: .375em .75em;
-    font-size: 1em;
-    line-height: 1.5em;
-    border-radius: .25em;
-    color: #fff;
-    background-color: #972e2d;
-    border-color: #972e2d;
-    margin-bottom: 5px;
+  text-align: center;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  padding: 0.375em 0.75em;
+  font-size: 1em;
+  line-height: 1.5em;
+  border-radius: 0.25em;
+  color: #fff;
+  background-color: #972e2d;
+  border-color: #972e2d;
+  margin-bottom: 5px;
 }
 
 #main-view .form-button:hover {
-    background-color: #c60000;
-    border-color: #c60000;
+  background-color: #c60000;
+  border-color: #c60000;
 }
 
 #main-view .form-button:focus {
-    outline: none;
+  outline: none;
 }
 
 #main-view .embed-responsive::before {
-    display: block;
-    content: "";
+  display: block;
+  content: "";
 }
 
 #main-view .embed-responsive .embed-responsive-item {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
 }
 
 #main-view .embed-responsive-16by9::before {
-    padding-top: 56.25%;
+  padding-top: 56.25%;
 }
 
 #main-view #level {
-    margin-top: 2px;
-    width: auto;
-    float: right;
+  margin-top: 2px;
+  width: auto;
+  float: right;
 }
 
 #graph {
-    max-width: 100%;
-    overflow: hidden;
-    margin: 3em auto;
-    border: 1px solid #eee;
+  max-width: 100%;
+  overflow: hidden;
+  margin: 3em auto;
+  border: 1px solid #eee;
 }
 
 #chart_container {
-    position: relative;
-    margin: 3em auto;
-    padding-left: 20px;
-    max-width: 100%;
+  position: relative;
+  margin: 3em auto;
+  padding-left: 20px;
+  max-width: 100%;
 }
 
 #y_axis {
-    position: absolute;
-    top: 0;
-    width: 40px;
-    left: -20px;
+  position: absolute;
+  top: 0;
+  width: 40px;
+  left: -20px;
 }
 
 #y_axis > svg {
-    overflow: visible;
+  overflow: visible;
 }
 
 #legend {
-    position: absolute;
-    top: 20px;
-    left: 40px;
-    z-index: 1;
+  position: absolute;
+  top: 20px;
+  left: 40px;
+  z-index: 1;
 }
 
 #legend-totals {
-    position: absolute;
-    bottom: 20px;
-    left: 40px;
-    z-index: 1;
+  position: absolute;
+  bottom: 20px;
+  left: 40px;
+  z-index: 1;
 }
 
 #main-view .hide {
-    display: none;
+  display: none;
 }
-
-/* End Demo styles */
