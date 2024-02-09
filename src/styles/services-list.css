@@ -38,19 +38,19 @@
   left: 0;
 }
 
-.services .title h3 {
+.services .title h2 {
   position: relative;
   margin: 0px;
 }
 
-.services .title h3 span {
+.services .title h2 span {
   padding: 0 1em;
   background: #ffffff;
-  font-size: 1.1em;
+  font-size: 0.9em;
   white-space: nowrap;
 }
 
-.services .title h3::after {
+.services .title h2::after {
   content: "";
   display: block;
   position: absolute;
@@ -81,8 +81,8 @@
 }
 
 @media (min-width: 576px) {
-  .services .title h3 span {
-    font-size: 1.4em;
+  .services .title h2 span {
+    font-size: 1.1em;
   }
 }
 
@@ -91,11 +91,11 @@
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .services .title h3 span {
+  .services .title h2 span {
     padding: 0;
   }
 
-  .services .title h3::after {
+  .services .title h2::after {
     display: none;
   }
 
