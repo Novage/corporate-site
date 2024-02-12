@@ -120,10 +120,6 @@ body {
   align-items: center;
 }
 
-#navbar .brand-logo {
-  height: 48px;
-}
-
 #navbar .navbar-toggle {
   cursor: pointer;
   color: rgba(0, 0, 0, 0.5);
