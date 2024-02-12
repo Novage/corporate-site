@@ -1,7 +1,5 @@
 import { defineConfig } from "astro/config";
 
-import sitemap from "@astrojs/sitemap";
-
 export default defineConfig({
   build: {
     format: "preserve",
@@ -12,11 +10,5 @@ export default defineConfig({
     },
     syntaxHighlight: "shiki",
   },
-  site: "http://novage.com.ua/",
-  integrations: [
-    sitemap({
-      priority: 0.8,
-      lastmod: new Date(),
-    }),
-  ],
+  site: "https://novage.com.ua/",
 });

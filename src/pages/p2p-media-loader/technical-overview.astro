@@ -4,7 +4,7 @@ import Header from "../../components/shared/Header.astro";
 import ImageBlock from "../../components/shared/ImageBlock.astro";
 import PageHeader from "../../components/shared/PageHeader.astro";
 import Layout from "../../layouts/Layout.astro";
-import img from "../../images/p2p-media-loader-network.png";
+import img from "../../../public/images/p2p-media-loader-network.png";
 ---
 
 <Layout title="P2P Media Loader">
@@ -14,11 +14,7 @@ import img from "../../images/p2p-media-loader-network.png";
       <PageHeader htmlTitle="P2P Media Loader<br>Technical Overview" />
       <div class="page container content">
         <h2>Key components of the P2P network</h2>
-        <ImageBlock
-          imgSrc={img}
-          publicImgSrc="/images/p2p-media-loader-network.png"
-          alt="P2P Media Loader network"
-        >
+        <ImageBlock imgSrc={img} alt="P2P Media Loader network">
           <p>All the components of the P2P network are free and open-source.</p>
           <p>
             <strong>P2P Media Loader</strong> is an open-source JavaScript library

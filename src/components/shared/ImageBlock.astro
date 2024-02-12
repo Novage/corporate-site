@@ -3,17 +3,21 @@ import { Picture } from "astro:assets";
 
 interface Props {
   imgSrc: any;
-  publicImgSrc: string;
   alt: string;
 }
 
-const { imgSrc, alt, publicImgSrc } = Astro.props;
+const { imgSrc, alt } = Astro.props;
 ---
 
 <div class="image-block">
   <div class="image">
-    <a href={publicImgSrc} target="_blank"
-      ><Picture src={imgSrc} formats={["avif", "webp"]} alt={alt} /></a
+    <a href={imgSrc.src} target="_blank"
+      ><Picture
+        src={imgSrc}
+        formats={["avif", "webp"]}
+        alt={alt}
+        loading="eager"
+      /></a
     >
   </div>
   <div>
