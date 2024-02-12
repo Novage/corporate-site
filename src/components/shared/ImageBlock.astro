@@ -1,6 +1,8 @@
 ---
+import { Picture } from "astro:assets";
+
 interface Props {
-  imgSrc: string;
+  imgSrc: any;
   alt: string;
 }
 
@@ -9,7 +11,14 @@ const { imgSrc, alt } = Astro.props;
 
 <div class="image-block">
   <div class="image">
-    <a href={imgSrc} target="_blank"><img src={imgSrc} alt={alt} /></a>
+    <a href={imgSrc.src} target="_blank"
+      ><Picture
+        src={imgSrc}
+        formats={["avif", "webp"]}
+        alt={alt}
+        loading="eager"
+      /></a
+    >
   </div>
   <div>
     <slot />

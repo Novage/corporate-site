@@ -4,6 +4,7 @@ import Header from "../../components/shared/Header.astro";
 import ImageBlock from "../../components/shared/ImageBlock.astro";
 import PageHeader from "../../components/shared/PageHeader.astro";
 import Layout from "../../layouts/Layout.astro";
+import img from "../../../public/images/p2p-assisted-media-delivery.png";
 ---
 
 <Layout title="P2P Media Loader">
@@ -12,10 +13,7 @@ import Layout from "../../layouts/Layout.astro";
     <article>
       <PageHeader htmlTitle="P2P Media Loader<br/> Overview" />
       <div class="page container content">
-        <ImageBlock
-          imgSrc="/images/p2p-assisted-media-delivery.png"
-          alt="P2P assisted media delivery"
-        >
+        <ImageBlock imgSrc={img} alt="P2P assisted media delivery">
           <p>
             <strong>P2P Media Loader</strong> is an open-source JavaScript library
             that uses features of modern web browsers (i.e. HTML5 video and WebRTC)
