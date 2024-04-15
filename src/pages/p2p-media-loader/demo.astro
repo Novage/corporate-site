@@ -3,7 +3,7 @@ import Footer from "../../components/shared/Footer.astro";
 import Header from "../../components/shared/Header.astro";
 import PageHeader from "../../components/shared/PageHeader.astro";
 import Layout from "../../layouts/Layout.astro";
-import { DemoComponent } from "p2p-media-loader-demo";
+import { P2PVideoDemo } from "p2p-media-loader-demo";
 ---
 
 <Layout title="P2P Media Loader">
@@ -12,7 +12,7 @@ import { DemoComponent } from "p2p-media-loader-demo";
   <div id="content">
     <article>
       <PageHeader htmlTitle="P2P Media Loader<br>Demo" />
-      <DemoComponent debugToolsEnabled={false} client:only="react" />
+      <P2PVideoDemo debugToolsEnabled={false} client:only="react" />
     </article>
   </div>
 </Layout>
