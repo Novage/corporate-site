@@ -16,7 +16,7 @@
     "@types/react": "^18.2.75",
     "@types/react-dom": "^18.2.24",
     "astro": "^4.5.18",
-    "p2p-media-loader-demo": "file:../p2p-media-loader/packages/p2p-media-loader-demo/p2p-media-loader-demo-0.0.0.tgz",
+    "p2p-media-loader-demo": "^1.0.0-beta.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.4.5"
