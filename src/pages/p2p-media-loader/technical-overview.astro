@@ -30,8 +30,9 @@ import img from "../../../public/images/p2p-media-loader-network.png";
               peers
             </li>
             <li>
-              <strong>Media Source Extensions</strong> are required by Hls.js and
-              Shaka Player engines for media playback
+              <strong>Media Source Extensions</strong> or <strong
+                >Managed Media Source</strong
+              > are required by Hls.js and Shaka Player engines for media playback
             </li>
           </ul>
           <p>
@@ -52,11 +53,15 @@ import img from "../../../public/images/p2p-media-loader-network.png";
             signaling and to create swarms of peers that download the same media
             stream. Few running public trackers are available:
             <a href="https://openwebtorrent.com/">https://openwebtorrent.com/</a
-            >. It is possible to run personal WebTorrent tracker using
-            open-source implementations: <a
+            >, <a href="https://tracker.webtorrent.dev/"></a>. It is possible to
+            run personal WebTorrent tracker using open-source implementations: <a
               href="https://github.com/webtorrent/bittorrent-tracker"
               >bittorrent-tracker</a
-            >, <a href="https://github.com/Novage/wt-tracker">wt-tracker</a>.
+            >, <a href="https://github.com/Novage/wt-tracker">wt-tracker</a>,
+            <a href="https://github.com/greatest-ape/aquatic">Aquatic</a>,
+            <a href="https://github.com/OpenWebTorrent/openwebtorrent-tracker"
+              >OpenWebtorrent Tracker</a
+            >.
           </p>
         </ImageBlock>
 
@@ -93,59 +98,15 @@ import img from "../../../public/images/p2p-media-loader-network.png";
           From time to time random peers from the P2P swarm download new
           segments over HTTP(S) and share them to others over P2P.
         </p>
-        <h2>Limitations</h2>
-        <p>
-          Only one media track is delivered over P2P. If video and audio tracks
-          in HLS or MPEG-DASH go separately, just video is going to be shared
-          over the P2P network.
-        </p>
         <h2>Web browsers support</h2>
-        <table class="browsers-table">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Chrome</th>
-              <th>Firefox</th>
-              <th>macOS Safari</th>
-              <th>iPadOS Safari (iPad)</th>
-              <th>iOS Safari (iPhone)</th>
-              <th>IE</th>
-              <th>Edge</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>WebRTC Data Channels</td>
-              <td>+</td>
-              <td>+</td>
-              <td>+</td>
-              <td>+</td>
-              <td>+</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>Media Source Extensions</td>
-              <td>+</td>
-              <td>+</td>
-              <td>+</td>
-              <td>+</td>
-              <td>-</td>
-              <td>+</td>
-              <td>+</td>
-            </tr>
-            <tr>
-              <td><strong>P2P Media Loader</strong></td>
-              <td><strong>+</strong></td>
-              <td><strong>+</strong></td>
-              <td><strong>+</strong></td>
-              <td><strong>+</strong></td>
-              <td><strong>-</strong></td>
-              <td><strong>-</strong></td>
-              <td><strong>-</strong></td>
-            </tr>
-          </tbody>
-        </table>
+        <ul>
+          <li>Chrome</li>
+          <li>Firefox</li>
+          <li>macOS Safari</li>
+          <li>iPadOS Safari (iPad)</li>
+          <li>iOS Safari (iPhone, iOS version 17.1+)</li>
+          <li>Edge</li>
+        </ul>
       </div>
     </article>
   </div>
