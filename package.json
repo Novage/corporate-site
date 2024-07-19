@@ -11,19 +11,19 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.7.0",
+    "@astrojs/check": "^0.8.2",
     "@astrojs/react": "^3.6.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "astro": "^4.11.3",
-    "p2p-media-loader-demo": "^1.0.0",
+    "astro": "^4.12.1",
+    "p2p-media-loader-demo": "^1.0.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.3"
   },
   "devDependencies": {
-    "prettier": "^3.3.2",
-    "prettier-plugin-astro": "^0.14.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-astro": "^0.14.1",
     "vite-plugin-node-polyfills": "^0.22.0"
   }
 }
