@@ -61,7 +61,7 @@ For MPEG-DASH video:
 </script>
 ```
 
-You can find [the full example](https://github.com/Novage/p2p-media-loader/tree/master/p2p-media-loader-hlsjs#basic-usage) as well as examples for other players in the [GitHub](https://github.com/Novage/p2p-media-loader/) repository of the project.
+You can find the full example as well as examples for other players in the [GitHub](https://github.com/Novage/p2p-media-loader/) repository of the project.
 
 Now you can lean back and enjoy your P2P video streaming.
 
