@@ -14,17 +14,16 @@ const { title } = Astro.props;
     <meta charset="utf-8" />
     <link
       rel="preload"
-      href="https://fonts.gstatic.com/s/titilliumweb/v7/NaPecZTIAOhVxoMyOr9n_E7fdMPmDQ.woff2"
+      href="/fonts/gstatic-TitilliumWeb-Regular.woff2"
       as="font"
       crossorigin
     />
     <link
       rel="preload"
-      href="https://use.fontawesome.com/releases/v5.9.0/webfonts/fa-solid-900.woff2"
+      href="/fonts/fa-solid-900.woff2"
       as="font"
       crossorigin
     />
-    <link rel="preconnect" href="https://www.google-analytics.com" />
     <link
       rel="icon"
       type="image/png"
@@ -47,10 +46,7 @@ const { title } = Astro.props;
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <script
-      async
-      is:inline
-      src="https://www.googletagmanager.com/gtag/js?id=G-8XFLFKSSL7"></script>
+
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
 
@@ -60,6 +56,13 @@ const { title } = Astro.props;
 
       gtag("js", new Date());
       gtag("config", "G-8XFLFKSSL7");
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const script = document.createElement("script");
+        script.src = "https://www.googletagmanager.com/gtag/js?id=G-8XFLFKSSL7";
+        script.async = true;
+        document.head.appendChild(script);
+      });
     </script>
 
     <meta
