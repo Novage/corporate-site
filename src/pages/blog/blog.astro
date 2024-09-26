@@ -7,11 +7,11 @@ import Layout from "../../layouts/Layout.astro";
 import "../../styles/blog.css";
 
 const posts = (await getCollection("blog")).sort(
-  (a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf(),
+  (a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf()
 );
 ---
 
-<Layout title="Novage Blog">
+<Layout title="Novage Blog" canonical="https://novage.com.ua/blog">
   <Header />
   <div id="content">
     <article>
