@@ -6,7 +6,7 @@ import Layout from "../../layouts/Layout.astro";
 import "../../styles/blog.css";
 
 const post = Astro.props.frontmatter ?? Astro.props;
-const canonicalUrl = `https://example.com/blog/${post.title}`;
+const canonicalUrl = `https://novage.com.ua/blog/${post.slug}`;
 ---
 
 <Layout title={post.title} canonical={canonicalUrl}>
