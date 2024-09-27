@@ -8,7 +8,7 @@ import { P2PVideoDemo } from "p2p-media-loader-demo";
 
 <link
   rel="stylesheet"
-  href="/_astro/_astro-entry_p2p-media-loader-demo.BMEc0IOl.css"
+  href="/_astro/_astro-entry_p2p-media-loader-demo.B-G3FOe6.css"
 />
 
 <Layout
@@ -20,7 +20,11 @@ import { P2PVideoDemo } from "p2p-media-loader-demo";
   <div id="content">
     <article>
       <PageHeader htmlTitle="P2P Media Loader<br>Demo" />
-      <P2PVideoDemo debugToolsEnabled={false} client:only="react" />
+      <P2PVideoDemo
+        debugToolsEnabled={false}
+        streamUrl="https://fcc3ddae59ed.us-west-2.playback.live-video.net/api/video/v1/us-west-2.893648527354.channel.DmumNckWFTqz.m3u8"
+        client:only="react"
+      />
     </article>
   </div>
 </Layout>
