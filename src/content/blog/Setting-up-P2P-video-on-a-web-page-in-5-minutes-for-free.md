@@ -1,4 +1,5 @@
 ---
+canonicalURL: https://novage.com.ua/blog/setting-up-p2p-video-on-a-web-page-in-5-minutes-for-free
 author: Andriy Lysnevych
 date: "2019-03-22"
 title: "Setting up p2p video on a web page in 5 minutes for free"
