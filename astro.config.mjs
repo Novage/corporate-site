@@ -5,7 +5,11 @@ import react from "@astrojs/react";
 // https://astro.build/config
 export default defineConfig({
   vite: {
-    plugins: [nodePolyfills()],
+    plugins: [
+      nodePolyfills({
+        exclude: ["path"],
+      }),
+    ],
   },
   build: {
     format: "preserve",
