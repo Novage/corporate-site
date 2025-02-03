@@ -3,27 +3,29 @@ canonicalURL: https://novage.com.ua/blog/setting-up-P2P-video-in-mobile-app-for-
 author: Dmytro Demchenko
 date: "2025-01-29"
 title: "Integrate P2P Video streaming into Mobile Applications: Native Android and Flutter Approaches"
-description: "In this article you can find ways how to set up Mobile P2P Video streaming"
+description: "Discover how to integrate P2P Media Loader into your mobile applications to achieve scalable, cost-efficient video streaming. This article explores two practical approaches — Native Android and Flutter — to leverage peer-to-peer (P2P) streaming technology powered by WebRTC. Learn step-by-step integration techniques, review the pros and cons of each method."
 ---
 
-In today’s digital age, video streaming has become an integral part of mobile applications, from social media platforms to on-demand entertainment services. However, delivering high-quality video content efficiently and cost-effectively remains a significant challenge. Traditional Content Delivery Networks (CDNs) often incur substantial bandwidth costs and can struggle with scalability as your user base grows.
+In today’s rapidly evolving digital landscape, delivering high-quality video content seamlessly and cost-effectively is essential for modern mobile applications. Traditional Content Delivery Networks (CDNs) often face scalability challenges and incur significant bandwidth costs, especially as user bases grow. This is where Peer-to-Peer (P2P) streaming technology steps in.
 
-Enter Peer-to-Peer (P2P) Streaming Technology. Leveraging the power of WebRTC and peer-to-peer connections, [P2P Media Loader](https://github.com/novage/p2p-media-loader) offers an efficient approach to video streaming. By enabling users to share video data directly with each other, P2P Media Loader reduces reliance on CDNs, leading to lower bandwidth costs, enhanced streaming performance, and improved scalability—crucial benefits as more users access content via mobile devices.
+P2P streaming leverages WebRTC to enable devices to share video data directly with one another, thereby reducing the load on centralized servers. This approach not only cuts down bandwidth expenses but also enhances streaming performance and scalability. Whether you're developing an on-demand video service, or live-streaming platform, P2P streaming offers a robust alternative that can lead to smoother playback experiences and lower operational costs.
 
-**Important Note:** P2P (WebRTC) may not connect to the outer world if it runs on Android emulators due to its virtual machine [network configuration](https://developer.android.com/studio/run/emulator-networking) (NAT). Please test P2P connectivity on real devices.
+Enter Peer-to-Peer (P2P) Streaming Technology with [P2P Media Loader](https://github.com/Novage/p2p-media-loader) — an open-source JavaScript library that leverages modern web browser features to enable media delivery over peer-to-peer (P2P) connections. The library enables the creation of a huge P2P mesh networks, also known as peer-to-peer content delivery network (P2P CDN), peer-to-peer television (P2PTV), and Enterprise Content Delivery Network (eCDN), which allows traffic sharing among users who are simultaneously viewing the same live or video on demand (VOD) stream via HLS or MPEG-DASH protocols.
+
+In this article, we will show you how to integrate P2P Media Loader into your mobile application. Integrations are fully compatible with web-based solutions, meaning that if you have both web and mobile integrations, your users can share traffic across platforms when watching the same content. As a result, you'll build a larger network of peers, save more on traffic costs, and enjoy enhanced streaming performance.
 
 ## Native Android (Kotlin)
 
 **Pros:**
 
 - **Seamless Integration with Android Ecosystem:** Direct access to Android-specific APIs and features, enabling more comprehensive customization and functionality.
-- **Better Control Over Media Playback:** Utilizing libraries like ExoPlayer offers robust control over media streaming, buffering, and caching mechanisms.
+- **Better Control Over Media Playback:** Native players like ExoPlayer offer better control over media streaming.
 - **Access to Latest Android Features:** Native development ensures immediate access to the latest Android platform updates and features without waiting for framework support.
 
 **Cons:**
 
 - **Platform-Specific:** The native approach is limited to Android.
-- **Dependency on WebView:** Integrating P2P via WebView may introduce potential performance bottlenecks.
+- **Dependency on WebView:** The library internally relies on WebView, it may introduce performance overhead.
 
 In this section, we introduce our [Kotlin library](https://github.com/Novage/p2p-media-loader-mobile) designed to leverage the capabilities of [P2P Media Loader](https://github.com/novage/p2p-media-loader) and WebRTC for efficient peer-to-peer streaming.
 
@@ -220,7 +222,7 @@ More examples are available in the library [repository](https://github.com/Novag
 
 - **Dependency on WebView:** Integrating P2P via WebView may introduce potential performance bottlenecks.
 
-The Flutter integration approach uses a **WebView** that contains a video player with P2P Media Loader integration. Below is a more detailed breakdown for clarity and maintainability:
+The Flutter integration approach uses a WebView that contains a video player with P2P Media Loader integration. Below is a more detailed breakdown for clarity and maintainability:
 
 To setup a video player with P2P Media Loader using webview you need:
 
@@ -357,6 +359,22 @@ class MainApp extends StatelessWidget {
 
 ## Testing P2P with Other Peers
 
+**Important Note:** P2P (WebRTC) may not connect to the outer world if it runs on Android emulators due to its virtual machine [network configuration](https://developer.android.com/studio/run/emulator-networking) (NAT). Please test P2P connectivity on real devices.
+
 After integrating the P2P Media Loader into your Flutter application, it's crucial to verify that the peer-to-peer connections are functioning as intended.
 
 The simpliest way to test is to run the application with integrated P2P on a real device and open our [demo](https://novage.com.ua/p2p-media-loader/demo) with same manifest url.
+
+**For Production Use:**
+
+- Setting up a production WebTorrent tracker.
+- Customizing RTC configurations to suit your network conditions.
+- Specifying other configuration parameters such as **swarmId** and other settings required for optimal performance,
+
+For detailed guidance on production configurations and advanced customizations options, please refer to our [documentation](https://novage.github.io/p2p-media-loader/docs/latest/).
+
+## Conclusion
+
+Integrating P2P Media Loader into your mobile application opens the door to a more scalable, cost-efficient, and robust video streaming solution. By leveraging WebRTC and peer-to-peer connections, you can reduce the dependency on traditional CDNs, lower bandwidth costs, and enhance the overall streaming experience for your users.
+
+We encourage you to experiment with these integration techniques, explore real-world scenarios, and tailor the solutions to best fit your project’s needs. For additional examples, troubleshooting tips, and community support, please refer to our [GitHub repositories](https://github.com/Novage) and join the ongoing discussions. If you encounter any issues, have suggestions for improvement, or discover bugs, don't hesitate to report them on our GitHub issue tracker. Your feedback is invaluable in helping us enhance the P2P Media Loader experience for everyone.
