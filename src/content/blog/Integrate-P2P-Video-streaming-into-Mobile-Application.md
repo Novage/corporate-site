@@ -2,17 +2,162 @@
 canonicalURL: https://novage.com.ua/blog/setting-up-P2P-video-in-mobile-app-for-free
 author: Dmytro Demchenko
 date: "2025-01-29"
-title: "Integrate P2P Video streaming into Mobile Applications: Native Android and Flutter Approaches"
+title: "Integrate P2P Video Streaming into Mobile Applications: Native Android and Flutter Approaches"
 description: "Discover how to integrate P2P Media Loader into your mobile applications to achieve scalable, cost-efficient video streaming. This article explores two practical approaches — Native Android and Flutter — to leverage peer-to-peer (P2P) streaming technology powered by WebRTC. Learn step-by-step integration techniques, review the pros and cons of each method."
 ---
 
 In today’s rapidly evolving digital landscape, delivering high-quality video content seamlessly and cost-effectively is essential for modern mobile applications. Traditional Content Delivery Networks (CDNs) often face scalability challenges and incur significant bandwidth costs, especially as user bases grow. This is where Peer-to-Peer (P2P) streaming technology steps in.
 
-P2P streaming leverages WebRTC to enable devices to share video data directly with one another, thereby reducing the load on centralized servers. This approach not only cuts down bandwidth expenses but also enhances streaming performance and scalability. Whether you're developing an on-demand video service, or live-streaming platform, P2P streaming offers a robust alternative that can lead to smoother playback experiences and lower operational costs.
+P2P streaming enable devices to share video data directly with one another, thereby reducing the load on centralized servers. This approach not only cuts down bandwidth expenses but also enhances streaming performance and scalability. Whether you're developing an on-demand video service, or live-streaming platform, P2P streaming offers a robust alternative that can lead to smoother playback experiences and lower operational costs.
 
-Enter Peer-to-Peer (P2P) Streaming Technology with [P2P Media Loader](https://github.com/Novage/p2p-media-loader) — an open-source JavaScript library that leverages modern web browser features to enable media delivery over peer-to-peer (P2P) connections. The library enables the creation of a huge P2P mesh networks, also known as peer-to-peer content delivery network (P2P CDN), peer-to-peer television (P2PTV), and Enterprise Content Delivery Network (eCDN), which allows traffic sharing among users who are simultaneously viewing the same live or video on demand (VOD) stream via HLS or MPEG-DASH protocols.
+Enter Peer-to-Peer Streaming Technology with [P2P Media Loader](https://github.com/Novage/p2p-media-loader) — an open-source JavaScript library that leverages modern web browser features to enable media delivery over peer-to-peer connections. The library enables the creation of a huge P2P mesh networks, also known as peer-to-peer content delivery network (P2P CDN), peer-to-peer television (P2PTV), and Enterprise Content Delivery Network (eCDN), which allows traffic sharing among users who are simultaneously viewing the same live or video on demand (VOD) stream via HLS or MPEG-DASH protocols.
 
-In this article, we will show you how to integrate P2P Media Loader into your mobile application. Integrations are fully compatible with web-based solutions, meaning that if you have both web and mobile integrations, your users can share traffic across platforms when watching the same content. As a result, you'll build a larger network of peers, save more on traffic costs, and enjoy enhanced streaming performance.
+In this article, we will showcase the available integration samples for both iOS and Android, demonstrating how to leverage P2P Media Loader in your mobile applications. Integrations are fully compatible with web-based integration, meaning that whether your users are on the web, iOS, or Android, they all become part of a single, unified P2P network. As a result, traffic is shared more efficiently across platforms, leading to a larger network of peers, reduced traffic costs, and enhanced streaming performance.
+
+## Flutter Integration (iOS and Android)
+
+**Pros:**
+
+- **Cross-Platform Capability:** Write once, deploy on both Android and iOS, reducing development time and effort for multi-platform support.
+
+**Cons:**
+
+- **Dependency on WebView:** Integrating P2P via WebView may introduce potential performance bottlenecks.
+
+The Flutter integration approach uses a WebView that contains a video player with P2P Media Loader integration. Below is a more detailed breakdown for clarity and maintainability:
+
+To setup a video player with P2P Media Loader using webview you need:
+
+### 1. Add the WebView Dependency
+
+We'll use [InAppWebView](https://inappwebview.dev/docs/webview/in-app-webview/) in our Flutter example. Update your **pubspec.yaml** with:
+
+```yaml
+dependencies:
+  flutter_inappwebview: ^6.1.5
+```
+
+### 2. Prepare an HTML File with a Player & P2P Media Loader
+
+We need an HTML file that includes:
+
+- A video player (in this example, the Vidstack player with HLS.js).
+- P2P Media Loader to enable peer-to-peer streaming.
+
+Below is a minimal example of an index.html file you can store in your project’s assets folder. This file uses the Vidstack player and configures the P2P engine if it’s supported on the device.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="importmap">
+      {
+        "imports": {
+          "p2p-media-loader-core": "https://cdn.jsdelivr.net/npm/p2p-media-loader-core@^2/dist/p2p-media-loader-core.es.min.js",
+          "p2p-media-loader-hlsjs": "https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@^2/dist/p2p-media-loader-hlsjs.es.min.js"
+        }
+      }
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.vidstack.io/player/theme.css" />
+    <link rel="stylesheet" href="https://cdn.vidstack.io/player/video.css" />
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@~1/dist/hls.min.js"></script>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="player"></div>
+  </body>
+
+  <script type="module">
+    import {
+      VidstackPlayer,
+      VidstackPlayerLayout,
+    } from "https://cdn.vidstack.io/player";
+
+    const isP2PSupported =
+      HTMLScriptElement.supports("importmap") && Hls.isSupported();
+
+    let HlsWithP2P;
+    if (isP2PSupported) {
+      const { HlsJsP2PEngine } = await import("p2p-media-loader-hlsjs");
+      HlsWithP2P = HlsJsP2PEngine.injectMixin(window.Hls);
+    }
+
+    const player = await VidstackPlayer.create({
+      target: "#player",
+      src: "https://fcc3ddae59ed.us-west-2.playback.live-video.net/api/video/v1/us-west-2.893648527354.channel.DmumNckWFTqz.m3u8",
+      crossOrigin: true,
+      playsInline: true,
+      layout: new VidstackPlayerLayout(),
+    });
+
+    player.addEventListener("provider-change", (event) => {
+      const provider = event.detail;
+      if (provider?.type === "hls") {
+        provider.library = HlsWithP2P;
+      }
+    });
+  </script>
+</html>
+```
+
+In your project’s root pubspec.yaml, ensure that the HTML file is declared as an asset:
+
+```yml
+flutter:
+  assets:
+    - assets/index.html
+```
+
+**Note:** You can also host this HTML file remotely on a CDN or your own server and load it by URL.
+
+### 3. Create a Flutter Widget with InAppWebView
+
+Below is an example of how to create a simple widget that loads your index.html into the InAppWebView:
+
+```dart
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
+
+  void _onWebViewCreated(InAppWebViewController controller) {
+    // Load the HTML file from the asset path
+    controller.loadFile(assetFilePath: 'assets/index.html');
+
+    // or Load the HTML file from URL
+    // controller.loadUrl(
+    //   urlRequest: URLRequest(url: WebUri('https://example.com')));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+          body: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: InAppWebView(
+                initialSettings: InAppWebViewSettings(
+                  javaScriptEnabled: true,
+                  allowsInlineMediaPlayback: true,
+                  allowUniversalAccessFromFileURLs: true,
+                  mediaPlaybackRequiresUserGesture: false,
+                  // Enable to debug WebView
+                  isInspectable: true,
+                ),
+                onWebViewCreated: _onWebViewCreated,
+              ))),
+    );
+  }
+}
+```
+
+**For a more extensive example that gathers P2P engine stats and manages P2P state according to app lifecycle, see our [P2P Media Loader Flutter Demo](https://github.com/Novage/p2p-media-loader-flutter-demo)**
 
 ## Native Android (Kotlin)
 
@@ -35,7 +180,7 @@ Our native Android library is crafted in Kotlin and is fully compatible with [Ex
 
 ![Kotlin Library Architecture](../../assets/kotlin-diagram.png)
 
-Inside the library we launch embedded server that will respond on players request. To setup P2P Media Loader we decided to use a WebView without binding to a view. The approach with WebView allows us to maintain the same codebase across different platforms. Moreover, with our approach there is no need to write custom WebRTC implementation for Native Android, since in WebView we already have WebRTC. This means that our WEB integration of P2P Media Loader is fully compatible with Native Android integration, as a result consumers may have a bigger mesh of peers to efficiently transfer traffic between each other.
+Inside the library we launch embedded HTTP server that will respond on players request. To setup P2P Media Loader we decided to use an off-screen WebView. This approach is lightweight because WebView is a part of OS and no need to bundle external libraries. Additionally, this means that our WEB integration of P2P Media Loader is fully compatible with Native Android integration, as a result consumers may have a bigger mesh of peers to efficiently transfer traffic between each other.
 
 **Note:** The library is in development, so the API might be changed by the time.
 
@@ -210,152 +355,7 @@ class MainActivity : ComponentActivity() {
 }
 ```
 
-More examples are available in the library [repository](https://github.com/Novage/p2p-media-loader-mobile)
-
-## Flutter Integration
-
-**Pros:**
-
-- **Cross-Platform Capability:** Write once, deploy on both Android and iOS, reducing development time and effort for multi-platform support.
-
-**Cons:**
-
-- **Dependency on WebView:** Integrating P2P via WebView may introduce potential performance bottlenecks.
-
-The Flutter integration approach uses a WebView that contains a video player with P2P Media Loader integration. Below is a more detailed breakdown for clarity and maintainability:
-
-To setup a video player with P2P Media Loader using webview you need:
-
-### 1. Add the WebView Dependency
-
-We'll use [InAppWebView](https://inappwebview.dev/docs/webview/in-app-webview/) in our Flutter example. Update your **pubspec.yaml** with:
-
-```yaml
-dependencies:
-  flutter_inappwebview: ^6.1.5
-```
-
-### 2. Prepare an HTML File with a Player & P2P Media Loader
-
-We need an HTML file that includes:
-
-- A video player (in this example, the Vidstack player with HLS.js).
-- P2P Media Loader to enable peer-to-peer streaming.
-
-Below is a minimal example of an index.html file you can store in your project’s assets folder. This file uses the Vidstack player and configures the P2P engine if it’s supported on the device.
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <script type="importmap">
-      {
-        "imports": {
-          "p2p-media-loader-core": "https://cdn.jsdelivr.net/npm/p2p-media-loader-core@^2/dist/p2p-media-loader-core.es.min.js",
-          "p2p-media-loader-hlsjs": "https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@^2/dist/p2p-media-loader-hlsjs.es.min.js"
-        }
-      }
-    </script>
-
-    <link rel="stylesheet" href="https://cdn.vidstack.io/player/theme.css" />
-    <link rel="stylesheet" href="https://cdn.vidstack.io/player/video.css" />
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@~1/dist/hls.min.js"></script>
-
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="player"></div>
-  </body>
-
-  <script type="module">
-    import {
-      VidstackPlayer,
-      VidstackPlayerLayout,
-    } from "https://cdn.vidstack.io/player";
-
-    const isP2PSupported =
-      HTMLScriptElement.supports("importmap") && Hls.isSupported();
-
-    let HlsWithP2P;
-    if (isP2PSupported) {
-      const { HlsJsP2PEngine } = await import("p2p-media-loader-hlsjs");
-      HlsWithP2P = HlsJsP2PEngine.injectMixin(window.Hls);
-    }
-
-    const player = await VidstackPlayer.create({
-      target: "#player",
-      src: "https://fcc3ddae59ed.us-west-2.playback.live-video.net/api/video/v1/us-west-2.893648527354.channel.DmumNckWFTqz.m3u8",
-      crossOrigin: true,
-      playsInline: true,
-      layout: new VidstackPlayerLayout(),
-    });
-
-    player.addEventListener("provider-change", (event) => {
-      const provider = event.detail;
-      if (provider?.type === "hls") {
-        provider.library = HlsWithP2P;
-      }
-    });
-  </script>
-</html>
-```
-
-In your project’s root pubspec.yaml, ensure that the HTML file is declared as an asset:
-
-```yml
-flutter:
-  assets:
-    - assets/index.html
-```
-
-**Note:** You can also host this HTML file remotely on a CDN or your own server and load it by URL.
-
-### 3. Create a Flutter Widget with InAppWebView
-
-Below is an example of how to create a simple widget that loads your index.html into the InAppWebView:
-
-```dart
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
-  void _onWebViewCreated(InAppWebViewController controller) {
-    // Load the HTML file from the asset path
-    controller.loadFile(assetFilePath: 'assets/index.html');
-
-    // or Load the HTML file from URL
-    // controller.loadUrl(
-    //   urlRequest: URLRequest(url: WebUri('https://example.com')));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          body: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: InAppWebView(
-                initialSettings: InAppWebViewSettings(
-                  javaScriptEnabled: true,
-                  allowsInlineMediaPlayback: true,
-                  allowUniversalAccessFromFileURLs: true,
-                  mediaPlaybackRequiresUserGesture: false,
-                  // Enable to debug WebView
-                  isInspectable: true,
-                ),
-                onWebViewCreated: _onWebViewCreated,
-              ))),
-    );
-  }
-}
-```
-
-**For a more extensive example that gathers P2P engine stats and manages P2P state according to app lifecycle, see our [P2P Media Loader Flutter Demo](https://github.com/Novage/p2p-media-loader-flutter-demo)**
+**More examples are available in the library's [repository](https://github.com/Novage/p2p-media-loader-mobile)**
 
 ## Testing P2P with Other Peers
 
@@ -369,9 +369,9 @@ The simpliest way to test is to run the application with integrated P2P on a rea
 
 - Setting up a production WebTorrent tracker.
 - Customizing RTC configurations to suit your network conditions.
-- Specifying other configuration parameters such as **swarmId** and other settings required for optimal performance,
+- Specifying other configuration parameters such as **swarmId** and other settings required for optimal performance.
 
-For detailed guidance on production configurations and advanced customizations options, please refer to our [documentation](https://novage.github.io/p2p-media-loader/docs/latest/).
+For detailed guidance on production configurations and advanced customizations options, please refer to our [GitHub](https://github.com/Novage) and [documentation](https://novage.github.io/p2p-media-loader/docs/latest/).
 
 ## Conclusion
 
