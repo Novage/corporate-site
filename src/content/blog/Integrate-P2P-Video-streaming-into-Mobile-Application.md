@@ -175,7 +175,6 @@ Under the hood, it runs the P2P Media Loader within a hidden WebView and uses a 
 
 - **Seamless Integration with Android Ecosystem:** Direct access to Android-specific APIs and features, enabling more comprehensive customization and functionality.
 
-
 **Cons:**
 
 - **Platform-Specific:** The native approach is limited to Android.
