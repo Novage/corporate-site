@@ -1,7 +1,7 @@
 ---
 canonicalURL: https://novage.com.ua/blog/integrate-p2p-video-streaming-into-mobile-applications
 author: Dmytro Demchenko
-date: "2025-01-29"
+date: "2025-02-07"
 title: "Integrate P2P Video Streaming into Mobile Applications"
 description: "Discover how to integrate P2P Media Loader into Android and iOS applications to achieve scalable, cost-efficient video streaming. This article explores two practical approaches — Native Android and Flutter — to leverage peer-to-peer (P2P) streaming technology powered by WebRTC. Learn step-by-step integration techniques, and review the pros and cons of each method."
 ---
@@ -161,9 +161,9 @@ class MainApp extends StatelessWidget {
 }
 ```
 
-**For a more extensive example that gathers P2P engine stats and manages P2P state according to app lifecycle, see our [P2P Media Loader Flutter Demo](https://github.com/Novage/p2p-media-loader-flutter-demo)**
+For a more extensive example that gathers P2P engine stats and manages P2P state according to app lifecycle, check our [P2P Media Loader Flutter Demo](https://github.com/Novage/p2p-media-loader-flutter-demo).
 
-## Native Android (Kotlin)
+## Native Android
 
 In this section, we introduce our [native Android library](https://github.com/Novage/p2p-media-loader-mobile) fully compatible with [ExoPlayer](https://exoplayer.dev/), one of the most popular media players for Android. The library is also designed to support other media players with minimal adjustments.
 
@@ -179,7 +179,10 @@ Under the hood, it runs the P2P Media Loader within a hidden WebView and uses a 
 
 - **Platform-Specific:** The native approach is limited to Android.
 
-**Note:** The library is in active development, so the API might be changed by the time.
+- **HLS only:** The integration is currently limeted to HLS and doesn't support MPEG-DASH streams.
+
+
+**Note:** The library is in active development, so the API and features might be changed by the time.
 
 To setup ExoPlayer with peer-to-peer streaming you need:
 
@@ -354,13 +357,13 @@ class MainActivity : ComponentActivity() {
 }
 ```
 
-**More examples are available in the library's [repository](https://github.com/Novage/p2p-media-loader-mobile)**
+More examples are available in the library's [repository](https://github.com/Novage/p2p-media-loader-mobile).
 
 ## Testing P2P
 
-**Important Note:** P2P (WebRTC) may not connect to the outer world if it runs on Android emulators due to its virtual machine [network configuration](https://developer.android.com/studio/run/emulator-networking) (NAT). Please test P2P connectivity on real devices.
+P2P (WebRTC) may not connect to the outer world if it runs on Android emulator or iOS simulator due to [network configuration](https://developer.android.com/studio/run/emulator-networking) (NAT). Please test P2P connectivity on real devices.
 
-The simpliest way to test is to run the application with integrated P2P on a real device and open our [web demo](https://novage.com.ua/p2p-media-loader/demo) with same manifest url.
+The simpliest way to test is to run an application with integrated P2P on a real device and open our [web demo](https://novage.com.ua/p2p-media-loader/demo) with same video URL.
 
 ## Conclusion
 
