@@ -1,9 +1,9 @@
 ---
-canonicalURL: https://novage.com.ua/blog/setting-up-P2P-video-in-mobile-app-for-free
+canonicalURL: https://novage.com.ua/blog/integrate-p2p-video-streaming-into-mobile-applications
 author: Dmytro Demchenko
 date: "2025-01-29"
-title: "Integrate P2P Video Streaming into Mobile Applications: Native Android and Flutter Approaches"
-description: "Discover how to integrate P2P Media Loader into your mobile applications to achieve scalable, cost-efficient video streaming. This article explores two practical approaches — Native Android and Flutter — to leverage peer-to-peer (P2P) streaming technology powered by WebRTC. Learn step-by-step integration techniques, review the pros and cons of each method."
+title: "Integrate P2P Video Streaming into Mobile Applications"
+description: "Discover how to integrate P2P Media Loader into Android and iOS applications to achieve scalable, cost-efficient video streaming. This article explores two practical approaches — Native Android and Flutter — to leverage peer-to-peer (P2P) streaming technology powered by WebRTC. Learn step-by-step integration techniques, and review the pros and cons of each method."
 ---
 
 In today’s rapidly evolving digital landscape, delivering high-quality video content seamlessly and cost-effectively is essential for modern mobile applications. Traditional Content Delivery Networks (CDNs) often face scalability challenges and incur significant bandwidth costs, especially as user bases grow. This is where Peer-to-Peer (P2P) streaming technology steps in.
