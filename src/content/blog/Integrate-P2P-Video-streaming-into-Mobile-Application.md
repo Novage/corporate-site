@@ -1,14 +1,14 @@
 ---
 canonicalURL: https://novage.com.ua/blog/integrate-p2p-video-streaming-into-mobile-applications
-author: Dmytro Demchenko
+author: Dmytro Demchenko, Andriy Lysnevych
 date: "2025-02-07"
 title: "Integrate P2P Video Streaming into Mobile Applications"
-description: "Discover how to integrate P2P Media Loader into Android and iOS applications to achieve scalable, cost-efficient video streaming. This article explores two practical approaches — Native Android and Flutter — to leverage peer-to-peer (P2P) streaming technology powered by WebRTC. Learn step-by-step integration techniques, and review the pros and cons of each method."
+description: "Discover how to integrate P2P Media Loader into Android and iOS applications to achieve scalable, cost-efficient video streaming. This article explores two practical approaches — Native on Android and Flutter on iOS/Android — to leverage peer-to-peer (P2P) streaming technology powered by WebRTC. Learn step-by-step integration techniques, and review the pros and cons of each method."
 ---
 
-[P2P Media Loader](https://github.com/Novage/p2p-media-loader) is an open-source JavaScript library that leverages modern web browser features to enable media delivery over peer-to-peer connections. The library enables the creation of a huge P2P mesh networks, also known as peer-to-peer content delivery network (P2P CDN), peer-to-peer television (P2PTV), and Enterprise Content Delivery Network (eCDN), which allows traffic sharing among users who are simultaneously viewing the same live or video on demand (VOD) stream via HLS or MPEG-DASH protocols.
+[P2P Media Loader](https://github.com/Novage/p2p-media-loader) by [Novage](https://novage.com.ua) 🇺🇦 is an open-source JavaScript library that leverages modern web browser features to enable media delivery over peer-to-peer (P2P) connections. The library enables the creation of a huge P2P mesh networks, also known as peer-to-peer content delivery network (P2P CDN), peer-to-peer television (P2PTV), and Enterprise Content Delivery Network (eCDN), which allows traffic sharing among users who are simultaneously viewing the same live or video on demand (VOD) stream via HLS or MPEG-DASH protocols.
 
-In this article, we will showcase the available integration samples for both iOS and Android, demonstrating how to leverage P2P Media Loader in your mobile applications. Integrations are fully compatible with web-based integration, meaning that whether your users are on the web, iOS, or Android, they all become part of a single, unified Peer-to-Peer (P2P) network. As a result, traffic is shared more efficiently across platforms, leading to a larger network of peers, reduced traffic costs, and enhanced streaming performance.
+In this article, we will showcase the available integration samples for both **iOS** and **Android**, demonstrating how to leverage P2P Media Loader in your mobile applications. Integrations are fully compatible with web-based integration, meaning that whether your users are on the web, iOS, or Android, they all become part of a single, unified peer-to-peer network. As a result, traffic is shared more efficiently across platforms, leading to a larger network of peers, reduced traffic costs, and enhanced streaming performance.
 
 ## Flutter Integration (iOS and Android)
 
