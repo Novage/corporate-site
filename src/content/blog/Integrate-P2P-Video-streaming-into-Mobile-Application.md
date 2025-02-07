@@ -371,3 +371,5 @@ The simplest way to test is to run an application with integrated P2P on a real 
 Integrating P2P Media Loader into your mobile application opens the door to a more scalable, cost-efficient, and robust video streaming solution. By leveraging WebRTC and peer-to-peer connections, you can reduce the dependency on traditional CDNs, lower bandwidth costs, and enhance the overall streaming experience for your users.
 
 We encourage you to experiment with these integration techniques, explore real-world scenarios, and tailor the solutions to best fit your project’s needs. For additional examples, troubleshooting tips, and community support, please refer to our [GitHub repositories](https://github.com/Novage) and join the ongoing discussions. If you encounter any issues, have suggestions for improvement, or discover bugs, don't hesitate to report them on our GitHub issue tracker. Your feedback is essential in helping us improve the P2P Media Loader experience for everyone.
+
+Join the [discussion of this article on GitHub](https://github.com/Novage/p2p-media-loader/discussions/469).
