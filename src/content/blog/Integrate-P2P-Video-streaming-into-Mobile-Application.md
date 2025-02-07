@@ -163,6 +163,8 @@ class MainApp extends StatelessWidget {
 
 For a more extensive example that gathers P2P engine stats and manages P2P state according to app lifecycle, check our [P2P Media Loader Flutter Demo](https://github.com/Novage/p2p-media-loader-flutter-demo).
 
+![Our Flutter Demo Example](../../assets/flutter_demo_example.jpg)
+
 ## Native Android
 
 In this section, we introduce our [native Android library](https://github.com/Novage/p2p-media-loader-mobile) fully compatible with [ExoPlayer](https://exoplayer.dev/), one of the most popular media players for Android. The library is also designed to support other media players with minimal adjustments.
@@ -180,7 +182,6 @@ Under the hood, it runs the P2P Media Loader within a hidden WebView and uses a 
 - **Platform-Specific:** The native approach is limited to Android.
 
 - **HLS only:** The integration is currently limeted to HLS and doesn't support MPEG-DASH streams.
-
 
 **Note:** The library is in active development, so the API and features might be changed by the time.
 
