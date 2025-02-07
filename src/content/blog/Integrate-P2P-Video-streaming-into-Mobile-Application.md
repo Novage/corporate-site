@@ -12,6 +12,8 @@ In this article, we will showcase the available integration samples for both **i
 
 ## Flutter Integration (iOS and Android)
 
+![Our Flutter Demo Example](../../assets/flutter_demo_example.jpg)
+
 In this method, your Flutter application includes a WebView that loads a HTML/JavaScript-based video player. The P2P Media Loader library runs in the WebView context to handle peer-to-peer streaming via WebRTC.
 
 **Pros:**
@@ -162,8 +164,6 @@ class MainApp extends StatelessWidget {
 ```
 
 For a more extensive example that gathers P2P engine stats and manages P2P state according to app lifecycle, check our [P2P Media Loader Flutter Demo](https://github.com/Novage/p2p-media-loader-flutter-demo).
-
-![Our Flutter Demo Example](../../assets/flutter_demo_example.jpg)
 
 ## Native Android
 
