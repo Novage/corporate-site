@@ -6,7 +6,7 @@ title: "Integrate P2P Video Streaming into Mobile Applications"
 description: "Discover how to integrate P2P Media Loader into Android and iOS applications to achieve scalable, cost-efficient video streaming. This article explores two practical approaches — Native on Android and Flutter on iOS/Android — to leverage peer-to-peer (P2P) streaming technology powered by WebRTC. Learn step-by-step integration techniques, and review the pros and cons of each method."
 ---
 
-[P2P Media Loader](https://github.com/Novage/p2p-media-loader) by [Novage](https://novage.com.ua) 🇺🇦 is an open-source JavaScript library that leverages modern web browser features to enable media delivery over peer-to-peer (P2P) connections. The library enables the creation of a huge P2P mesh networks, also known as peer-to-peer content delivery network (P2P CDN), peer-to-peer television (P2PTV), and Enterprise Content Delivery Network (eCDN), which allows traffic sharing among users who are simultaneously viewing the same live or video on demand (VOD) stream via HLS or MPEG-DASH protocols.
+[P2P Media Loader](https://github.com/Novage/p2p-media-loader) by [Novage](https://novage.com.ua) 🇺🇦 is an open-source JavaScript library that leverages modern web browser features to enable media delivery over peer-to-peer (P2P) connections. The library enables the creation of huge P2P mesh networks, also known as peer-to-peer content delivery networks (P2P CDN), peer-to-peer television (P2PTV), and Enterprise Content Delivery Networks (eCDN), which allows traffic sharing among users who are simultaneously viewing the same live or video on demand (VOD) stream via HLS or MPEG-DASH protocols.
 
 In this article, we will showcase the available integration samples for both **iOS** and **Android**, demonstrating how to leverage P2P Media Loader in your mobile applications. Integrations are fully compatible with web-based integration, meaning that whether your users are on the web, iOS, or Android, they all become part of a single, unified peer-to-peer network. As a result, traffic is shared more efficiently across platforms, leading to a larger network of peers, reduced traffic costs, and enhanced streaming performance.
 
@@ -14,11 +14,11 @@ In this article, we will showcase the available integration samples for both **i
 
 ![Our Flutter Demo Example](../../assets/flutter_demo_example.jpg)
 
-In this method, your Flutter application includes a WebView that loads a HTML/JavaScript-based video player. The P2P Media Loader library runs in the WebView context to handle peer-to-peer streaming via WebRTC.
+In this method, your Flutter application includes a WebView that loads an HTML/JavaScript-based video player. The P2P Media Loader library runs in the WebView context to handle peer-to-peer streaming via WebRTC.
 
 **Pros:**
 
-- **Cross-Platform Capability:** Write once, deploy on both Android and iOS, reducing development time and effort for multi-platform support.
+- **Cross-Platform Capability:** Write once, and deploy on both Android and iOS, reducing development time and effort for multi-platform support.
 
 - **No Native Video Player Dependencies:** By relying on the WebView rather than each platform’s video player, this approach reduces compatibility issues and streamlines maintenance.
 
@@ -26,9 +26,9 @@ In this method, your Flutter application includes a WebView that loads a HTML/Ja
 
 - **Limited Native Feature Support:** Certain platform-specific features (e.g., Picture-in-Picture, casting, DRM, advanced hardware acceleration, or certain OS-level optimizations) may not be directly accessible or as seamless as with a native player.
 
-- **Less Control Over Player Lifecycle:** Integrating deeper with the OS-level media controls (lock screen controls, Bluetooth headset events, or background playback) can be more involved than it is with a native player.
+- **Less Control Over Player Lifecycle:** Integrating deeper with the OS-level media controls (lock screen controls, Bluetooth headset events, or background playback) can be more involved than with a native player.
 
-- **Complex Debugging:** Troubleshooting playback issues, network behavior, or UI glitches can be more challenging, because you have two layers of code: Flutter (Dart) and the embedded web content (HTML/JavaScript).
+- **Complex Debugging:** Troubleshooting playback issues, network behavior, or UI glitches can be more challenging because you have two layers of code: Flutter (Dart) and the embedded web content (HTML/JavaScript).
 
 - **Cross-Layer Interactions:** When integrating a WebView-based player within a Flutter app, coordinating playback events and controls across Dart and JavaScript can become more complex.
 
@@ -169,7 +169,7 @@ For a more extensive example that gathers P2P engine stats and manages P2P state
 
 In this section, we introduce our [native Android library](https://github.com/Novage/p2p-media-loader-mobile) fully compatible with [ExoPlayer](https://exoplayer.dev/), one of the most popular media players for Android. The library is also designed to support other media players with minimal adjustments.
 
-Under the hood, it runs the P2P Media Loader within a hidden WebView and uses a local HTTP proxy to feed the peer-to-peer stream into the native player. This approach enables seamless integration of P2P streaming while preserving the performance and feature set of a fully native media player like ExoPlayer.
+Under the hood, it runs the P2P Media Loader within a hidden WebView and uses a local HTTP proxy to feed the peer-to-peer stream to the native player. This approach enables seamless integration of P2P streaming while preserving the performance and feature set of a fully native media player like ExoPlayer.
 
 ![Kotlin Library Architecture](../../assets/kotlin-diagram.png)
 
@@ -181,7 +181,7 @@ Under the hood, it runs the P2P Media Loader within a hidden WebView and uses a 
 
 - **Platform-Specific:** The native approach is limited to Android.
 
-- **HLS only:** The integration is currently limeted to HLS and doesn't support MPEG-DASH streams.
+- **HLS only:** The integration is currently limited to HLS and doesn't support MPEG-DASH streams.
 
 **Note:** The library is in active development, so the API and features might be changed by the time.
 
@@ -362,9 +362,9 @@ More examples are available in the library's [repository](https://github.com/Nov
 
 ## Testing P2P
 
-P2P (WebRTC) may not connect to the outer world if it runs on Android emulator or iOS simulator due to [network configuration](https://developer.android.com/studio/run/emulator-networking) (NAT). Please test P2P connectivity on real devices.
+P2P (WebRTC) may not connect to the outer world if it runs on an Android emulator due to [network configuration](https://developer.android.com/studio/run/emulator-networking) (NAT). Please test P2P connectivity on real devices.
 
-The simpliest way to test is to run an application with integrated P2P on a real device and open our [web demo](https://novage.com.ua/p2p-media-loader/demo) with same video URL.
+The simplest way to test is to run an application with integrated P2P on a real device and open our [web demo](https://novage.com.ua/p2p-media-loader/demo) with the same video URL.
 
 ## Conclusion
 
