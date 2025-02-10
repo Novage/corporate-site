@@ -149,11 +149,13 @@ For MPEG-DASH video:
         VidstackPlayerLayout,
       } from "https://cdn.vidstack.io/player";
 
+      // Check if the browser supports import maps and Hls.js
       const isP2PSupported =
         HTMLScriptElement.supports("importmap") && Hls.isSupported();
 
       let HlsWithP2P;
       if (isP2PSupported) {
+        // Inject P2P capabilities into Hls.js
         const { HlsJsP2PEngine } = await import("p2p-media-loader-hlsjs");
         HlsWithP2P = HlsJsP2PEngine.injectMixin(window.Hls);
       }
