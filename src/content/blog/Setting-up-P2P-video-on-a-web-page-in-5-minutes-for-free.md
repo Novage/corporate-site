@@ -22,47 +22,184 @@ In peer-to-peer video delivery network (also called P2P CDN) each player (peer) 
 
 ## Instructions
 
-**Add P2P Media Loader script to your web page**
+### Using P2P Media Loader with npm
+
+To include **P2P Media Loader** in your project using npm, follow these steps:
+
+1. Install the package via npm:
+
+   - For HLS.js integration:
+
+     ```bash
+     npm install p2p-media-loader-hlsjs
+     ```
+
+   - For Shaka Player integration:
+     ```bash
+     npm install p2p-media-loader-shaka
+     ```
+
+2. Provide Node.js polyfills
+
+   To ensure the P2P Media Loader works correctly in a browser environment, you must provide Node.js polyfills required by [bittorrent-tracker](https://www.npmjs.com/package/bittorrent-tracker) dependency.
+
+   - Vite configuration example:
+
+     ```typescript
+     // vite.config.ts
+     import { defineConfig } from "vite";
+     import { nodePolyfills } from "vite-plugin-node-polyfills";
+
+     export default defineConfig({
+       plugins: [nodePolyfills()],
+     });
+     ```
+
+   - Webpack configuration example:
+
+     ```javascript
+     // webpack.config.mjs
+     import NodePolyfillPlugin from "node-polyfill-webpack-plugin";
+
+     export default {
+       plugins: [new NodePolyfillPlugin({ additionalAliases: ["process"] })],
+     };
+     ```
+
+3. Import and use it in your project:
+
+   - HLS.js integration:
+
+     ```typescript
+     import Hls from "hls.js";
+     import { HlsJsP2PEngine } from "p2p-media-loader-hlsjs";
+
+     const HlsWithP2P = HlsJsP2PEngine.injectMixin(Hls);
+     ```
+
+   - Shaka Player integration:
+
+     ```typescript
+     import shaka from "shaka-player/dist/shaka-player.ui";
+     import { ShakaP2PEngine } from "p2p-media-loader-shaka";
+
+     ShakaP2PEngine.registerPlugins(shaka);
+     ```
+
+For more examples with npm packages, you may check our [React demo](https://github.com/Novage/p2p-media-loader/tree/main/packages/p2p-media-loader-demo/src/components/players)
+
+## Using P2P Media Loader with CDN via JavaScript Modules
 
 For HLS video:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@latest/build/p2p-media-loader-core.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@latest/build/p2p-media-loader-hlsjs.min.js"></script>
+<script type="importmap">
+  {
+    "imports": {
+      "p2p-media-loader-core": "https://cdn.jsdelivr.net/npm/p2p-media-loader-core@^2/dist/p2p-media-loader-core.es.min.js",
+      "p2p-media-loader-hlsjs": "https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@^2/dist/p2p-media-loader-hlsjs.es.min.js"
+    }
+  }
+</script>
 ```
 
 For MPEG-DASH video:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@latest/build/p2p-media-loader-core.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-shaka@latest/build/p2p-media-loader-shaka.min.js"></script>
-```
-
-**Integrate P2P Media Loader with your favorite player**
-
-**P2P Media Loader** supports many popular HTML5 video players and engines: **Hls.js, Shaka Player, JWPlayer, Clappr, Flowplayer, MediaElement, Video.js.** Let’s pick **Clappr** just for this example:
-
-```html
-<script>
-  var engine = new p2pml.hlsjs.Engine();
-  var player = new Clappr.Player({
-    parentId: "#player",
-    source:
-      "https://akamai-axtest.akamaized.net/routes/lapd-v1-acceptance/www_c4/Manifest.m3u8",
-    mute: true,
-    autoPlay: true,
-    playback: {
-      hlsjsConfig: {
-        liveSyncDurationCount: 7,
-        loader: engine.createLoaderClass(),
-      },
-    },
-  });
-  p2pml.hlsjs.initClapprPlayer(player);
+<script type="importmap">
+  {
+    "imports": {
+      "p2p-media-loader-core": "https://cdn.jsdelivr.net/npm/p2p-media-loader-core@^2/dist/p2p-media-loader-core.es.min.js",
+      "p2p-media-loader-shaka": "https://cdn.jsdelivr.net/npm/p2p-media-loader-shaka@^2/dist/p2p-media-loader-shaka.es.min.js"
+    }
+  }
 </script>
 ```
 
-You can find the full example as well as examples for other players in the [GitHub](https://github.com/Novage/p2p-media-loader/) repository of the project.
+**P2P Media Loader** supports many players that use Hls.js as media engine. Lets pick [Vidstack](https://www.vidstack.io/) player for extended Hls.js example:
+
+### Integrating P2P with Vidstack and Hls.js
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Include Hls.js library from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@~1/dist/hls.min.js"></script>
+
+    <!-- Import map for P2P Media Loader modules -->
+    <script type="importmap">
+      {
+        "imports": {
+          "p2p-media-loader-core": "https://cdn.jsdelivr.net/npm/p2p-media-loader-core@^2/dist/p2p-media-loader-core.es.min.js",
+          "p2p-media-loader-hlsjs": "https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@^2/dist/p2p-media-loader-hlsjs.es.min.js"
+        }
+      }
+    </script>
+
+    <!-- Include Vidstack player stylesheets -->
+    <link rel="stylesheet" href="https://cdn.vidstack.io/player/theme.css" />
+    <link rel="stylesheet" href="https://cdn.vidstack.io/player/video.css" />
+
+    <!-- Module script to initialize Vidstack player with P2P Media Loader -->
+    <script type="module">
+      // Include Vidstack player library from CDN
+      import {
+        VidstackPlayer,
+        VidstackPlayerLayout,
+      } from "https://cdn.vidstack.io/player";
+
+      const isP2PSupported =
+        HTMLScriptElement.supports("importmap") && Hls.isSupported();
+
+      let HlsWithP2P;
+      if (isP2PSupported) {
+        const { HlsJsP2PEngine } = await import("p2p-media-loader-hlsjs");
+        HlsWithP2P = HlsJsP2PEngine.injectMixin(window.Hls);
+      }
+
+      const player = await VidstackPlayer.create({
+        target: "#player",
+        src: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+        playsInline: true,
+        layout: new VidstackPlayerLayout(),
+      });
+
+      player.addEventListener("provider-change", (event) => {
+        const provider = event.detail;
+
+        // Check if the provider is HLS
+        if (provider?.type === "hls") {
+          provider.library = HlsWithP2P;
+
+          provider.config = {
+            p2p: {
+              core: {
+                swarmId: "Optional custom swarm ID for stream",
+                // other P2P engine config parameters go here
+              },
+              onHlsJsCreated: (hls) => {
+                hls.p2pEngine.addEventListener("onPeerConnect", (params) => {
+                  console.log("Peer connected:", params.peerId);
+                });
+                // Subscribe to P2P engine and Hls.js events here
+              },
+            },
+          };
+        }
+      });
+    </script>
+  </head>
+
+  <body>
+    <div style="width: 800px">
+      <div id="player"></div>
+    </div>
+  </body>
+</html>
+```
+
+To find more examples please refer to our [GitHub repository](https://github.com/Novage/p2p-media-loader/) and [API documentation](https://novage.github.io/p2p-media-loader/docs/latest/).
 
 Now you can lean back and enjoy your P2P video streaming.
 
