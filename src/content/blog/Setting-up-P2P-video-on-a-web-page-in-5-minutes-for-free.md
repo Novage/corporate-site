@@ -14,11 +14,11 @@ The approach supports both live and VOD video streams and doesn’t require inst
 
 In peer-to-peer video delivery network (also called P2P CDN) each player (peer) shares downloaded video segments with other visitors that watch the same stream. Up to 90% of the video can be transferred over a P2P network. This results in:
 
-- Lower CDN cost — if you pay $100 for a CDN to deliver a stream to your users with 90% P2P ratio you will pay only $10.
+- Lower CDN cost: When streaming content with P2P, most video requests are served inside P2P network rather than the origin server or CDN. This significantly lowers the total data load on centralized infrastructure, resulting in substantial cost savings. For instance, if it normally costs $100 to deliver a stream through a CDN, achieving a 90% P2P ratio could reduce that expense to just $10.
 
-- Higher bandwidth and better adaptive quality — each peer is contributing to the overall bandwidth by simultaneously uploading the video stream to others. And if your source bandwidth allows streaming a video to 100 users, with 90% P2P your video can be viewed by 1000 users.
+- Increased bandwidth, stability and quality: Each peer is contributing to the overall bandwidth by simultaneously uploading the video stream to others. And if your source bandwidth allows streaming a video to 100 users, with 90% P2P your video can be viewed by 1000 users.
 
-- Improved reliability — P2P acceleration makes video streaming more scalable, resistant to peak demands and failure situations.
+- Improved reliability: P2P acceleration makes video streaming more scalable, resistant to peak demands and failure situations.
 
 ## Instructions
 
@@ -116,9 +116,9 @@ For MPEG-DASH video:
 </script>
 ```
 
-**P2P Media Loader** supports many players that use Hls.js as media engine. Lets pick [Vidstack](https://www.vidstack.io/) player for extended Hls.js example:
-
 ### Integrating P2P with Vidstack and Hls.js
+
+**P2P Media Loader** supports many players that use Hls.js as media engine. Lets pick [Vidstack](https://www.vidstack.io/) player for extended Hls.js example:
 
 ```html
 <!DOCTYPE html>
