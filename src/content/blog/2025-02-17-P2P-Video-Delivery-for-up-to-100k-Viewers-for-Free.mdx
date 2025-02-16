@@ -1,0 +1,145 @@
+---
+author: Andriy Lysnevych
+date: "2025-02-17"
+title: "P2P Video Delivery for up to 100k Viewers for Free"
+slug: p2p-video-delivery-for-up-to-100k-viewers-for-free
+description: "This article explores how to scale video streaming to 100K+ peers by leveraging P2P technology alongside hybrid CDN strategies. It covers using public and dedicated trackers, and sharding techniques to achieve cost-effective, high-quality P2P delivery."
+---
+
+Our open-source [P2P Media Loader](https://github.com/novage/p2p-media-loader) JavaScript library (created by [Novage](https://novage.com.ua/) 🇺🇦) makes it simple, fast, and completely **free** to enable **P2P-assisted video delivery** on your **HTML** web pages, working seamlessly with **HLS** or **MPEG-DASH** segmented media formats. It also supports native **iOS** and **Android** mobile apps.
+For more details, check out our earlier articles:
+
+- [Setting up P2P Video on a Web Page in 5 Minutes for Free](https://novage.com.ua/blog/setting-up-p2p-video-on-a-web-page-in-5-minutes-for-free)
+- [Integrate P2P Video Streaming into Mobile Applications](https://novage.com.ua/blog/integrate-p2p-video-streaming-into-mobile-application)
+
+## Why Use Hybrid CDN + P2P Delivery?
+
+- **Reduced Load on Origin:**
+  Offloading requests from the CDN or media server to peers eases the strain on centralized infrastructure, increasing system reliability.
+
+- **Significant Cost Savings:**
+  With less bandwidth required from your primary video source, you can dramatically cut CDN or hosting expenses.
+
+- **Enhanced Total Bandwidth:**
+  When viewers share video data among themselves, they collectively expand overall network capacity, leading to smoother streaming for everyone.
+
+- **Flexible for Live & VOD:**
+  Whether you’re streaming live events or on-demand videos, P2P Media Loader supports both scenarios without added complexity.
+
+- **eCDN (Enterprise Content Delivery Network) Approach:**
+  In enterprise environments, you have full control over the internal network. This means peers can easily interconnect with minimal external constraints, ensuring reliable, high-quality internal video delivery (e.g., multiple screens and devices across an organization) without straining external bandwidth.
+
+- **No Extra Server Software Needed:**
+  For smaller setups (1,000–2,000 simultaneous viewers), public trackers alone can handle peer connections. This means you don’t need to install or maintain any additional server-side components in many cases.
+
+This hybrid approach — where traditional CDN-based delivery is augmented by P2P — offers scalability, cost efficiency, and ease of deployment, making it an excellent option for those looking to serve large audiences without a massive infrastructure budget.
+
+## Issues with Public Trackers
+
+Establishing a WebRTC (peer-to-peer) connection between two devices requires a [signaling server](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Signaling_and_video_calling) — often referred to as a **tracker** — to coordinate how those devices find and connect over the internet.
+
+Public trackers are handy for initial development and testing. They let you experiment with P2P video delivery without needing to set up any extra server-side components. **P2P Media Loader** ships with a few **preconfigured public trackers**, so you can get P2P streaming up and running right out of the box.
+
+However, public trackers do have **significant limitations**, particularly in terms of **scalability**. They typically can’t support large numbers of simultaneous peers, making them unsuitable for high-traffic production environments.
+
+In this article, we’ll outline how you can **run your dedicated tracker**, including **free** options capable of handling **up to 100,000 concurrent peers**. We’ll also explore strategies for **scaling** trackers beyond that point to accommodate **millions** of peers.
+
+## Tracker Software Overview
+
+**P2P Media Loader** relies on the WebSocket-based tracker protocol from the [WebTorrent](https://webtorrent.io/) project. This approach allows us to tap into a variety of **public trackers** and also use **open-source tracker software** implementations. Below is an overview of some popular solutions and their respective pros and cons.
+
+### bittorrent-tracker
+
+[bittorrent-tracker](https://github.com/webtorrent/bittorrent-tracker) is the **official** WebTorrent Tracker Implementation. This is the main reference for the WebTorrent signaling protocol. If you already have a Node.js server, it’s straightforward to embed because it uses Node.js’s built-in networking API for WebSocket connections.
+
+This is precisely how projects like [PeerTube](https://github.com/Chocobozzz/PeerTube) integrate P2P functionality into their Node.js backends.
+
+While easy to embed, it may not be optimal for large-scale deployments due to inefficient Node.js built-in networking functionality.
+
+### wt-tracker
+
+[wt-tracker](https://github.com/Novage/wt-tracker) is built on [µWebSockets.js](https://github.com/uNetworking/uWebSockets.js), which offers better performance than standard Node.js network APIs. It can only utilize one CPU core, making it an excellent choice for small VPS instances with one or two cores. For instance, a 1-core VPS with 2 GB RAM (around €3.5/month) can handle 20,000 simultaneous peers with a wt-tracker.
+
+It is great for projects expecting moderate loads and looking for an easy, budget-friendly setup but provides no benefits on multi-core servers.
+
+### Aquatic
+
+[Aquatic](https://github.com/greatest-ape/aquatic) implements the WebTorrent signaling protocol in **Rust**, offering robust performance and multi-threaded design. It is well-suited for higher-traffic scenarios:
+
+- For 20,000 peers, you’ll typically need 1 CPU core and 4 GB of RAM.
+- For 100,000 simultaneous peers on average, plan on an 8-core dedicated server with around 20 GB of RAM, usually costing €10–30/month or more depending on the provider.
+
+Ideal for larger-scale production environments that demand high concurrency and reliable performance.
+
+## Free Tracker for up to 100k Simultaneous Peers
+
+One of the most straightforward ways to run a **free** high-capacity tracker is by using the **Oracle Cloud Always Free Tier**, which offers:
+
+- **Arm-based Ampere A1** instance with **4 CPU cores**
+- **24 GB** of memory
+- **10 TB** of monthly outbound data transfer
+
+These resources are sufficient to handle **peaks of up to 100,000 simultaneous peers** when running the **Aquatic** tracker software, provided it’s configured correctly to utilize all four CPU cores.
+
+For specific setup instructions, consult the official documentation in the [Aquatic GitHub repository](https://github.com/greatest-ape/aquatic). Keep in mind that peer behavior can significantly affect bandwidth usage. If you find you’re nearing the **10 TB** monthly outbound data cap, you may need to increase the peer request interval (reducing how frequently peers contact the tracker).
+
+You can stay within Oracle Cloud’s always free-tier limits while simultaneously supporting a substantial number of peers — all at no additional cost.
+
+## Handling Millions of Simultaneous Peers
+
+To support **millions of concurrent peers**, you’ll generally need to run **multiple trackers**. While you can scale trackers vertically by adding more CPU/RAM, relying on **horizontal scaling** (adding tracker nodes) typically offers more long-term flexibility. In this chapter, we’ll explore **sharding** — a straightforward way to distribute the tracker load while keeping operations relatively simple.
+
+### What is Sharding?
+
+**Sharding** involves splitting a large system into smaller, more manageable parts — called “shards.” In the context of P2P streaming, each shard can be a separate tracker (or cluster of trackers), each responsible for a subset of the content or user base. This helps:
+
+- **Distribute Load Evenly:** No single tracker is overwhelmed.
+- **Improve Scalability:** You can add new trackers (shards) as your audience grows.
+- **Maintain Simplicity:** Each shard has fewer moving parts to manage, making it easier to maintain.
+
+### Common Sharding Techniques
+
+#### Content-Based Sharding
+
+- Each tracker handles specific video streams or channels.
+- Example: Tracker A manages sports events, Tracker B handles movies, etc.
+- **Key Benefit:** Prevents popular categories from overloading a single tracker; easy for content owners to manage.
+
+#### Hash-Based Sharding
+
+- Assign each stream to a shard based on a hash of its name, URL, or ID.
+- A simple formula like **_hash_value mod number_of_shards_** determines which tracker will manage a particular stream.
+- **Key Benefit:** Ensures an even distribution of content, avoiding hotspots if all videos have roughly similar popularity.
+
+#### Geographic/Regional Sharding
+
+- Route users to trackers based on their physical location or IP address.
+- **Key Benefit:** Reduces latency for end users and often increases P2P bandwidth by localizing traffic.
+- Can also balance load across multiple regions or data centers.
+
+#### Account-Level Sharding
+
+- If you have multiple content providers with accounts, assign each one to its dedicated tracker (or set of trackers).
+- **Key Benefit:** Isolates traffic and administration for each provider, making it simpler to manage quotas and usage.
+
+#### Hierarchical Sharding
+
+- ntroduce two or more layers of sharding.
+- For instance, first divide traffic by region, then within each region apply a hash-based or content-based approach.
+- **Key Benefit:** Combines the strengths of multiple sharding strategies to handle large-scale or diverse traffic.
+
+#### Dynamic Sharding
+
+- Move “hot shards” (high-traffic content) to dedicated tracker clusters during peak demand.
+- Scale back after traffic subsides by merging shards or redistributing content.
+- **Key Benefit:** Efficiently manages surges in popularity without permanently allocating extra resources.
+
+Sharding makes it possible to manage millions of concurrent peers without creating a single overwhelming point of failure. By strategically dividing your traffic you can **distribute the load**, **reduce operational complexity**, and **scale** as your audience or content library grows.
+
+## Conclusion
+
+Implementing a **P2P video delivery** strategy drastically reduces bandwidth costs while scaling to handle hundreds of thousands — even millions — of viewers. Small deployments can rely on **public trackers** with minimal setup, while free-tier cloud instances like **Oracle Cloud** handle up to 100k peers. For larger loads, **multiple trackers and sharding** keep operations efficient and cost-effective.
+
+Whether you’re a startup looking to reduce streaming overhead or an established platform aiming to optimize delivery, adopting a hybrid **CDN + P2P** model provides a scalable, cost-effective approach to meet the demands of modern audiences without sacrificing quality.
+
+Join the [discussion of this article on GitHub](https://github.com/Novage/p2p-media-loader/discussions/).
