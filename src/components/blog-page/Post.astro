@@ -8,7 +8,7 @@ import "../../styles/blog.css";
 const post = Astro.props.frontmatter ?? Astro.props;
 ---
 
-<Layout title={post.title} canonical={post.canonicalURL}>
+<Layout title={post.title} canonical={post.canonical}>
   <Header />
   <div id="content">
     <article>

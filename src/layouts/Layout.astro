@@ -48,7 +48,7 @@ const { title, canonical } = Astro.props;
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
 
-    {canonical && <link rel="canonical" href={canonical} />}
+    {canonical !== undefined && <link rel="canonical" href={`${Astro.site}${canonical}`} />}
 
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
