@@ -110,7 +110,7 @@ To support **millions of concurrent peers**, you’ll generally need to run **mu
 
 - Assign each stream to a shard based on a hash of its name, URL, or ID.
 - A simple formula like **_hash_value mod number_of_shards_** determines which tracker will manage a particular stream.
-- **Key Benefit:** Ensures an even distribution of content, avoiding hotspots if all videos have roughly similar popularity.
+- **Key Benefit:** Ensures an even distribution of content, avoiding hotspots if all sards have roughly similar popularity.
 
 #### Geographic/Regional Sharding
 
