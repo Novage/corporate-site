@@ -68,22 +68,36 @@ To include **P2P Media Loader** in your project using npm, follow these steps:
 
 3. Import and use it in your project:
 
-   - HLS.js integration:
+   - Plain HLS.js with P2P example:
 
      ```typescript
      import Hls from "hls.js";
      import { HlsJsP2PEngine } from "p2p-media-loader-hlsjs";
 
      const HlsWithP2P = HlsJsP2PEngine.injectMixin(Hls);
+
+     // Use it as a regular HLS.js directly or with your player
+     const hls = new HlsWithP2P();
+     hls.attachMedia(videoElement);
+     hls.loadSource(streamUrl);
      ```
 
-   - Shaka Player integration:
+   - Plain Shaka Player with P2P example:
 
      ```typescript
      import shaka from "shaka-player/dist/shaka-player.ui";
      import { ShakaP2PEngine } from "p2p-media-loader-shaka";
 
      ShakaP2PEngine.registerPlugins(shaka);
+
+     const shakaP2PEngine = new ShakaP2PEngine();
+
+     const player = new shaka.Player();
+     await player.attach(video);
+
+     shakaP2PEngine.bindShakaPlayer(player);
+
+     await player.load(streamUrl);
      ```
 
 For more examples with npm packages, you may check our [React demo](https://github.com/Novage/p2p-media-loader/tree/main/packages/p2p-media-loader-demo/src/components/players)
