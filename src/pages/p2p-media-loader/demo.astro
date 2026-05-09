@@ -4,24 +4,30 @@ import Header from "../../components/shared/Header.astro";
 import PageHeader from "../../components/shared/PageHeader.astro";
 import Layout from "../../layouts/Layout.astro";
 import { P2PVideoDemo } from "p2p-media-loader-demo";
+import "../../../node_modules/p2p-media-loader-demo/lib/components/demo.css";
+import "../../../node_modules/p2p-media-loader-demo/lib/components/players/clappr.css";
+import "../../../node_modules/p2p-media-loader-demo/lib/components/players/hlsjs/vidstack_indexed_db.css";
+import "../../../node_modules/p2p-media-loader-demo/lib/components/players/hlsjs/hlsjs.css";
+import "../../../node_modules/p2p-media-loader-demo/lib/components/players/loader/loader.css";
+import "../../../node_modules/p2p-media-loader-demo/lib/components/chart/chart.css";
+import "../../../node_modules/p2p-media-loader-demo/lib/components/nodeNetwork/network.css";
+import "@vidstack/react/player/styles/default/theme.css";
+import "@vidstack/react/player/styles/default/layouts/video.css";
+import "shaka-player/dist/controls.css";
+import "plyr/dist/plyr.css";
+import "openplayerjs/dist/openplayer.min.css";
+import "mediaelement/build/mediaelementplayer.min.css";
 ---
 
-<link
-  rel="stylesheet"
-  href="/_astro/_astro-entry_p2p-media-loader-demo.CdM14Hul.css"
-/>
-
-<Layout
-  title="P2P Media Loader"
-  canonical="p2p-media-loader/demo"
->
+<Layout title="P2P Media Loader" canonical="p2p-media-loader/demo">
   <Header />
 
   <div id="content">
     <article>
       <PageHeader htmlTitle="P2P Media Loader<br>Demo" />
       <div class="container">
-        <script async defer is:inline src="https://buttons.github.io/buttons.js"></script>
+        <script async defer is:inline src="https://buttons.github.io/buttons.js"
+        ></script>
         <a
           class="github-button"
           href="https://github.com/Novage/p2p-media-loader"

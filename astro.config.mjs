@@ -8,7 +8,7 @@ export default defineConfig({
   vite: {
     plugins: [
       nodePolyfills({
-        exclude: ["path", "os"],
+        exclude: ["path", "os", "fs", "util", "module"],
       }),
     ],
   },
