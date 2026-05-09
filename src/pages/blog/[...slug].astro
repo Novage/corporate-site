@@ -1,20 +1,20 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import Post from "../../components/blog-page/Post.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
 
   return posts.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.id },
     props: post,
   }));
 }
 
 const post = Astro.props;
-const { Content } = await post.render();
+const { Content } = await render(post);
 ---
 
-<Post {...post.data} canonical={`blog/${post.slug}`}>
+<Post {...post.data} canonical={`blog/${post.id}`}>
   <Content />
 </Post>

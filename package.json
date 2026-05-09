@@ -11,20 +11,23 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.5",
-    "@astrojs/mdx": "^4.3.10",
-    "@astrojs/react": "^4.4.2",
-    "@types/react": "^19.2.5",
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/mdx": "^5.0.4",
+    "@astrojs/react": "^5.0.4",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "astro": "^5.15.8",
-    "p2p-media-loader-demo": "^2.2.2",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "typescript": "^5.9.3"
+    "astro": "^6.3.1",
+    "p2p-media-loader-demo": "^2.3.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "typescript": "^6.0.3"
   },
   "devDependencies": {
-    "prettier": "^3.6.2",
+    "prettier": "^3.8.3",
     "prettier-plugin-astro": "^0.14.1",
-    "vite-plugin-node-polyfills": "^0.24.0"
+    "vite-plugin-node-polyfills": "^0.26.0"
+  },
+  "overrides": {
+    "vite": "^7.3.2"
   }
 }
