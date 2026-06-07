@@ -39,34 +39,7 @@ To include **P2P Media Loader** in your project using npm, follow these steps:
      npm install p2p-media-loader-shaka
      ```
 
-2. Provide Node.js polyfills
-
-   To ensure the P2P Media Loader works correctly in a browser environment, you must provide Node.js polyfills required by [bittorrent-tracker](https://www.npmjs.com/package/bittorrent-tracker) dependency.
-
-   - Vite configuration example:
-
-     ```typescript
-     // vite.config.ts
-     import { defineConfig } from "vite";
-     import { nodePolyfills } from "vite-plugin-node-polyfills";
-
-     export default defineConfig({
-       plugins: [nodePolyfills()],
-     });
-     ```
-
-   - Webpack configuration example:
-
-     ```javascript
-     // webpack.config.mjs
-     import NodePolyfillPlugin from "node-polyfill-webpack-plugin";
-
-     export default {
-       plugins: [new NodePolyfillPlugin({ additionalAliases: ["process"] })],
-     };
-     ```
-
-3. Import and use it in your project:
+2. Import and use it in your project:
 
    - Plain HLS.js with P2P example:
 
@@ -75,7 +48,7 @@ To include **P2P Media Loader** in your project using npm, follow these steps:
      import { HlsJsP2PEngine } from "p2p-media-loader-hlsjs";
 
      const HlsWithP2P = HlsJsP2PEngine.injectMixin(Hls);
-     
+
      // Use it as a regular HLS.js directly or with your player
      const hls = new HlsWithP2P();
      hls.attachMedia(videoElement);
@@ -89,14 +62,14 @@ To include **P2P Media Loader** in your project using npm, follow these steps:
      import { ShakaP2PEngine } from "p2p-media-loader-shaka";
 
      ShakaP2PEngine.registerPlugins(shaka);
-     
+
      const shakaP2PEngine = new ShakaP2PEngine();
-     
+
      const player = new shaka.Player();
      await player.attach(video);
-     
+
      shakaP2PEngine.bindShakaPlayer(player);
-     
+
      await player.load(streamUrl);
      ```
 
