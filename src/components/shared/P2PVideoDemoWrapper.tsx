@@ -5,6 +5,6 @@ interface P2PVideoDemoWrapperProps {
   debugToolsEnabled?: boolean;
 }
 
-export default function P2PVideoDemoWrapper(props: P2PVideoDemoWrapperProps) {
+export function P2PVideoDemoWrapper(props: P2PVideoDemoWrapperProps) {
   return <P2PVideoDemo {...props} />;
 }
