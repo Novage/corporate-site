@@ -2,135 +2,277 @@
 import Footer from "../../components/shared/Footer.astro";
 import Header from "../../components/shared/Header.astro";
 import ImageBlock from "../../components/shared/ImageBlock.astro";
+import P2PDeliveryDiagram from "../../components/p2p/P2PDeliveryDiagram.astro";
 import PageHeader from "../../components/shared/PageHeader.astro";
+import P2PSubNav from "../../components/shared/P2PSubNav.astro";
 import Layout from "../../layouts/Layout.astro";
-import img from "../../../public/images/p2p-assisted-media-delivery.png";
+import { organization, siteUrl } from "../../data/organization";
+
+const schema = [
+  organization,
+  {
+    "@type": "SoftwareSourceCode",
+    name: "P2P Media Loader",
+    description:
+      "Open-source JavaScript library for P2P delivery of live and on-demand HLS and MPEG-DASH video over WebRTC.",
+    url: `${siteUrl}p2p-media-loader/overview`,
+    codeRepository: "https://github.com/novage/p2p-media-loader",
+    programmingLanguage: "TypeScript",
+    license: "https://www.apache.org/licenses/LICENSE-2.0",
+    author: { "@id": organization["@id"] },
+  },
+];
+import LeadBlock from "../../components/shared/LeadBlock.astro";
+import ContactBanner from "../../components/shared/ContactBanner.astro";
 ---
 
 <Layout
-  title="P2P Media Loader"
+  title="P2P Media Loader: Open-Source P2P Video Delivery | Novage"
   canonical="p2p-media-loader/overview"
+  schema={schema}
+  description="P2P Media Loader is an open-source JavaScript library for P2P video over WebRTC: live and VOD HLS and MPEG-DASH with HLS.js, Shaka, dash.js and Video.js."
 >
   <Header />
   <div id="content">
     <article>
-      <PageHeader htmlTitle="P2P Media Loader<br/> Overview" />
+      <PageHeader title="P2P Media Loader" accent="Overview">
+        <P2PSubNav current="overview" />
+      </PageHeader>
       <div class="page container content">
-        <ImageBlock imgSrc={img} alt="P2P assisted media delivery">
+        <ImageBlock>
+          <P2PDeliveryDiagram slot="image" />
           <p>
-            <strong>P2P Media Loader</strong> is an open-source JavaScript library
-            that uses features of modern web browsers (i.e. HTML5 video and WebRTC)
-            to deliver media over P2P and do playback via integrations with many
-            popular HTML5 video players. It doesn’t require any web browser plugins
-            or add-ons to function.
+            <strong>P2P Media Loader</strong> is an open-source JavaScript
+            library that uses modern browser technologies — HTML5 video and
+            WebRTC — to deliver media over peer-to-peer (P2P) connections. It
+            integrates with popular HTML5 video players and requires no browser
+            plugins or add-ons. Try the{" "}
+            <a href="/p2p-media-loader/demo">live demo</a> to see it in action.
           </p>
           <p>
-            By leveraging P2P technology, it greatly reduces reliance on
-            traditional content delivery network (CDN) resources, lowers costs,
-            and enhances the ability to deliver media streams to a larger
-            audience.
+            It makes it possible to build large-scale P2P mesh networks — often
+            called peer-to-peer content delivery networks (P2P CDN), Hybrid CDN,
+            Multi CDN, peer-to-peer television (P2PTV), or Enterprise Content
+            Delivery Networks (eCDN) — in which viewers watching the same live
+            or video on demand (VOD) stream over HLS or MPEG-DASH share traffic
+            in real time.
           </p>
           <p>
-            It enables the creation of a huge P2P mesh networks, also known as
-            peer-to-peer content delivery network (P2P CDN), peer-to-peer
-            television (P2PTV), and Enterprise Content Delivery Network (eCDN),
-            which allows traffic sharing among users who are simultaneously
-            viewing the same live or video on demand (VOD) stream via HLS or
-            MPEG-DASH protocols.
+            The result: far less load on your CDN or origin server, lower
+            delivery costs, and the capacity to reach a larger audience.
           </p>
         </ImageBlock>
+
+        <h2>Why use Hybrid CDN + P2P delivery</h2>
+        <ul>
+          <li>
+            <strong>Works everywhere.</strong> All modern desktop and mobile
+            browsers — Chrome, Safari, Edge, Firefox and Opera — on Windows,
+            macOS, Linux, Android, iOS and iPadOS. See our guide to{" "}
+            <a href="/blog/setting-up-p2p-video-on-a-web-page-in-5-minutes-for-free">
+              setting up P2P video in five minutes
+            </a>
+            . You can also{" "}
+            <a href="/blog/integrate-p2p-video-streaming-into-mobile-application">
+              embed it into native iOS and Android apps
+            </a>{" "}
+            and use it with native players.
+          </li>
+          <li>
+            <strong>No setup cost, no server software.</strong> For smaller
+            audiences (1,000–2,000 simultaneous viewers), public trackers alone
+            can connect peers, so in many cases you don't need to install or
+            maintain any server-side components. Free alternatives scale to
+            100,000 simultaneous peers and beyond — see{" "}
+            <a href="/blog/p2p-video-delivery-for-up-to-100k-viewers-for-free">
+              running dedicated trackers
+            </a>
+            .
+          </li>
+          <li>
+            <strong>Significant cost savings.</strong> The more viewers watch
+            the same content at the same time, the more traffic they share. In
+            ideal conditions each video segment is downloaded over HTTP once and
+            then shared between peers: on a live stream with 10 viewers, 90% of
+            traffic goes over P2P, with 100 viewers 99%, and with 1,000 viewers
+            99.9%. For video on demand, savings depend on how many viewers watch
+            the same part of the video at the same time. Real-world ratios also
+            depend on network conditions and peer connectivity.
+          </li>
+          <li>
+            <strong>Reduced load on the origin.</strong> Offloading requests
+            from the CDN or media server to peers eases the strain on
+            centralized infrastructure and makes the whole system more reliable.
+          </li>
+          <li>
+            <strong>More total bandwidth.</strong> When viewers share video
+            data, they collectively expand network capacity, which means
+            smoother streaming for everyone.
+          </li>
+          <li>
+            <strong>Live and VOD.</strong> Live events and on-demand video work
+            the same way, with no added complexity.
+          </li>
+          <li>
+            <strong>Enterprise eCDN.</strong> Inside a corporate network, peers
+            interconnect with few constraints, so video reaches screens,
+            desktops and mobile devices across an organization without straining
+            external bandwidth or internal infrastructure.
+          </li>
+        </ul>
 
         <h2>Key features</h2>
 
         <p>
-          <strong>Supports multiple HTML5 video players and engines:</strong><br
-          />
-          Engines: Hls.js, Shaka Player<br />
-          Players: <a href="https://www.vidstack.io/">Vidstack</a>, <a
-            href="http://clappr.io/">Clappr</a
-          >, <a href="https://www.mediaelementjs.com/">MediaElement</a>, <a
-            href="https://plyr.io/"
-          >
-            Plyr</a
-          >, <a href="https://dplayer.diygod.dev/">DPlayer</a>,
-          <a href="https://www.openplayerjs.com/"> OpenPlayer</a> and others that
-          support Hls.js or Shaka video engines. These players can be integrated
-          via custom integration with the library API.
+          <strong>Players and engines</strong>
+          <br />
+          Engines: HLS.js, Shaka Player, dash.js and Video.js 8 (VHS). Video.js
+          10 needs no separate integration: it plays HLS and MPEG-DASH through
+          HLS.js and dash.js, which P2P Media Loader drives directly. Viewers on
+          different players share the same swarm.
+          <br />
+          Players: <a href="https://www.vidstack.io/">Vidstack</a>,{" "}
+          <a href="http://clappr.io/">Clappr</a>,{" "}
+          <a href="https://www.mediaelementjs.com/">MediaElement</a>,{" "}
+          <a href="https://plyr.io/">Plyr</a>,{" "}
+          <a href="https://dplayer.diygod.dev/">DPlayer</a>,{" "}
+          <a href="https://www.openplayerjs.com/">OpenPlayerJS</a>,{" "}
+          <a href="https://playerjs.com/">PlayerJS</a> and others built on the
+          supported engines. Any other player can be integrated through the
+          library API.
         </p>
 
         <p>
-          <strong>Effective</strong><br />
-          P2P Media Loader allows to save up to 80% of CDN traffic.
+          <strong>Streaming formats</strong>
+          <br />
+          Live and VOD streams over HLS or MPEG-DASH, with adaptive bitrate
+          streaming.
         </p>
 
         <p>
-          <strong>Versatile</strong><br />
-          Supports live and VOD streams over HLS or MPEG-DASH protocols.
+          <strong>DRM and encrypted streams</strong>
+          <br />
+          Works with Widevine, PlayReady, FairPlay and HLS AES-128. Peers
+          exchange segments exactly as the CDN delivers them, still encrypted:
+          decryption stays in the video player, and license requests always go
+          directly to your license server. P2P must be disabled for per-session
+          encryption or forensic watermarking, where every viewer receives
+          different bytes.
         </p>
 
         <p>
-          <strong>Adaptive Bitrate</strong><br />
-          Supports adaptive bitrate streaming of HLS and MPEG-DASH protocols.
+          <strong>Smart TVs and older browsers</strong>
+          <br />
+          Besides ES modules, every integration ships as an IIFE build for older
+          browsers and Smart TVs.
         </p>
 
         <p>
-          <strong>Free and open-source</strong><br />
-          All components of P2P network are available as open-source products:
+          <strong>Free and open source</strong>
+          <br />
+          All components of the P2P network are available as open-source
+          products:
         </p>
         <ul>
           <li>
-            P2P Media Loader - <a
-              href="https://github.com/novage/p2p-media-loader"
-              >https://github.com/novage/p2p-media-loader</a
-            >
+            P2P Media Loader -{" "}
+            <a href="https://github.com/novage/p2p-media-loader">
+              https://github.com/novage/p2p-media-loader
+            </a>
           </li>
           <li>
             STUN server - open specification with multiple open-source
             implementations
           </li>
           <li>
-            WebTorrent tracker - <a
-              href="https://github.com/webtorrent/bittorrent-tracker"
-              >bittorrent-tracker</a
-            >, <a href="https://github.com/Novage/wt-tracker">wt-tracker</a>,
-            <a href="https://github.com/greatest-ape/aquatic">Aquatic</a>,
-            <a href="https://github.com/OpenWebTorrent/openwebtorrent-tracker"
-              >OpenWebtorrent Tracker</a
-            >
+            WebTorrent tracker -{" "}
+            <a href="/case-studies/wt-tracker">wt-tracker</a>,{" "}
+            <a href="https://github.com/greatest-ape/aquatic">Aquatic</a>,{" "}
+            <a href="https://github.com/webtorrent/bittorrent-tracker">
+              bittorrent-tracker
+            </a>
+            ,{" "}
+            <a href="https://github.com/OpenWebTorrent/openwebtorrent-tracker">
+              OpenWebtorrent Tracker
+            </a>
           </li>
         </ul>
 
         <p>
-          <strong>No need in server-side software</strong><br />
+          <strong>No server-side software needed to start</strong>
+          <br />
           By default P2P Media Loader uses publicly available servers:
         </p>
         <ul>
           <li>
-            STUN servers - <a
-              href="https://gist.github.com/mondain/b0ec1cf5f60ae726202e"
-              >Public STUN server list</a
-            >
+            STUN servers -{" "}
+            <a href="https://gist.github.com/mondain/b0ec1cf5f60ae726202e">
+              Public STUN server list
+            </a>
           </li>
           <li>
-            WebTorrent trackers - <a href="https://openwebtorrent.com"
-              >https://openwebtorrent.com</a
-            >, <a href="https://tracker.novage.com.ua"
-              >https://tracker.novage.com.ua</a
-            >,
-            <a href="https://tracker.webtorrent.dev/">
-              https://tracker.webtorrent.dev/</a
-            >
+            WebTorrent trackers - <code>wss://tracker.webtorrent.dev</code>,{" "}
+            <code>wss://tracker.openwebtorrent.com</code>
           </li>
         </ul>
 
         <p>
-          <strong>Privacy</strong><br />
-          For privacy reasons it is possible to run private instances of STUN server
-          and WebTorrent tracker. In this case information about the P2P network
-          and its peers will not be available to third parties.
+          Public trackers are fine to start with. For production, we recommend
+          running your own tracker, such as{" "}
+          <a href="/case-studies/wt-tracker">wt-tracker</a>.
         </p>
+
+        <p>
+          <strong>Privacy</strong>
+          <br />
+          For privacy, you can run private instances of the STUN server and
+          WebTorrent tracker. Information about your P2P network and its peers
+          is then not available to third parties.
+        </p>
+
+        <h2>Built and supported by Novage</h2>
+        <p>
+          P2P Media Loader is developed by Novage, a software engineering and
+          R&amp;D company. The same team works with clients on:
+        </p>
+        <ul>
+          <li>
+            <strong>Integration</strong> — adding P2P delivery to your web
+            players, native iOS and Android apps, and Smart TV applications
+          </li>
+          <li>
+            <strong>Custom P2P CDN and eCDN</strong> — delivery networks
+            designed around your audience, infrastructure and security
+            requirements
+          </li>
+          <li>
+            <strong>Tracker infrastructure</strong> — running and scaling
+            WebTorrent trackers for tens or hundreds of thousands of
+            simultaneous viewers
+          </li>
+          <li>
+            <strong>Performance and cost optimization</strong> — tuning P2P
+            ratio, startup time and CDN usage on real traffic
+          </li>
+          <li>
+            <strong>R&amp;D</strong> — streaming, WebRTC and networking problems
+            without an off-the-shelf answer
+          </li>
+          <li>
+            <strong>Full-cycle product development</strong> — product design,
+            development, QA and delivery for products well beyond video
+          </li>
+        </ul>
+
+        <LeadBlock title="Need P2P video delivery on your platform?">
+          The team behind P2P Media Loader integrates it into your players and
+          apps, builds custom P2P CDNs, and supports them in production. We also
+          take on the complete development cycle for other products — product
+          design, development, QA, and delivery.
+        </LeadBlock>
       </div>
     </article>
+    <ContactBanner />
   </div>
   <Footer />
 </Layout>

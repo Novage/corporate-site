@@ -1,0 +1,130 @@
+---
+import Icon, { type IconName } from "../shared/Icon.astro";
+import SectionLabel from "./SectionLabel.astro";
+
+const models: { icon: IconName; title: string; text: string }[] = [
+  {
+    icon: "rocket",
+    title: "Full ownership",
+    text: "We own the product end to end: design, engineering, QA and delivery, managed by one accountable team from concept to production and beyond.",
+  },
+  {
+    icon: "users",
+    title: "Dedicated team",
+    text: "Our engineers join your team, work in your processes and tools, and take ownership of the parts of the product you give them.",
+  },
+  {
+    icon: "message",
+    title: "Consulting",
+    text: "Architecture reviews, technology selection, performance audits and R&D on problems without an off-the-shelf answer, short or long term.",
+  },
+];
+
+const trust: { icon: IconName; title: string; items: string[] }[] = [
+  {
+    icon: "shield-check",
+    title: "Your IP",
+    items: [
+      "We sign an NDA before you share project details",
+      "You own all the code, designs and IP we create",
+      "Code lives in your repositories and infrastructure from day one",
+    ],
+  },
+  {
+    icon: "lock",
+    title: "Access",
+    items: [
+      "Two-factor authentication on all our work accounts",
+      "Engineers get only the access their work needs",
+      "Your production data stays in your systems, not on our machines",
+      "Access is revoked when an engagement, or a person's part in it, ends",
+    ],
+  },
+  {
+    icon: "code",
+    title: "Engineering",
+    items: [
+      "Every change is reviewed by another engineer before it merges",
+      "Automated tests and CI run on every change",
+      "Secrets live in secret managers, never in code",
+      "Dependencies are scanned for known vulnerabilities",
+    ],
+  },
+];
+
+const steps = [
+  {
+    title: "Send a brief",
+    text: "Tell us what you want to build, where it stands today and your timeline.",
+  },
+  {
+    title: "Get a proposal",
+    text: "We come back with a proposed team composition, delivery plan and first milestone.",
+  },
+  {
+    title: "Start with a first milestone",
+    text: "We deliver working software early, with weekly demos and written status along the way.",
+  },
+];
+---
+
+<section id="how-we-work" class="home-section container">
+  <SectionLabel label="How we work" accent="From brief to first milestone" />
+
+  <div class="models">
+    {models.map(({ icon, title, text }) => (
+      <article class="model">
+        <Icon name={icon} class="model-icon" />
+        <h3>{title}</h3>
+        <p>{text}</p>
+      </article>
+    ))}
+  </div>
+
+  <ol class="steps">
+    {steps.map(({ title, text }, i) => (
+      <li class="step">
+        <span class="step-number">{i + 1}</span>
+        <div>
+          <h3>
+            {i === 0 ? (
+              <a href="#contact" data-umami-event="how-we-work-brief">
+                {title}
+              </a>
+            ) : (
+              title
+            )}
+          </h3>
+          <p>{text}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+
+  <p class="work-note">
+    <Icon name="clock" class="note-icon" />
+    <span>
+      <strong>Based in Ukraine (UTC+2, UTC+3 in summer).</strong> We share a
+      full working day with Europe and overlap with US teams in their morning.
+      You get weekly demos, written status and one point of contact.
+    </span>
+  </p>
+  <div id="security" class="trust">
+    <h3 class="trust-title">Confidentiality, IP and security</h3>
+    <div class="trust-grid">
+      {trust.map(({ icon, title, items }) => (
+        <div class="trust-group">
+          <h4>
+            <Icon name={icon} class="inline-icon" />
+            {title}
+          </h4>
+          <ul>
+            {items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

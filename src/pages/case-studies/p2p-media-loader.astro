@@ -1,0 +1,293 @@
+---
+import Footer from "../../components/shared/Footer.astro";
+import Header from "../../components/shared/Header.astro";
+import PageHeader from "../../components/shared/PageHeader.astro";
+import P2PSubNav from "../../components/shared/P2PSubNav.astro";
+import ContactBanner from "../../components/shared/ContactBanner.astro";
+import LeadBlock from "../../components/shared/LeadBlock.astro";
+import P2PNetworkDiagram from "../../components/p2p/P2PNetworkDiagram.astro";
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout
+  title="P2P Media Loader Case Study: P2P Video R&D | Novage"
+  canonical="case-studies/p2p-media-loader"
+  description="How Novage built and keeps evolving P2P Media Loader, an open-source P2P video engine served nearly 200 million times a month: architecture and results."
+>
+  <Header />
+  <div id="content">
+    <article>
+      <PageHeader
+        eyebrow="Case study"
+        title="P2P Media Loader"
+        accent="Eight years of P2P video R&D"
+      >
+        <p class="lead">
+          How we built — and keep rebuilding — an open-source engine that turns
+          viewers into a delivery network, served{" "}
+          <strong>nearly 200 million times a month from jsDelivr alone</strong>.
+        </p>
+        <P2PSubNav current="case-study" />
+      </PageHeader>
+
+      <div class="page container content">
+        <ul class="key-facts">
+          <li>
+            <strong>Since 2018</strong> 35 releases, 5 major versions
+          </li>
+          <li>
+            <strong>~200M</strong> monthly requests on jsDelivr
+          </li>
+          <li>
+            <strong>1,700+</strong> GitHub stars, 345 forks
+          </li>
+          <li>
+            <strong>99%</strong> of live traffic over P2P with 100 viewers,
+            ideally
+          </li>
+        </ul>
+
+        <h2>The challenge</h2>
+        <p>
+          With a CDN, every new viewer adds to the bill. Peer-to-peer delivery
+          turns that around: viewers watching the same stream share video
+          segments with each other, so a bigger audience costs less per viewer,
+          not more.
+        </p>
+        <p>
+          Our aim goes further: bring the cost of delivery close to zero, and
+          bring closer an era where anyone can stream 8K video to a large
+          audience.
+        </p>
+        <p>Doing that in a browser is hard:</p>
+        <ul>
+          <li>
+            no plugins — only WebRTC, HTML5 video and what each browser allows
+          </li>
+          <li>many video players, each seeing the same stream differently</li>
+          <li>
+            live streams that leave only seconds to share each new segment
+          </li>
+          <li>
+            and one rule above all: P2P must never make playback worse than the
+            CDN alone
+          </li>
+        </ul>
+        <p>
+          On top of that, the ground keeps moving: players, browsers, streaming
+          formats and mobile platforms change every year.
+        </p>
+
+        <h2>An architecture that keeps evolving</h2>
+        <p>
+          P2P Media Loader has never been finished. We keep reworking its
+          architecture to raise the P2P ratio and to adapt to how the video
+          ecosystem changes:
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Version</th>
+              <th>What changed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0.x (2018–2019)</td>
+              <td>
+                First versions prove P2P video in the browser for Hls.js and
+                Shaka Player, with WebRTC and WebTorrent signaling
+              </td>
+            </tr>
+            <tr>
+              <td>1.0 (2024)</td>
+              <td>
+                Full rewrite of the code and algorithms: iOS support, ES
+                modules, P2P for split audio and video, zero configuration
+              </td>
+            </tr>
+            <tr>
+              <td>2.0 (2024)</td>
+              <td>
+                Pluggable segment storage — for example, IndexedDB keeps VOD
+                segments across page reloads — and memory limits adapted to each
+                browser
+              </td>
+            </tr>
+            <tr>
+              <td>3.0 (2026)</td>
+              <td>
+                Our own browser-native WebTorrent client with no Node.js
+                polyfills, active peer churning, and builds for Smart TVs and
+                older browsers
+              </td>
+            </tr>
+            <tr>
+              <td>4.0 (2026)</td>
+              <td>
+                Stream identity owned by the core, and predictable swarm IDs so
+                private trackers can allowlist swarms
+              </td>
+            </tr>
+            <tr>
+              <td>5.0 (2026)</td>
+              <td>
+                A manifest-driven core, dash.js and Video.js integrations,
+                rendezvous hashing for segment ownership, and DRM support
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Key engineering decisions</h2>
+
+        <h3>One core, thin engine integrations</h3>
+        <p>
+          Video engines such as HLS.js, Shaka Player, dash.js and Video.js 8
+          (VHS) play segmented video through Media Source Extensions, or Managed
+          Media Source on iOS. P2P Media Loader plugs into these engines and
+          delivers the segments over P2P, so every player built on them gets P2P
+          too.
+        </p>
+        <p>
+          Everything the engines have in common lives in one core: P2P
+          networking over WebRTC, the WebTorrent client, manifest parsing,
+          segment storage and the algorithms that decide what to load from peers
+          or the CDN. Each engine integration is a small package that uses the
+          core through its public API. That is why integrations with HLS.js,
+          Shaka Player, dash.js and Video.js 8 came together smoothly, why
+          adding a new engine is straightforward, and why the same core can
+          power our native mobile library.
+        </p>
+
+        <h3>Hybrid by design</h3>
+        <p>
+          Playback always starts over HTTP from the CDN, and the CDN stays the
+          fallback for anything peers can't deliver in time. P2P fills the
+          buffer ahead of the player, so a slow peer doesn't stall playback.
+        </p>
+
+        <h3>One swarm, whatever the player</h3>
+        <p>
+          Since version 5.0 the core parses HLS and MPEG-DASH manifests itself
+          and derives each segment's identity from the manifest. Viewers on
+          HLS.js, Shaka Player, dash.js or Video.js recognize the same segments
+          and share them in one swarm.
+        </p>
+
+        <h3>Rendezvous hashing applied to P2P</h3>
+        <p>
+          When a new live segment appears, one peer should fetch it from the CDN
+          and the rest should get it over P2P. We apply{" "}
+          <a href="https://en.wikipedia.org/wiki/Rendezvous_hashing">
+            rendezvous hashing
+          </a>{" "}
+          among each peer's connected neighbors, not the whole swarm: every peer
+          scores itself and its neighbors, and the lowest score fetches. It
+          needs no coordination round trip, ownership rotates from segment to
+          segment, and a late owner is covered by the others before playback is
+          at risk.
+        </p>
+        <figure class="diagram-figure">
+          <P2PNetworkDiagram />
+          <figcaption>
+            Each browser fetches a different segment from the CDN and shares it
+            with the others, so every segment crosses the CDN once.
+          </figcaption>
+        </figure>
+
+        <h3>Measured, not assumed</h3>
+        <p>
+          Changes are verified in real browsers against live and on-demand
+          streams, and we measure origin traffic instead of assuming it. Placing
+          the player deeper in the live window, for example, gives peers time to
+          trade segments before the player asks for them, and measurably cuts
+          what the origin has to deliver.
+        </p>
+
+        <h3>Safe with DRM</h3>
+        <p>
+          Peers exchange segments exactly as the CDN delivers them, still
+          encrypted. Decryption stays in the player and license requests go
+          straight to the license server, so Widevine, PlayReady, FairPlay and
+          HLS AES-128 streams can use P2P without weakening protection.
+        </p>
+
+        <h3>Runs everywhere</h3>
+        <p>
+          ES modules for modern apps and IIFE builds for Smart TVs and older
+          browsers; memory limits that adapt to each browser; and engine
+          integrations maintained side by side as each engine evolves.
+        </p>
+
+        <h2>The results</h2>
+        <ul>
+          <li>
+            <strong>Nearly 200 million requests a month</strong> on the jsDelivr
+            CDN alone
+          </li>
+          <li>
+            <strong>1,700+ GitHub stars and 345 forks</strong>, and 35 releases
+            since 2018
+          </li>
+          <li>
+            <strong>The bigger the audience, the higher the P2P share</strong> —
+            in ideal conditions, 90% of live traffic goes over P2P with 10
+            viewers, 99% with 100 and 99.9% with 1,000
+          </li>
+          <li>
+            <strong>
+              Integrations with HLS.js, Shaka Player, dash.js and Video.js 8
+              (VHS)
+            </strong>{" "}
+            — all built on one shared core, so every player on these engines
+            gets P2P
+          </li>
+          <li>
+            <strong>A complete open-source stack</strong>, together with our{" "}
+            <a href="/case-studies/wt-tracker">wt-tracker</a> for self-hosted
+            signaling
+          </li>
+        </ul>
+
+        <h2>What's next: native mobile apps</h2>
+        <p>
+          Today P2P Media Loader runs in mobile browsers and can be{" "}
+          <a href="/blog/integrate-p2p-video-streaming-into-mobile-application">
+            embedded into native apps
+          </a>
+          . Our current R&amp;D goes further: a Kotlin Native library that
+          builds for both iOS and Android.
+        </p>
+        <p>
+          It runs a local HTTP proxy built on Kotlin Native networking APIs. Any
+          player in the app sends its media requests to the proxy, which
+          forwards them to a hidden WebView running the same P2P Media Loader
+          core as on the web. The WebView provides the WebRTC engine and the
+          runtime for our JavaScript algorithms, so apps don't have to ship
+          their own WebRTC implementation. The library is at the prototype
+          stage.
+        </p>
+
+        <h2>What it shows</h2>
+        <p>
+          P2P Media Loader is the kind of work we do best: turning a hard
+          networking problem into a product people rely on, then improving it
+          release after release as the platforms around it change. We bring the
+          same approach to client projects — new algorithms, performance work on
+          systems in production, and R&amp;D on problems without an
+          off-the-shelf answer.
+        </p>
+
+        <LeadBlock title="Have a hard problem in video or networking?">
+          The team behind P2P Media Loader integrates it into your players and
+          apps, builds custom P2P CDNs, and supports them in production. We also
+          take on the complete development cycle for other products — product
+          design, development, QA, and delivery.
+        </LeadBlock>
+      </div>
+    </article>
+    <ContactBanner />
+  </div>
+  <Footer />
+</Layout>

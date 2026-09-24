@@ -1,0 +1,119 @@
+---
+import Footer from "../components/shared/Footer.astro";
+import Header from "../components/shared/Header.astro";
+import PageHeader from "../components/shared/PageHeader.astro";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="Privacy Policy | Novage"
+  canonical="privacy"
+  description="How novage.com.ua handles your data: cookie-free analytics, email inquiries, and what the P2P Media Loader demo shares with other viewers."
+>
+  <Header />
+  <div id="content">
+    <article>
+      <PageHeader title="Privacy Policy">
+        <p class="lead">Last updated: September 24, 2026</p>
+      </PageHeader>
+      <div class="page container content">
+        <p>
+          This policy explains what data novage.com.ua collects and why. The
+          site is operated by Novage, LLC. For any privacy question or request,
+          email <a href="mailto:contact@novage.com.ua">contact@novage.com.ua</a>
+          .
+        </p>
+
+        <h2>In short</h2>
+        <ul>
+          <li>This site does not use cookies.</li>
+          <li>
+            We use cookie-free analytics that doesn't identify you personally.
+          </li>
+          <li>If you email us, we use your message only to reply to you.</li>
+          <li>
+            The P2P Media Loader demo connects your browser to other viewers,
+            which shares your IP address with them — see below.
+          </li>
+          <li>We don't sell or share your data for advertising.</li>
+        </ul>
+
+        <h2>Analytics</h2>
+        <p>
+          We use <a href="https://umami.is/">Umami</a>, a privacy-focused
+          analytics service, to count page views and see which pages and links
+          are used. Umami doesn't use cookies and doesn't collect personal data.
+          We see only aggregated statistics such as page views, referring
+          websites, browser and device type, and country.
+        </p>
+
+        <h2>When you contact us</h2>
+        <p>
+          If you email us, we receive your email address, your name if you
+          include it, and your message. We use them only to reply and to discuss
+          the project you wrote about, and we don't add you to any mailing list.
+          You can ask us to delete your messages at any time.
+        </p>
+
+        <h2>The P2P Media Loader demo</h2>
+        <p>
+          The <a href="/p2p-media-loader/demo">live demo</a> shows peer-to-peer
+          video delivery in action, so it works differently from the rest of the
+          site:
+        </p>
+        <ul>
+          <li>
+            <strong>Other viewers.</strong> Your browser connects directly to
+            other people watching the same stream over WebRTC to exchange video
+            segments. This shares your IP address with them.
+          </li>
+          <li>
+            <strong>Signaling servers.</strong> To find other viewers, your
+            browser connects to public WebTorrent trackers (
+            <code>tracker.webtorrent.dev</code> and{" "}
+            <code>tracker.openwebtorrent.com</code>) and public STUN servers run
+            by Google and Twilio. These services receive your IP address.
+          </li>
+          <li>
+            <strong>The video stream.</strong> The demo video is served by
+            Amazon Web Services, which receives standard request data such as
+            your IP address.
+          </li>
+          <li>
+            <strong>GitHub button.</strong> The demo page loads GitHub's star
+            button, which contacts GitHub.
+          </li>
+        </ul>
+        <p>
+          These connections only happen on the demo page, and only while it is
+          open.
+        </p>
+
+        <h2>Hosting</h2>
+        <p>
+          The site is hosted on GitHub Pages. Like any web host, GitHub
+          processes technical data such as IP addresses to deliver the site and
+          keep it secure. Fonts are served from our own site, not from third
+          parties.
+        </p>
+
+        <h2>Your rights</h2>
+        <p>
+          You can ask us what data we hold about you, and ask us to correct or
+          delete it, by emailing{" "}
+          <a href="mailto:contact@novage.com.ua">contact@novage.com.ua</a>. If
+          you are in the European Union, you also have the rights described in
+          the GDPR, including the right to complain to your data protection
+          authority.
+        </p>
+
+        <h2>Changes</h2>
+        <p>
+          If we change this policy, we will update it on this page and change
+          the date at the top.
+        </p>
+      </div>
+    </article>
+  </div>
+  <Footer />
+</Layout>

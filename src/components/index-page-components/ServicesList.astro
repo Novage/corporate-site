@@ -1,64 +1,65 @@
 ---
-import "../../styles/services-list.css";
+import Icon, { type IconName } from "../shared/Icon.astro";
+import SectionLabel from "./SectionLabel.astro";
+
+const offers: { title: string; text: string; icon: IconName }[] = [
+  {
+    title: "Product design & architecture",
+    text: "Scope, user experience, and a technical architecture built for real use and scale.",
+    icon: "pen-tool",
+  },
+  {
+    title: "Software development",
+    text: "Web platforms, enterprise systems, custom tooling, low-level components — any stack that fits the problem.",
+    icon: "code",
+  },
+  {
+    title: "Manual & automated QA",
+    text: "Structured manual testing and automated suites on every release, before it reaches users.",
+    icon: "award",
+  },
+  {
+    title: "Delivery & process management",
+    text: "Planning, prioritization, and <strong>clear reporting</strong> — weekly demos and written status — with one point of accountability.",
+    icon: "clipboard-list",
+  },
+  {
+    title: "R&D & consulting",
+    text: "Applied research for problems without an off-the-shelf answer; architecture reviews and technology selection.",
+    icon: "flask",
+  },
+  {
+    title: "Support & optimization",
+    text: "<strong>Continuous support</strong> and maintenance, audits, and performance work on systems in production.",
+    icon: "gauge",
+  },
+];
 ---
 
-<div class="page container content">
-  <div class="services-container">
-    <article class="services">
-      <div class="title"><h2><span>P2P Solutions</span></h2></div>
-      <div class="list">
-        <ul>
-          <li>
-            P2P video delivery - see <a href="/p2p-media-loader/demo">demo</a>
-          </li>
-          <li>Custom P2P CDN</li>
-          <li>P2P applications development</li>
-          <li>Maintance &amp; support</li>
-          <li>Analysis &amp; optimization</li>
-        </ul>
-      </div>
-      <div class="technology">
-        <img src="/images/p2p.svg" alt="P2P" />
-        <img src="/images/video-transcoding.svg" alt="Video Transcoding" />
-        <img src="/images/web-rtc.svg" alt="WebRTC" />
-        <img src="/images/nodejs.svg" alt="Node.js" />
-      </div>
-    </article>
-    <article class="services">
-      <div class="title"><h2><span>Web Development</span></h2></div>
-      <div class="list">
-        <ul>
-          <li>Full stack web development</li>
-          <li>CMS sites development</li>
-          <li>Single page applications</li>
-          <li>Maintance &amp; support</li>
-          <li>Analysis &amp; optimization</li>
-        </ul>
-      </div>
-      <div class="technology">
-        <img src="/images/wordpress.svg" alt="WordPress" />
-        <img src="/images/angular.svg" alt="Angular" />
-        <img src="/images/react.svg" alt="React" />
-        <img src="/images/express.svg" alt="Express" />
-      </div>
-    </article>
-    <article class="services">
-      <div class="title"><h2><span>Software Development</span></h2></div>
-      <div class="list">
-        <ul>
-          <li>Product design</li>
-          <li>Application development</li>
-          <li>R&amp;D</li>
-          <li>Maintance &amp; support</li>
-          <li>Analysis &amp; optimization</li>
-        </ul>
-      </div>
-      <div class="technology">
-        <img src="/images/java.svg" alt="Java" />
-        <img src="/images/typescript.svg" alt="TypeScript" />
-        <img src="/images/c++.svg" alt="C/C++" />
-        <img src="/images/php.svg" alt="PHP" />
-      </div>
-    </article>
+<section id="services" class="home-section container">
+  <SectionLabel label="What we offer" accent="The complete cycle" />
+  <div class="offers-grid">
+    {offers.map(({ title, text, icon }) => (
+      <article class="offer">
+        <div class="icon-tile">
+          <Icon name={icon} />
+        </div>
+        <div>
+          <h3>{title}</h3>
+          <p set:html={text} />
+        </div>
+      </article>
+    ))}
   </div>
-</div>
+  <p class="callout">
+    <strong class="lead">Teams for every need.</strong> We assemble a complete
+    team around your product —{" "}
+    <strong>
+      product designers, software engineers, QA specialists, and delivery
+      managers
+    </strong>{" "}
+    — one accountable unit that <strong>builds</strong> the product,{" "}
+    <strong>delivers</strong> it to your users, and <strong>maintains</strong>{" "}
+    it in production.
+  </p>
+</section>

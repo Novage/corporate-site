@@ -1,0 +1,257 @@
+---
+import Footer from "../../components/shared/Footer.astro";
+import Header from "../../components/shared/Header.astro";
+import PageHeader from "../../components/shared/PageHeader.astro";
+import ContactBanner from "../../components/shared/ContactBanner.astro";
+import LeadBlock from "../../components/shared/LeadBlock.astro";
+import Icon from "../../components/shared/Icon.astro";
+import WtTrackerDiagram from "../../components/case-studies/WtTrackerDiagram.astro";
+import Layout from "../../layouts/Layout.astro";
+import { organization, siteUrl } from "../../data/organization";
+
+const schema = [
+  organization,
+  {
+    "@type": "SoftwareSourceCode",
+    name: "wt-tracker",
+    description:
+      "High-performance WebTorrent tracker for WebRTC signaling in P2P networks, built on Node.js and µWebSockets.js.",
+    url: `${siteUrl}case-studies/wt-tracker`,
+    codeRepository: "https://github.com/novage/wt-tracker",
+    programmingLanguage: "TypeScript",
+    license: "https://www.apache.org/licenses/LICENSE-2.0",
+    author: { "@id": organization["@id"] },
+  },
+];
+---
+
+<Layout
+  title="wt-tracker: High-Performance WebTorrent Tracker | Novage"
+  canonical="case-studies/wt-tracker"
+  schema={schema}
+  description="How we built wt-tracker, an open-source WebTorrent tracker on Node.js and µWebSockets.js that handles 20,000 peers on a VPS with 1 vCPU and 2 GiB of memory."
+>
+  <Header />
+  <div id="content">
+    <article>
+      <PageHeader
+        eyebrow="Case study"
+        title="wt-tracker"
+        accent="High-Performance WebTorrent Tracker"
+      >
+        <p class="lead">
+          How we built a Node.js WebSocket server that handles{" "}
+          <strong>20,000 simultaneous peers</strong> on a VPS with only 1
+          virtual CPU and 2 GiB of memory — and why that matters for the cost of
+          P2P video.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/novage/wt-tracker">
+            <Icon name="github" class="inline-icon" />
+            View on GitHub
+          </a>
+          <a
+            class="button secondary"
+            href="#contact"
+            data-umami-event="wt-tracker-discuss"
+          >
+            Discuss your project
+          </a>
+        </div>
+      </PageHeader>
+
+      <div class="page container content">
+        <ul class="key-facts">
+          <li>
+            <strong>20,000</strong> simultaneous WebSocket Secure peers
+          </li>
+          <li>
+            <strong>1 vCPU, 2 GiB</strong> a single small VPS
+          </li>
+          <li>
+            <strong>0</strong> load balancers or clusters needed
+          </li>
+          <li>
+            <strong>Apache-2.0</strong> open source
+          </li>
+        </ul>
+
+        <h2>The challenge</h2>
+        <p>
+          Viewers in a <a href="/p2p-media-loader/overview">P2P Media Loader</a>{" "}
+          network find each other through a WebTorrent tracker. Every viewer
+          keeps a WebSocket connection open to the tracker, announces the
+          streams it is watching, and exchanges WebRTC connection offers and
+          answers (SDP) with other viewers of the same stream — a process called
+          WebRTC signaling.
+        </p>
+        <p>
+          Public trackers are fine to start with, but a production audience
+          needs its own. The load is unusual: tens of thousands of long-lived
+          TLS connections and a constant flow of small JSON messages, where
+          every announce can fan out into offers to many other peers. The
+          reference implementation is built on the standard Node.js networking
+          stack, which spends a lot of CPU and memory per connection at that
+          scale.
+        </p>
+        <p>
+          Our goal was to serve a large audience from the cheapest possible
+          server: one small VPS, with no cluster and no load balancer.
+        </p>
+
+        <h2>How we made it fast</h2>
+
+        <figure class="diagram-figure">
+          <WtTrackerDiagram />
+          <figcaption>
+            Every peer keeps a WebSocket connection open. µWebSockets.js handles
+            the networking natively, and the TypeScript core handles the swarms,
+            all on one small server.
+          </figcaption>
+        </figure>
+
+        <h3>An unconventional choice: µWebSockets.js</h3>
+        <p>
+          Most Node.js servers, including the reference tracker, handle
+          networking with the standard Node.js stack. We took a different route:
+          wt-tracker keeps its logic in TypeScript, but hands HTTP, WebSocket
+          and TLS handling to{" "}
+          <a href="https://github.com/uNetworking/uWebSockets.js">
+            µWebSockets.js
+          </a>
+          , a native C++ networking stack. Each connection costs far less CPU
+          and memory, and plain (<code>ws://</code>) and secure (
+          <code>wss://</code>) connections are served by the same process over
+          IPv4 and IPv6.
+        </p>
+
+        <h3>Rejecting bad traffic before it costs anything</h3>
+        <p>
+          Connection limits and allowed-origin checks are applied during the
+          HTTP upgrade, before a WebSocket is even created. A malformed message
+          closes its connection immediately, so misbehaving clients can't tie up
+          the server.
+        </p>
+
+        <h3>No unnecessary work per message</h3>
+        <p>
+          Each peer's state is attached directly to its socket, so incoming
+          messages need no lookup to find their sender. Outgoing announce
+          responses and offers reuse the same message objects and are serialized
+          immediately instead of being allocated for every message. Debug
+          logging is checked before any output is built, so it costs nothing
+          when turned off.
+        </p>
+
+        <h3>Memory designed around the garbage collector</h3>
+        <p>
+          With tens of thousands of peers joining and leaving, garbage
+          collection pauses are a real risk. wt-tracker keeps pools of up to
+          100,000 reusable peer and swarm-membership records, so churn recycles
+          memory instead of creating garbage. A peer's swarm memberships are a
+          linked list stored inside the peer record itself: the common case of a
+          peer in a single swarm needs no extra allocation at all.
+        </p>
+
+        <h3>Constant-time swarm operations</h3>
+        <p>
+          Swarms are found by info hash in hash maps, and each peer remembers
+          its position in its swarm's list. Removing a peer moves the last peer
+          into the freed slot, so leaving a swarm takes the same time whether it
+          has ten peers or ten thousand.
+        </p>
+
+        <h3>Cheap offer fan-out</h3>
+        <p>
+          When a peer announces with WebRTC offers, the tracker forwards them to
+          other peers in the swarm. If there are enough offers for everyone,
+          each peer gets one; otherwise the tracker starts at a random position
+          and walks the swarm — no shuffling and no temporary arrays.
+        </p>
+
+        <h3>Batched cleanup</h3>
+        <p>
+          Instead of a timer per peer, one sweep per announce interval removes
+          peers that have gone silent for two intervals. The cost of cleanup
+          stays flat no matter how many peers are connected.
+        </p>
+
+        <h3>Robust and well tested</h3>
+        <p>
+          100% TypeScript, with CI, unit tests and static analysis on every
+          change.
+        </p>
+
+        <h2>The results</h2>
+        <ul>
+          <li>
+            <strong>20,000 simultaneous WebSocket Secure peers</strong> on a VPS
+            with 1 virtual CPU and 2 GiB of memory — a server that costs a few
+            euros a month.
+          </li>
+          <li>
+            <strong>No complex horizontal scaling</strong> for many P2P video
+            projects: one small server replaces a cluster.
+          </li>
+          <li>
+            <strong>Private by design:</strong> self-hosting keeps information
+            about your audience and P2P network on your own infrastructure.
+          </li>
+          <li>
+            <strong>Production features:</strong> the WebTorrent "scrape"
+            extension, live statistics at <code>/stats.json</code>, allowed and
+            denied origins, connection limits, and a custom index page.
+          </li>
+        </ul>
+        <p>
+          For larger audiences, our article{" "}
+          <a href="/blog/p2p-video-delivery-for-up-to-100k-viewers-for-free">
+            P2P Video Delivery for up to 100k Viewers for Free
+          </a>{" "}
+          compares tracker options and sizing.
+        </p>
+
+        <h2>What's next: every CPU core</h2>
+        <p>
+          We are working on a multi-core mode. Incoming connections are spread
+          across socket worker threads, and swarms are split between tracker
+          workers — one per CPU core — by info hash. Each peer talks to the
+          worker that owns its swarm over a dedicated message channel, so
+          workers never share state or wait on locks.
+        </p>
+
+        <h2>What it shows</h2>
+        <p>
+          wt-tracker is a showcase of how far the Node.js stack can go. Keep the
+          business logic in TypeScript, move the networking to native code, and
+          design data structures and memory use around the runtime — and one
+          small server can take on a load that would otherwise need a cluster.
+          The same approach often lets a team stay on Node.js instead of
+          rewriting a service in another language or scaling it out.
+        </p>
+
+        <h2>Get wt-tracker</h2>
+        <p>
+          wt-tracker is free and open source under the Apache-2.0 license. It
+          works with <a href="/p2p-media-loader/overview">P2P Media Loader</a>{" "}
+          and any WebTorrent-compatible client. Installation, configuration and
+          deployment are covered in the{" "}
+          <a href="https://github.com/novage/wt-tracker#readme">
+            README on GitHub
+          </a>
+          .
+        </p>
+
+        <LeadBlock title="Need a backend that does more with less?">
+          wt-tracker is one example of the performance work we do for clients:
+          profiling real traffic, redesigning hot paths and memory use, and
+          letting one small server do the job of a cluster — for real-time
+          systems, APIs and streaming backends. We also run and scale tracker
+          infrastructure for P2P video in production.
+        </LeadBlock>
+      </div>
+    </article>
+    <ContactBanner />
+  </div>
+  <Footer />
+</Layout>

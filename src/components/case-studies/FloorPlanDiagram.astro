@@ -1,0 +1,243 @@
+---
+// Intent-aware editing, illustrated: dragging one wall updates the rooms on
+// both sides, the connected wall and the door in a single move. A generic
+// drawing, not Yembo's interface.
+---
+
+<svg
+  class="diagram floor-plan"
+  viewBox="0 0 620 380"
+  role="img"
+  aria-labelledby="fp-title fp-desc"
+>
+  <title id="fp-title">Editing a floor plan in one move</title>
+  <desc id="fp-desc">
+    A floor plan with a living room, a bedroom and a kitchen. Dragging the wall
+    between the living room and the other rooms resizes all three rooms, the
+    connected wall and the door together, in a single move.
+  </desc>
+
+  <!-- Room floors (fills only, so they can stretch without distorting walls) -->
+  <rect x="60" y="50" width="220" height="300" class="room room-a"></rect>
+  <rect x="280" y="50" width="280" height="150" class="room room-b"></rect>
+  <rect x="280" y="200" width="280" height="150" class="room room-c"></rect>
+
+  <!-- Wall between bedroom and kitchen: its left end follows the moving wall -->
+  <line x1="280" y1="200" x2="560" y2="200" class="wall inner connected"></line>
+
+  <!-- Outer walls and windows -->
+  <rect x="60" y="50" width="500" height="300" class="wall outer"></rect>
+  <line x1="120" y1="50" x2="200" y2="50" class="window"></line>
+  <line x1="560" y1="250" x2="560" y2="310" class="window"></line>
+
+  <!-- Room labels -->
+  <text x="170" y="206" class="room-label label-a">
+    Living room
+  </text>
+  <text x="420" y="131" class="room-label label-bc">
+    Bedroom
+  </text>
+  <text x="420" y="281" class="room-label label-bc">
+    Kitchen
+  </text>
+
+  <!-- The wall being dragged, with its door and the drag handle -->
+  <g class="moving">
+    <line x1="280" y1="50" x2="280" y2="90" class="wall selected"></line>
+    <line x1="280" y1="140" x2="280" y2="350" class="wall selected"></line>
+    <line x1="280" y1="140" x2="326" y2="140" class="door"></line>
+    <path d="M280 94 A46 46 0 0 1 326 140" class="door-swing"></path>
+    <circle cx="280" cy="262" r="11" class="handle"></circle>
+    <path
+      d="M273 262 h14 M273 262 l4 -4 M273 262 l4 4 M287 262 l-4 -4 M287 262 l-4 4"
+      class="handle-arrows"
+    ></path>
+    <path
+      d="M290 272 l0 22 l6 -6 l5 10 l4 -2 l-5 -10 l8 0 z"
+      class="cursor"
+    ></path>
+  </g>
+</svg>
+
+<style>
+  .diagram {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: inherit;
+  }
+
+  .room-a {
+    fill: #faf8f5;
+  }
+
+  .room-b {
+    fill: #f5f1ec;
+  }
+
+  .room-c {
+    fill: #efe9e1;
+  }
+
+  .wall {
+    fill: none;
+    stroke: #3a3a3a;
+    stroke-linecap: square;
+  }
+
+  .wall.outer {
+    stroke-width: 7;
+  }
+
+  .wall.inner {
+    stroke-width: 4;
+  }
+
+  .wall.selected {
+    stroke: var(--brand);
+    stroke-width: 5;
+  }
+
+  .window {
+    stroke: #ffffff;
+    stroke-width: 3;
+  }
+
+  .door {
+    stroke: #3a3a3a;
+    stroke-width: 2.5;
+  }
+
+  .door-swing {
+    fill: none;
+    stroke: #8a8a8a;
+    stroke-width: 1.5;
+    stroke-dasharray: 3 3;
+  }
+
+  .handle {
+    fill: #ffffff;
+    stroke: var(--brand);
+    stroke-width: 2.5;
+  }
+
+  .handle-arrows {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .cursor {
+    fill: #1f1f1f;
+    stroke: #ffffff;
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+
+  .room-label {
+    font-size: 18px;
+    text-anchor: middle;
+    fill: var(--muted);
+  }
+
+  /* The wall moves 60 units right and back; everything attached follows. */
+  .room,
+  .connected,
+  .room-label,
+  .moving {
+    transform-box: fill-box;
+    animation-duration: 6s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+  }
+
+  .room-a {
+    transform-origin: left center;
+    animation-name: grow-a;
+  }
+
+  .room-b,
+  .room-c,
+  .connected {
+    transform-origin: right center;
+    animation-name: shrink-bc;
+  }
+
+  .label-a,
+  .label-bc,
+  .moving {
+    transform-box: view-box;
+  }
+
+  .label-a,
+  .label-bc {
+    animation-name: shift-half;
+  }
+
+  .moving {
+    animation-name: shift-wall;
+  }
+
+  @keyframes grow-a {
+    0%,
+    17%,
+    77%,
+    100% {
+      transform: scaleX(1);
+    }
+    37%,
+    57% {
+      transform: scaleX(1.2727);
+    }
+  }
+
+  @keyframes shrink-bc {
+    0%,
+    17%,
+    77%,
+    100% {
+      transform: scaleX(1);
+    }
+    37%,
+    57% {
+      transform: scaleX(0.7857);
+    }
+  }
+
+  @keyframes shift-wall {
+    0%,
+    17%,
+    77%,
+    100% {
+      transform: translateX(0);
+    }
+    37%,
+    57% {
+      transform: translateX(60px);
+    }
+  }
+
+  @keyframes shift-half {
+    0%,
+    17%,
+    77%,
+    100% {
+      transform: translateX(0);
+    }
+    37%,
+    57% {
+      transform: translateX(30px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .room,
+    .connected,
+    .room-label,
+    .moving {
+      animation: none;
+    }
+  }
+</style>

@@ -1,0 +1,60 @@
+---
+import Icon from "../shared/Icon.astro";
+import SectionLabel from "./SectionLabel.astro";
+---
+
+<section class="home-section container">
+  <SectionLabel label="Why Novage" accent="The case in three points" />
+  <div class="reasons">
+    <article class="reason">
+      <div class="icon-round">
+        <Icon name="trophy" />
+      </div>
+      <div>
+        <h3>Ownership, not staffing</h3>
+        <p>
+          Typical firms rent out developers and rotate them between accounts. We
+          take ownership of the outcome — which is why our typical clients stay
+          with us <strong>for many years</strong>.
+        </p>
+      </div>
+    </article>
+    <article class="reason">
+      <div class="icon-round">
+        <Icon name="users" />
+      </div>
+      <div>
+        <h3>One accountable team</h3>
+        <p>
+          Design, engineering, QA, and delivery under one roof — no hand-offs
+          between vendors, no gap between "built" and "shipped". A single team
+          answers for the result.
+        </p>
+      </div>
+    </article>
+    <article class="reason">
+      <div class="icon-round">
+        <Icon name="code" />
+      </div>
+      <div>
+        <h3>Proof in production</h3>
+        <p>
+          Our main client and largest project: <strong>Yembo</strong>, a startup
+          building AI for the moving and insurance industries, deployed in{" "}
+          <strong>40+ countries</strong> and processing{" "}
+          <strong>millions of videos</strong> — engineered with us as its
+          partner for seven years.{" "}
+          <a href="/case-studies/yembo">Read the case study</a>.
+        </p>
+      </div>
+    </article>
+  </div>
+  <p class="note">
+    <Icon name="zap" class="note-icon" />
+    <span>
+      <strong>Delivery that doesn't stop:</strong> a distributed team with
+      redundant power and connectivity — our clients' releases have continued
+      uninterrupted.
+    </span>
+  </p>
+</section>

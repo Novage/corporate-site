@@ -1,0 +1,40 @@
+---
+import Icon from "../shared/Icon.astro";
+import SectionLabel from "./SectionLabel.astro";
+---
+
+<section class="home-section container">
+  <SectionLabel
+    label="Who it's for"
+    accent="Teams that want a partner, not a vendor"
+  />
+  <div class="audience-grid">
+    <article class="audience">
+      <Icon name="rocket" class="audience-icon" />
+      <div>
+        <h3>
+          For <em>startups</em>
+        </h3>
+        <p>
+          Most agencies hand you code and an invoice. We hand you a working
+          product: design, engineering, QA, and delivery managed in one
+          contract, from concept to a production-ready release — without the
+          months of hiring.
+        </p>
+      </div>
+    </article>
+    <article class="audience">
+      <Icon name="building" class="audience-icon" />
+      <div>
+        <h3>
+          For <em>established companies</em>
+        </h3>
+        <p>
+          Most vendors staff projects; we adopt products. Engage us for full
+          ownership, a dedicated team extension, or consulting — a partner that
+          integrates with your processes and stays as long as the product does.
+        </p>
+      </div>
+    </article>
+  </div>
+</section>
