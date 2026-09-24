@@ -1,0 +1,51 @@
+---
+import { getCollection } from "astro:content";
+import ContactBanner from "../shared/ContactBanner.astro";
+import Footer from "../shared/Footer.astro";
+import Header from "../shared/Header.astro";
+import Icon from "../shared/Icon.astro";
+import PageHeader from "../shared/PageHeader.astro";
+import Layout from "../../layouts/Layout.astro";
+import { formatPostDate } from "./formatPostDate";
+import "../../styles/blog.css";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf(),
+);
+---
+
+<Layout
+  title="Novage Blog: Web Development, Software Engineering & P2P"
+  canonical="blog/"
+  description="Practical articles from Novage engineers on web and software development, performance, architecture, and P2P video delivery with WebRTC and P2P Media Loader."
+>
+  <Header />
+  <div id="content">
+    <PageHeader title="Blog">
+      <p class="lead">
+        Practical articles on web and software development, performance, and P2P
+        video delivery — from the engineers behind P2P Media Loader.
+      </p>
+    </PageHeader>
+    <main class="container content">
+      <ul class="post-list">
+        {posts.map((post) => (
+          <li class="post-card">
+            <div class="post-meta">
+              {formatPostDate(post.data.date)} · {post.data.author}
+            </div>
+            <h2>
+              <a href={`/blog/${post.id}`}>{post.data.title}</a>
+            </h2>
+            <p set:html={post.data.description} />
+            <a class="read-more" href={`/blog/${post.id}`}>
+              Read article <Icon name="arrow-right" class="inline-icon" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </main>
+    <ContactBanner />
+  </div>
+  <Footer />
+</Layout>

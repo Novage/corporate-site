@@ -1,0 +1,42 @@
+---
+import Icon, { type IconName } from "../shared/Icon.astro";
+
+const stats: { icon: IconName; value: string; text: string; href?: string }[] =
+  [
+    {
+      icon: "shield-check",
+      value: "15+ years",
+      text: "of hands-on software engineering and consulting",
+    },
+    {
+      icon: "heart",
+      value: "Partners",
+      text: "not vendors — our clients typically stay for many years",
+    },
+    {
+      icon: "layers",
+      value: "Any stack",
+      text: "from systems-level C/C++ to modern web platforms",
+    },
+    {
+      icon: "star",
+      value: "2,000+",
+      text: "GitHub stars on open source you can review before hiring us",
+      href: "https://github.com/novage",
+    },
+  ];
+---
+
+<section class="container">
+  <ul class="stats">
+    {stats.map(({ icon, value, text, href }) => (
+      <li class="stat">
+        <Icon name={icon} class="stat-icon" />
+        <div>
+          <div class="value">{href ? <a href={href}>{value}</a> : value}</div>
+          <div class="text">{text}</div>
+        </div>
+      </li>
+    ))}
+  </ul>
+</section>

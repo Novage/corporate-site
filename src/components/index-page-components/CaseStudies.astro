@@ -1,0 +1,53 @@
+---
+import Icon, { type IconName } from "../shared/Icon.astro";
+import SectionLabel from "./SectionLabel.astro";
+
+const studies: {
+  href: string;
+  kind: string;
+  title: string;
+  text: string;
+  icon: IconName;
+}[] = [
+  {
+    href: "/case-studies/yembo",
+    kind: "Client partnership",
+    title: "Yembo",
+    text: "Seven years and a 10+ person team as engineering partner for an AI startup in moving and insurance: a 3D home editor, live video calls and AI integrations.",
+    icon: "users",
+  },
+  {
+    href: "/case-studies/p2p-media-loader",
+    kind: "Open-source R&D",
+    title: "P2P Media Loader",
+    text: "Eight years of P2P video R&D behind an engine served nearly 200 million times a month: rendezvous hashing, a manifest-driven core and native mobile.",
+    icon: "share",
+  },
+  {
+    href: "/case-studies/wt-tracker",
+    kind: "Performance engineering",
+    title: "wt-tracker",
+    text: "A Node.js WebTorrent tracker that handles 20,000 simultaneous peers on a VPS with 1 virtual CPU and 2 GiB of memory.",
+    icon: "server",
+  },
+];
+---
+
+<section id="case-studies" class="home-section container">
+  <SectionLabel label="Case studies" accent="Work we can show" />
+  <div class="case-grid">
+    {studies.map(({ href, kind, title, text, icon }) => (
+      <a class="case-card" href={href}>
+        <div class="case-kind">
+          <Icon name={icon} class="inline-icon" />
+          {kind}
+        </div>
+        <h3>{title}</h3>
+        <p>{text}</p>
+        <span class="case-more">
+          Read the case study <Icon name="arrow-right" class="inline-icon" />
+        </span>
+      </a>
+    ))}
+  </div>
+</section>

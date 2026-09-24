@@ -4,6 +4,7 @@ date: "2019-03-22"
 title: "Setting up P2P Video on a Web Page in 5 Minutes for Free"
 slug: setting-up-p2p-video-on-a-web-page-in-5-minutes-for-free
 description: 'This article will give you instructions on how to easily, quickly and 100% for free enable P2P video delivery on your HTML5 web pages that stream HLS or MPEG-DASH videos with open-source <a href="https://github.com/novage/p2p-media-loader">P2P Media Loader</a> JavaScript library by <a href="https://novage.com.ua/">Novage</a> (see <a href="http://novage.com.ua/p2p-media-loader/demo">the demo</a>).'
+seoDescription: "Enable free P2P video delivery on your HTML5 web pages in 5 minutes with P2P Media Loader: live and VOD HLS or MPEG-DASH streams, with Hls.js or Shaka Player."
 ---
 
 This article will give you instructions on how to easily, quickly and 100% for free enable P2P video delivery on your HTML5 web pages that stream HLS or MPEG-DASH videos with open-source [P2P Media Loader](https://github.com/novage/p2p-media-loader) JavaScript library by [Novage](https://novage.com.ua/) (see [the demo](http://novage.com.ua/p2p-media-loader/demo)).

@@ -1,0 +1,123 @@
+---
+import Icon from "../shared/Icon.astro";
+import SectionLabel from "./SectionLabel.astro";
+import LeadBlock from "../shared/LeadBlock.astro";
+---
+
+<section id="products" class="home-section container">
+  <SectionLabel label="Our products" accent="Open source you can review" />
+  <p class="products-intro">
+    Our open-source P2P video stack is served{" "}
+    <strong>nearly 200 million times a month from jsDelivr alone</strong>. The
+    goal behind it: bring the cost of video delivery close to zero, so that
+    streaming even 8K video to a large audience is affordable for anyone.
+  </p>
+  <div class="products-grid">
+    <article class="product">
+      <div class="product-head">
+        <div class="icon-tile">
+          <Icon name="share" />
+        </div>
+        <div>
+          <h3>P2P Media Loader</h3>
+          <div class="meta">Open source · 1,700+ GitHub stars</div>
+        </div>
+      </div>
+      <p class="tagline">
+        Cut video delivery costs with peer-to-peer streaming
+      </p>
+      <p>
+        Viewers of the same stream share video segments with each other, so your
+        CDN delivers far less —{" "}
+        <strong>the bigger the audience, the bigger the savings.</strong> On a
+        live stream, 10 viewers can offload up to 90% of traffic and 100 viewers
+        up to 99%. HLS and MPEG-DASH, live and on demand, on web, iOS and
+        Android — with nothing for viewers to install.
+      </p>
+      <div class="built">
+        <div class="built-label">How we built it</div>
+        <ul>
+          <li>
+            A set of state-of-the-art algorithms, design and ideas that make P2P
+            video delivery not only possible, but almost free for anyone
+          </li>
+          <li>
+            Real-time decisions, segment by segment, on whether to load from
+            peers or the CDN — without hurting playback
+          </li>
+          <li>
+            A WebRTC P2P mesh that runs in web browsers and inside native iOS
+            and Android apps — no plugins, and free public trackers work out of
+            the box
+          </li>
+        </ul>
+      </div>
+      <div class="links">
+        <a class="button primary small" href="/p2p-media-loader/demo">
+          Live demo
+        </a>
+        <a href="/p2p-media-loader/overview">Overview</a>
+        <a href="/case-studies/p2p-media-loader">Case study</a>
+        <a href="https://github.com/novage/p2p-media-loader">
+          <Icon name="github" class="inline-icon" />
+          GitHub
+        </a>
+      </div>
+    </article>
+    <article class="product">
+      <div class="product-head">
+        <div class="icon-tile">
+          <Icon name="server" />
+        </div>
+        <div>
+          <h3>wt-tracker</h3>
+          <div class="meta">Open source · Works with P2P Media Loader</div>
+        </div>
+      </div>
+      <p class="tagline">Run your own P2P network on one small server</p>
+      <p>
+        The server that connects viewers to each other in a P2P Media Loader
+        network. Public trackers are fine to start with; for production we
+        recommend running your own. It handles{" "}
+        <strong>20,000 simultaneous peers</strong> on a VPS with only 2 GiB
+        memory and 1 virtual CPU, and self-hosting keeps data about your
+        audience on your own infrastructure.
+      </p>
+      <div class="built">
+        <div class="built-label">How we built it</div>
+        <ul>
+          <li>
+            A showcase of getting the most performance out of the Node.js stack,
+            with a µWebSockets.js I/O backend and an optimized hot path
+          </li>
+          <li>
+            Eliminates the need for complex horizontal scaling in many P2P video
+            projects
+          </li>
+          <li>
+            Robust and well tested: CI, unit tests, static analysis, 100%
+            TypeScript
+          </li>
+        </ul>
+      </div>
+      <div class="links">
+        <a class="button primary small" href="/case-studies/wt-tracker">
+          Case study
+        </a>
+        <a href="https://github.com/novage/wt-tracker">
+          <Icon name="github" class="inline-icon" />
+          GitHub
+        </a>
+      </div>
+    </article>
+  </div>
+  <LeadBlock title="The same team can build your product">
+    The engineers behind these projects take on the complete cycle for our
+    clients — product design, development, QA, and delivery — for web platforms,
+    enterprise systems, and custom software. Bring us a hard problem that needs
+    new algorithms, deep performance work, or lower running costs, or a product
+    that simply needs to ship on time and keep working. For P2P video, we also
+    integrate P2P Media Loader, build custom P2P CDNs, and support them in
+    production.
+  </LeadBlock>
+</section>
