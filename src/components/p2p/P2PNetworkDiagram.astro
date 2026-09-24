@@ -29,9 +29,10 @@ const sigPaths = [
   "M442 232 L398 232",
 ];
 
-// Flow animation, following "How it works": playback starts over HTTP, peers
-// announce to the tracker and hear back, then peers share segments over P2P.
-const cycle = 6;
+// Flow animation: each browser gets a segment over HTTP, then the browsers
+// share them over P2P. Signaling isn't animated: it happens alongside, not
+// per segment, so showing it as a step would suggest a dependency.
+const cycle = 5;
 const phase = (start: number, end: number, reverse = false) => ({
   motionTimes: `0;${start};${end};1`,
   points: reverse ? "1;1;0;0" : "0;0;1;1",
@@ -44,13 +45,7 @@ const packets = [
   ...httpPaths.map((path, i) => ({
     path,
     kind: `seg-${i + 1}`,
-    ...phase(0, 0.18),
-  })),
-  ...sigPaths.map((path) => ({ path, kind: "sig", ...phase(0.22, 0.32) })),
-  ...sigPaths.map((path) => ({
-    path,
-    kind: "sig",
-    ...phase(0.34, 0.44, true),
+    ...phase(0, 0.25),
   })),
   // p2pPaths run top→left, top→right, left→right; the reverse direction
   // carries the other browser's segment.
@@ -59,8 +54,8 @@ const packets = [
     ["seg-1", "seg-3"],
     ["seg-2", "seg-3"],
   ].flatMap(([forward, back], i) => [
-    { path: p2pPaths[i], kind: forward, ...phase(0.5, 0.8) },
-    { path: p2pPaths[i], kind: back, ...phase(0.5, 0.8, true) },
+    { path: p2pPaths[i], kind: forward, ...phase(0.32, 0.72) },
+    { path: p2pPaths[i], kind: back, ...phase(0.32, 0.72, true) },
   ]),
 ];
 ---
@@ -348,10 +343,6 @@ const packets = [
 
   .packet.seg-3 {
     fill: #3f63b0;
-  }
-
-  .packet.sig {
-    fill: #b8862f;
   }
 
   @media (prefers-reduced-motion: reduce) {
