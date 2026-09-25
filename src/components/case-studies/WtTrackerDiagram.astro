@@ -1,0 +1,254 @@
+---
+// wt-tracker architecture: tens of thousands of peers keep WebSocket
+// connections to one small VPS, where µWebSockets.js handles the networking
+// natively and the TypeScript tracker core handles swarms and signaling.
+
+// A grid of peers; a label below says there are many more
+const peerRows = [70, 125, 180, 235, 290, 345];
+const peerCols = [40, 80, 120, 160];
+const peers = peerRows.flatMap((y) => peerCols.map((x) => ({ x, y })));
+
+// Connections from the nearest peer in each row into the networking layer
+const links = peerRows.map((y) => `M172 ${y} C230 ${y} 250 150 318 150`);
+
+// Signaling messages: announces in, offers and answers back out
+const cycle = 4;
+const packets = links.flatMap((path, i) => {
+  const start = +((i * 0.07) % 0.4).toFixed(2);
+  const inEnd = +(start + 0.22).toFixed(2);
+  const outStart = +(inEnd + 0.12).toFixed(2);
+  const outEnd = +(outStart + 0.22).toFixed(2);
+  return [
+    {
+      path,
+      times: `0;${start};${inEnd};1`,
+      points: "0;0;1;1",
+      a: start,
+      b: inEnd,
+    },
+    {
+      path,
+      times: `0;${outStart};${outEnd};1`,
+      points: "1;1;0;0",
+      a: outStart,
+      b: outEnd,
+    },
+  ];
+});
+const fade = (a: number, b: number) =>
+  `0;${a};${+(a + 0.02).toFixed(2)};${+(b - 0.02).toFixed(2)};${b};1`;
+
+const chips = [
+  { x: 332, y: 238, label: "Object pools" },
+  { x: 462, y: 238, label: "Swarm index" },
+  { x: 332, y: 292, label: "Offer fan-out" },
+  { x: 462, y: 292, label: "Batched cleanup" },
+];
+---
+
+<svg
+  class="diagram"
+  viewBox="0 0 620 400"
+  role="img"
+  aria-labelledby="wt-diagram-title wt-diagram-desc"
+>
+  <title id="wt-diagram-title">wt-tracker architecture</title>
+  <desc id="wt-diagram-desc">
+    Tens of thousands of peers keep WebSocket connections to a single small VPS
+    with 1 virtual CPU and 2 GiB of memory. µWebSockets.js handles HTTP,
+    WebSocket and TLS natively, and the TypeScript tracker core handles swarms
+    with object pools, a swarm index, offer fan-out and batched cleanup.
+  </desc>
+
+  <text x="100" y="30" class="caption-strong">
+    20,000 peers
+  </text>
+
+  <!-- One small VPS -->
+  <rect x="300" y="44" width="300" height="336" rx="16" class="server"></rect>
+  <text x="450" y="30" class="caption-strong">
+    One small VPS
+  </text>
+  <text x="450" y="72" class="caption-muted">
+    1 vCPU · 2 GiB memory
+  </text>
+
+  <!-- WebSocket connections -->
+  {links.map((d) => (
+    <path d={d} class="link" />
+  ))}
+
+  <!-- Peers -->
+  {peers.map(({ x, y }) => (
+    <g>
+      <circle cx={x} cy={y} r="13" class="peer" />
+      <path
+        d={`M${x - 4} ${y - 6} L${x + 6} ${y} L${x - 4} ${y + 6} Z`}
+        class="play"
+      />
+    </g>
+  ))}
+  <text x="100" y="388" class="caption-muted">
+    …and thousands more
+  </text>
+
+  <!-- Signaling messages -->
+  <g class="packets" aria-hidden="true">
+    {packets.map(({ path, times, points, a, b }) => (
+      <circle r="4.5" class="packet" opacity="0">
+        <animateMotion
+          dur={`${cycle}s`}
+          repeatCount="indefinite"
+          path={path}
+          keyPoints={points}
+          keyTimes={times}
+          calcMode="linear"
+        />
+        <animate
+          attributeName="opacity"
+          dur={`${cycle}s`}
+          repeatCount="indefinite"
+          values="0;0;1;1;0;0"
+          keyTimes={fade(a, b)}
+        />
+      </circle>
+    ))}
+  </g>
+
+  <rect
+    x="318"
+    y="100"
+    width="264"
+    height="84"
+    rx="10"
+    class="layer-native"
+  ></rect>
+  <text x="450" y="135" class="layer-title">
+    µWebSockets.js
+  </text>
+  <text x="450" y="160" class="layer-muted">
+    native HTTP · WebSocket · TLS
+  </text>
+
+  <path d="M450 186 L450 204" class="connector"></path>
+
+  <rect
+    x="318"
+    y="206"
+    width="264"
+    height="158"
+    rx="10"
+    class="layer-core"
+  ></rect>
+  <text x="450" y="229" class="layer-title small">
+    TypeScript tracker core
+  </text>
+  {chips.map(({ x, y, label }) => (
+    <g>
+      <rect x={x} y={y + 6} width="106" height="40" rx="8" class="chip" />
+      <text x={x + 53} y={y + 31} class="chip-label">
+        {label}
+      </text>
+    </g>
+  ))}
+</svg>
+
+<style>
+  .diagram {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: inherit;
+  }
+
+  .caption-strong {
+    font-size: 18px;
+    text-anchor: middle;
+    fill: var(--heading);
+  }
+
+  .caption-muted {
+    font-size: 14px;
+    text-anchor: middle;
+    fill: var(--muted);
+  }
+
+  .link {
+    fill: none;
+    stroke: #b8862f;
+    stroke-width: 1.5;
+    stroke-dasharray: 5 4;
+    opacity: 0.7;
+  }
+
+  .peer {
+    fill: #ffffff;
+    stroke: #cfc6bb;
+    stroke-width: 1.5;
+  }
+
+  .play {
+    fill: var(--brand);
+  }
+
+  .packet {
+    fill: #b8862f;
+  }
+
+  .server {
+    fill: var(--warm-bg);
+    stroke: #6b7780;
+    stroke-width: 2;
+  }
+
+  .layer-native {
+    fill: #ffffff;
+    stroke: var(--brand);
+    stroke-width: 2;
+  }
+
+  .layer-core {
+    fill: #ffffff;
+    stroke: #cfc6bb;
+    stroke-width: 1.5;
+  }
+
+  .layer-title {
+    font-size: 18px;
+    text-anchor: middle;
+    fill: var(--heading);
+  }
+
+  .layer-title.small {
+    font-size: 16px;
+  }
+
+  .layer-muted {
+    font-size: 13.5px;
+    text-anchor: middle;
+    fill: var(--muted);
+  }
+
+  .connector {
+    stroke: #6b7780;
+    stroke-width: 2;
+  }
+
+  .chip {
+    fill: var(--warm);
+    stroke: var(--warm-border);
+    stroke-width: 1.5;
+  }
+
+  .chip-label {
+    font-size: 13.5px;
+    text-anchor: middle;
+    fill: var(--text);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .packets {
+      display: none;
+    }
+  }
+</style>

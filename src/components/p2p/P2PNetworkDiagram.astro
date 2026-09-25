@@ -1,0 +1,358 @@
+---
+// Key components of the P2P network: browser peers exchange media over P2P,
+// fetch from the CDN over HTTP, and find each other through the tracker.
+
+const peers = [
+  { x: 235, y: 24, id: "top" },
+  { x: 20, y: 196, id: "left" },
+  { x: 450, y: 196, id: "right" },
+];
+const w = 150;
+const h = 92;
+
+// Media over P2P between browsers
+const p2pPaths = [
+  "M235 66 C160 66 105 110 95 188",
+  "M385 66 C460 66 515 110 525 188",
+  "M95 296 C95 528 525 528 525 296",
+];
+// Media over HTTP, drawn from the CDN to each browser
+const httpPaths = [
+  "M222 372 C205 320 205 170 250 124",
+  "M215 395 C190 395 175 330 172 296",
+  "M405 395 C430 395 445 330 448 296",
+];
+// WebRTC signaling, drawn from each browser to the tracker
+const sigPaths = [
+  "M330 124 L330 186",
+  "M178 232 L222 232",
+  "M442 232 L398 232",
+];
+
+// Flow animation: each browser gets a segment over HTTP, then the browsers
+// share them over P2P. Signaling isn't animated: it happens alongside, not
+// per segment, so showing it as a step would suggest a dependency.
+const cycle = 5;
+const phase = (start: number, end: number, reverse = false) => ({
+  motionTimes: `0;${start};${end};1`,
+  points: reverse ? "1;1;0;0" : "0;0;1;1",
+  fadeTimes: `0;${start};${+(start + 0.02).toFixed(3)};${+(end - 0.02).toFixed(3)};${end};1`,
+});
+// Each browser fetches a different segment from the CDN (seg-1 to the top,
+// seg-2 to the left, seg-3 to the right), then shares it with the other two
+// over P2P, so every segment crosses the CDN once.
+const packets = [
+  ...httpPaths.map((path, i) => ({
+    path,
+    kind: `seg-${i + 1}`,
+    ...phase(0, 0.25),
+  })),
+  // p2pPaths run top→left, top→right, left→right; the reverse direction
+  // carries the other browser's segment.
+  ...[
+    ["seg-1", "seg-2"],
+    ["seg-1", "seg-3"],
+    ["seg-2", "seg-3"],
+  ].flatMap(([forward, back], i) => [
+    { path: p2pPaths[i], kind: forward, ...phase(0.32, 0.72) },
+    { path: p2pPaths[i], kind: back, ...phase(0.32, 0.72, true) },
+  ]),
+];
+---
+
+<svg
+  class="diagram"
+  viewBox="0 0 620 520"
+  role="img"
+  aria-labelledby="p2p-network-title p2p-network-desc"
+>
+  <title id="p2p-network-title">Key components of the P2P network</title>
+  <desc id="p2p-network-desc">
+    Three browsers run P2P Media Loaders. They exchange media with each other
+    over P2P, download from an HTTP server or CDN with an HLS or MPEG-DASH
+    source, and find each other through WebTorrent and STUN servers, which can
+    be public or private.
+  </desc>
+
+  <defs>
+    {[
+      ["nd-p2p", "fill-p2p"],
+      ["nd-http", "fill-http"],
+      ["nd-sig", "fill-sig"],
+    ].map(([id, cls]) => (
+      <marker
+        id={id}
+        viewBox="0 0 10 10"
+        refX="9"
+        refY="5"
+        markerWidth="7"
+        markerHeight="7"
+        orient="auto-start-reverse"
+      >
+        <path d="M0 0 10 5 0 10z" class={cls} />
+      </marker>
+    ))}
+  </defs>
+
+  <!-- Media over P2P between browsers -->
+  {p2pPaths.map((d) => (
+    <path
+      d={d}
+      class="link-p2p"
+      marker-start="url(#nd-p2p)"
+      marker-end="url(#nd-p2p)"
+    />
+  ))}
+
+  <!-- Media over HTTP from the CDN -->
+  {httpPaths.map((d) => (
+    <path d={d} class="link-http" marker-end="url(#nd-http)" />
+  ))}
+
+  <!-- WebRTC signaling through the tracker -->
+  {sigPaths.map((d) => (
+    <path
+      d={d}
+      class="link-sig"
+      marker-start="url(#nd-sig)"
+      marker-end="url(#nd-sig)"
+    />
+  ))}
+
+  <!-- Data flowing through the network -->
+  <g class="packets" aria-hidden="true">
+    {packets.map(({ path, kind, motionTimes, points, fadeTimes }) => (
+      <circle r="5" class={`packet ${kind}`} opacity="0">
+        <animateMotion
+          dur={`${cycle}s`}
+          repeatCount="indefinite"
+          path={path}
+          keyPoints={points}
+          keyTimes={motionTimes}
+          calcMode="linear"
+        />
+        <animate
+          attributeName="opacity"
+          dur={`${cycle}s`}
+          repeatCount="indefinite"
+          values="0;0;1;1;0;0"
+          keyTimes={fadeTimes}
+        />
+      </circle>
+    ))}
+  </g>
+
+  <!-- Browsers running P2P Media Loader -->
+  {peers.map(({ x, y }) => (
+    <g>
+      <rect x={x} y={y} width={w} height={h} rx="10" class="browser" />
+      <path
+        d={`M${x} ${y + 10} a10 10 0 0 1 10 -10 h${w - 20} a10 10 0 0 1 10 10 v12 h-${w} z`}
+        class="browser-bar"
+      />
+      <circle cx={x + 12} cy={y + 11} r="2.5" class="dot" />
+      <circle cx={x + 21} cy={y + 11} r="2.5" class="dot" />
+      <circle cx={x + 30} cy={y + 11} r="2.5" class="dot" />
+      <text x={x + w / 2 + 14} y={y + 15} class="bar-label">
+        Browser
+      </text>
+      <path
+        d={`M${x + w / 2 - 7} ${y + 36} L${x + w / 2 + 10} ${y + 46} L${x + w / 2 - 7} ${y + 56} Z`}
+        class="play"
+      />
+      <text x={x + w / 2} y={y + 80} class="peer-label">
+        P2P Media Loader
+      </text>
+    </g>
+  ))}
+
+  <!-- Tracker and STUN -->
+  <rect x="222" y="192" width="176" height="80" rx="12" class="infra"></rect>
+  <text x="310" y="219" class="box-strong">
+    WebTorrent tracker
+  </text>
+  <text x="310" y="240" class="box-strong">
+    + STUN server
+  </text>
+  <text x="310" y="261" class="box-muted">
+    public or private
+  </text>
+
+  <!-- CDN -->
+  <rect x="215" y="372" width="190" height="72" rx="12" class="source"></rect>
+  <text x="310" y="400" class="box-strong">
+    HTTP server or CDN
+  </text>
+  <text x="310" y="421" class="box-muted">
+    HLS or MPEG-DASH source
+  </text>
+
+  <!-- Segment colors -->
+  <g transform="translate(492 17)">
+    <circle cx="0" cy="0" r="5" class="packet seg-1"></circle>
+    <circle cx="14" cy="0" r="5" class="packet seg-2"></circle>
+    <circle cx="28" cy="0" r="5" class="packet seg-3"></circle>
+    <text x="42" y="5" class="legend">
+      Segments
+    </text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(16 12)">
+    <line
+      x1="0"
+      y1="0"
+      x2="30"
+      y2="0"
+      class="link-p2p"
+      marker-end="url(#nd-p2p)"
+    ></line>
+    <text x="40" y="5" class="legend">
+      Media over P2P
+    </text>
+    <line
+      x1="0"
+      y1="22"
+      x2="30"
+      y2="22"
+      class="link-http"
+      marker-end="url(#nd-http)"
+    ></line>
+    <text x="40" y="27" class="legend">
+      Media over HTTP
+    </text>
+    <line
+      x1="0"
+      y1="44"
+      x2="30"
+      y2="44"
+      class="link-sig"
+      marker-end="url(#nd-sig)"
+    ></line>
+    <text x="40" y="49" class="legend">
+      WebRTC signaling
+    </text>
+  </g>
+</svg>
+
+<style>
+  .diagram {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: inherit;
+  }
+
+  .browser {
+    fill: #ffffff;
+    stroke: #cfc6bb;
+    stroke-width: 1.5;
+  }
+
+  .browser-bar {
+    fill: var(--warm);
+    stroke: #cfc6bb;
+    stroke-width: 1.5;
+  }
+
+  .dot {
+    fill: #cfc6bb;
+  }
+
+  .bar-label {
+    font-size: 13px;
+    text-anchor: middle;
+    fill: var(--muted);
+  }
+
+  .play {
+    fill: var(--brand);
+  }
+
+  .peer-label {
+    font-size: 15px;
+    text-anchor: middle;
+    fill: var(--heading);
+  }
+
+  .infra {
+    fill: var(--warm);
+    stroke: var(--warm-border);
+    stroke-width: 1.5;
+  }
+
+  .source {
+    fill: #ffffff;
+    stroke: #6b7780;
+    stroke-width: 2;
+  }
+
+  .box-strong {
+    font-size: 16.5px;
+    text-anchor: middle;
+    fill: var(--heading);
+  }
+
+  .box-muted {
+    font-size: 14px;
+    text-anchor: middle;
+    fill: var(--muted);
+  }
+
+  .link-p2p,
+  .link-http,
+  .link-sig {
+    fill: none;
+  }
+
+  .link-p2p {
+    stroke: var(--brand);
+    stroke-width: 2.75;
+  }
+
+  .link-http {
+    stroke: #6b7780;
+    stroke-width: 1.75;
+  }
+
+  .link-sig {
+    stroke: #b8862f;
+    stroke-width: 1.75;
+    stroke-dasharray: 5 4;
+  }
+
+  .fill-p2p {
+    fill: var(--brand);
+  }
+
+  .fill-http {
+    fill: #6b7780;
+  }
+
+  .fill-sig {
+    fill: #b8862f;
+  }
+
+  .packet.seg-1 {
+    fill: var(--brand);
+  }
+
+  .packet.seg-2 {
+    fill: #2a8c7e;
+  }
+
+  .packet.seg-3 {
+    fill: #3f63b0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .packets {
+      display: none;
+    }
+  }
+
+  .legend {
+    font-size: 16px;
+    fill: var(--text);
+  }
+</style>

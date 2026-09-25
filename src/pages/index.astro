@@ -1,20 +1,78 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/shared/Header.astro";
-import ServicesList from "../components/index-page-components/ServicesList.astro";
-import TechnologiesList from "../components/index-page-components/TechnologiesList.astro";
-import Footer from "../components/shared/Footer.astro";
 import PageHeader from "../components/shared/PageHeader.astro";
+import Stats from "../components/index-page-components/Stats.astro";
+import ServicesList from "../components/index-page-components/ServicesList.astro";
+import Audience from "../components/index-page-components/Audience.astro";
+import HowWeWork from "../components/index-page-components/HowWeWork.astro";
+import WhyNovage from "../components/index-page-components/WhyNovage.astro";
+import CaseStudies from "../components/index-page-components/CaseStudies.astro";
+import Products from "../components/index-page-components/Products.astro";
+import ContactBanner from "../components/shared/ContactBanner.astro";
+import Footer from "../components/shared/Footer.astro";
+import "../styles/home.css";
+import { organization, siteUrl } from "../data/organization";
+
+const schema = [
+  organization,
+  {
+    "@type": "WebSite",
+    "@id": `${siteUrl}#website`,
+    url: siteUrl,
+    name: "Novage",
+    publisher: { "@id": organization["@id"] },
+  },
+];
 ---
 
-<Layout title="Novage" canonical="">
+<Layout
+  title="Novage — Software Engineering & Full-Cycle Development"
+  canonical=""
+  schema={schema}
+  description="Novage is a software engineering & R&D company with 15+ years of experience, taking on the complete cycle: product design, development, QA, and delivery."
+>
   <Header />
   <div id="content">
-    <article>
-      <PageHeader title="Consulting & Full Development Cycle" />
+    <main class="home-page">
+      <PageHeader
+        large
+        title="Fifteen years of building software."
+        accent="Engineering software built to last."
+      >
+        <p class="lead">
+          Novage is a software engineering &amp; R&amp;D company. We take on the{" "}
+          <strong>complete development cycle</strong> — product design,
+          development, manual and automated QA — and{" "}
+          <strong>manage the entire delivery process</strong>, so our clients
+          receive working software, not a list of tasks.
+        </p>
+        <div class="actions">
+          <a
+            class="button primary"
+            href="#contact"
+            data-umami-event="hero-discuss"
+          >
+            Discuss your project
+          </a>
+          <a
+            class="button secondary"
+            href="#products"
+            data-umami-event="hero-open-source"
+          >
+            See our open source
+          </a>
+        </div>
+      </PageHeader>
+      <Stats />
       <ServicesList />
-      <TechnologiesList />
-    </article>
+      <Audience />
+      <HowWeWork />
+      <WhyNovage />
+      <CaseStudies />
+      <Products />
+    </main>
+    <ContactBanner />
   </div>
   <Footer />
 </Layout>

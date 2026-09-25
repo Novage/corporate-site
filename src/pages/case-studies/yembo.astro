@@ -1,0 +1,199 @@
+---
+import Footer from "../../components/shared/Footer.astro";
+import Header from "../../components/shared/Header.astro";
+import PageHeader from "../../components/shared/PageHeader.astro";
+import ContactBanner from "../../components/shared/ContactBanner.astro";
+import LeadBlock from "../../components/shared/LeadBlock.astro";
+import FloorPlanDiagram from "../../components/case-studies/FloorPlanDiagram.astro";
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout
+  title="Yembo Case Study: Engineering for an AI Platform | Novage"
+  canonical="case-studies/yembo"
+  description="Seven years as engineering partner to Yembo, an AI startup for moving and insurance in 40+ countries: full-stack development, 3D, video calls and AI."
+>
+  <Header />
+  <div id="content">
+    <article>
+      <PageHeader
+        eyebrow="Case study"
+        title="Yembo"
+        accent="Long-term engineering partner for an AI platform"
+      >
+        <p class="lead">
+          <a href="https://www.yembo.ai/">Yembo</a> is a growth-stage startup
+          building AI for the moving and insurance industries, deployed in{" "}
+          <strong>40+ countries</strong> and processing{" "}
+          <strong>millions of videos</strong>. For <strong>seven years</strong>,
+          our <strong>10+ person team</strong> has worked alongside Yembo's core
+          team as its engineering partner — across web, backend, mobile and QA.
+        </p>
+        <div class="actions">
+          <a
+            class="button primary"
+            href="#contact"
+            data-umami-event="yembo-discuss"
+          >
+            Discuss your project
+          </a>
+        </div>
+      </PageHeader>
+
+      <div class="page container content">
+        <ul class="key-facts">
+          <li>
+            <strong>40+</strong> countries using the platform
+          </li>
+          <li>
+            <strong>Millions</strong> of videos processed
+          </li>
+          <li>
+            <strong>7 years</strong> of engineering partnership
+          </li>
+          <li>
+            <strong>10+</strong> people across web, backend, mobile and QA
+          </li>
+        </ul>
+
+        <h2>About Yembo</h2>
+        <p>
+          Yembo is a venture-backed startup building what it calls "spatial
+          intelligence for every property." It started in the moving industry,
+          where its AI understands images and videos of a home for virtual
+          surveys, and has grown into insurance, with AI-powered 3D home
+          inspections for claims and underwriting, and into property management.
+          Yembo holds 10+ granted AI patents, and its platform is deployed in
+          more than 40 countries.
+        </p>
+
+        <h2>The engagement</h2>
+        <p>
+          We are not a vendor working through a ticket queue. Our team takes
+          responsibility for applications and modules across Yembo's products
+          and builds new features together with Yembo's core team — from the
+          first design discussions to production.
+        </p>
+        <ul>
+          <li>
+            <strong>Full-stack development</strong> — frontend, backend and
+            mobile applications
+          </li>
+          <li>
+            <strong>Automated QA</strong> — end-to-end test automation for the
+            products we work on
+          </li>
+          <li>
+            <strong>Technology stack</strong> — React, TypeScript and
+            JavaScript, React Native, Node.js, PHP, AWS and Playwright
+          </li>
+        </ul>
+
+        <h2>What we build with Yembo's core team</h2>
+
+        <h3>A 3D home editor for insurance claims</h3>
+        <p>
+          With Yembo's{" "}
+          <a href="https://yembo.ai/insurance/claims">ScanMyHome®</a>,
+          policyholders, inspectors and adjusters scan a home on their phone,
+          and Yembo's AI 3D pipeline turns the scan into a 3D model of the
+          house. Our part starts there: together with Yembo's core team, we
+          built the in-browser 3D editor for that model. Users can adjust rooms,
+          walls, doors, windows, objects and the roof, with full undo and redo.
+          It is built on <a href="https://www.babylonjs.com/">Babylon.js</a>,
+          and we designed its architecture.
+        </p>
+        <p>
+          The hard part was making editing fast. We designed the heuristic
+          algorithms and interaction model behind it, including{" "}
+          <strong>bump-outs</strong>, <strong>wall merging</strong> and{" "}
+          <strong>vertex merging</strong>. When someone moves a wall or a
+          corner, the editor works out what they intend: it pushes part of a
+          wall out into a bump-out, merges walls that line up into one, and
+          joins corners that meet. The whole floor plan updates in a single
+          move, where a generic vector editor would need many separate edits.
+          The result is a state-of-the-art editor that is easy to use.
+        </p>
+        <figure class="diagram-figure">
+          <FloorPlanDiagram />
+          <figcaption>
+            An illustration of the idea: drag one wall, and the rooms on both
+            sides, the connected wall and the door update together.
+          </figcaption>
+        </figure>
+
+        <h3>Live video calls</h3>
+        <p>
+          Real-time video calls built into Yembo's products, developed together
+          with the core team.
+        </p>
+
+        <h3>AI in the product</h3>
+        <p>
+          We integrate AI solutions into Yembo's products — both models
+          developed in-house by Yembo's US team and services from outside
+          vendors — so that AI results reach users as working product features.
+        </p>
+
+        <h3>From prototype to production</h3>
+        <p>
+          Yembo's CEO designs innovative prototypes; we help turn them into
+          production features that hold up under real use and scale.
+        </p>
+
+        <h2>Keeping a large codebase modern</h2>
+        <p>
+          A platform deployed in more than 40 countries has to keep moving
+          without breaking. Staying on modern technology is part of our
+          responsibility, not an occasional project:
+        </p>
+        <ul>
+          <li>
+            <strong>
+              Migrated a large codebase from JavaScript and Redux to TypeScript
+              and TanStack Query
+            </strong>{" "}
+            — safer changes through static types, and simpler, more consistent
+            data fetching and caching
+          </li>
+          <li>
+            <strong>Continuous refactoring</strong> of the applications and
+            modules we are responsible for, improving their architecture while
+            features keep shipping
+          </li>
+          <li>
+            <strong>Automated end-to-end tests with Playwright</strong>, so
+            refactoring and new features don't break what already works
+          </li>
+        </ul>
+        <p>
+          <strong>It pays off in the era of AI-assisted development.</strong> We
+          have always kept the code easy for people to work with: static types,
+          consistent patterns, clear module boundaries and automated tests. It
+          turns out the same qualities make it easy to develop with AI. Types
+          and tests give AI coding tools the context to make the right change,
+          and give our engineers a fast way to verify it.
+        </p>
+
+        <h2>What it shows</h2>
+        <p>
+          This is how we prefer to work with every client: as part of the team,
+          owning the outcome rather than renting out developers. We bring
+          full-stack engineering, architecture for complex features like live
+          video and 3D, experience turning AI and prototypes into production
+          features, and the discipline to keep a large codebase modern for the
+          long term.
+        </p>
+
+        <LeadBlock title="Looking for a long-term engineering partner?">
+          We work as one accountable team alongside yours — product design,
+          development, QA, and delivery — and stay as long as the product does.
+          Tell us about your product and we will propose a team, a delivery plan
+          and a first milestone.
+        </LeadBlock>
+      </div>
+    </article>
+    <ContactBanner />
+  </div>
+  <Footer />
+</Layout>

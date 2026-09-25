@@ -1,0 +1,21 @@
+---
+import Icon from "./Icon.astro";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<aside class="lead-block">
+  <div>
+    <h3>{title}</h3>
+    <p>
+      <slot />
+    </p>
+  </div>
+  <a class="button primary" href="#contact" data-umami-event="lead-block">
+    Discuss your project <Icon name="arrow-right" class="inline-icon" />
+  </a>
+</aside>

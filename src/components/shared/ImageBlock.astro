@@ -1,25 +1,10 @@
 ---
-import { Picture } from "astro:assets";
-
-interface Props {
-  imgSrc: any;
-  alt: string;
-}
-
-const { imgSrc, alt } = Astro.props;
+// Two-column block: a figure (diagram or image) next to text.
 ---
 
 <div class="image-block">
   <div class="image">
-    <a href={imgSrc.src} target="_blank"
-      ><Picture
-        src={imgSrc}
-        formats={["avif", "webp"]}
-        alt={alt}
-        loading="eager"
-        decoding="auto"
-      /></a
-    >
+    <slot name="image" />
   </div>
   <div>
     <slot />
