@@ -1,6 +1,7 @@
-// Renders the LinkedIn company page images into brand/linkedin/:
-//   novage-linkedin-banner.png  1128×191 cover image (plus a 2× version)
-//   novage-linkedin-logo.png    400×400 square logo (the diamond mark)
+// Renders the LinkedIn images into brand/linkedin/:
+//   novage-linkedin-banner.png  1128×191 company page cover (plus a 2× version)
+//   novage-linkedin-logo.png    400×400 company page logo (the diamond mark)
+//   andriy-linkedin-banner.png  1584×396 founder's profile cover (plus a 2× version)
 // Rerun after changing the logo or the positioning:  npm run linkedin-images
 import sharp from "sharp";
 import { mkdirSync, readFileSync } from "node:fs";
@@ -32,6 +33,24 @@ const banner = (scale) => `
   <text x="564" y="166" text-anchor="middle" font-family="${font}" font-size="17" fill="#555555">${focus}</text>
 </svg>`;
 
+// Founder's profile banner. The profile photo covers the lower left, so the
+// text block sits right of center, clear of the photo and the mobile crop.
+const role =
+  "Founder &amp; Director, Novage · software engineering &amp; R&amp;D";
+const profileBanner = (scale) => `
+<svg xmlns="http://www.w3.org/2000/svg" width="${1584 * scale}" height="${396 * scale}" viewBox="0 0 1584 396">
+  <rect width="1584" height="396" fill="#faf8f5"/>
+  <rect width="1584" height="6" fill="#972e2d"/>
+  <path fill="#972e2d" opacity="0.07" transform="translate(-40 -20) scale(0.7)" d="${mark}"/>
+  <g transform="translate(590 0)">
+    <text x="0" y="150" font-family="${font}" font-size="54" font-weight="700" fill="#1f1f1f">${tagline}</text>
+    <rect x="0" y="178" width="84" height="6" fill="#972e2d"/>
+    <text x="0" y="236" font-family="${font}" font-size="30" fill="#972e2d">${role}</text>
+    <text x="0" y="286" font-family="${font}" font-size="24" fill="#555555">${focus}</text>
+    <text x="0" y="334" font-family="${font}" font-size="22" fill="#777777">novage.com.ua</text>
+  </g>
+</svg>`;
+
 // The mark fills about 70% of the square, centered on white.
 const size = 400;
 const markSize = size * 0.7;
@@ -50,6 +69,6 @@ const render = (svg, file) =>
 await render(banner(1), "novage-linkedin-banner.png");
 await render(banner(2), "novage-linkedin-banner@2x.png");
 await render(square, "novage-linkedin-logo.png");
-console.log(
-  `Wrote ${OUT}/novage-linkedin-banner.png, …@2x.png and novage-linkedin-logo.png`,
-);
+await render(profileBanner(1), "andriy-linkedin-banner.png");
+await render(profileBanner(2), "andriy-linkedin-banner@2x.png");
+console.log(`Wrote the company banner, logo and founder banner to ${OUT}/`);
