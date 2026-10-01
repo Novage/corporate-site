@@ -1,0 +1,84 @@
+---
+import Icon, { type IconName } from "../shared/Icon.astro";
+import SectionLabel from "./SectionLabel.astro";
+
+type Item = { icon: IconName; title: string; text: string };
+
+const inProduct: { icon: IconName; label: string }[] = [
+  { icon: "mic", label: "Audio transcription" },
+  { icon: "scan-eye", label: "Object detection" },
+  { icon: "graduation-cap", label: "AI mentors" },
+];
+
+const inDevelopment: Item[] = [
+  {
+    icon: "refresh-cw",
+    title: "Rewrites and refactoring",
+    text: "Large codebases rewritten and refactored with AI.",
+  },
+  {
+    icon: "zap",
+    title: "Very fast development",
+    text: "New features and products delivered much faster with AI-assisted development.",
+  },
+  {
+    icon: "shield-check",
+    title: "Engineers stay accountable",
+    text: "AI tools are used within each project's security requirements, and every AI-assisted change is reviewed by an engineer and tested in CI before it merges.",
+  },
+];
+---
+
+<section id="ai" class="home-section container">
+  <SectionLabel label="AI" accent="We turn AI into a competitive advantage" />
+  <div class="ai-grid">
+    <article class="ai-panel product-side">
+      <h3>
+        <Icon name="sparkles" class="inline-icon" />
+        AI in your product
+      </h3>
+      <p>
+        We integrate AI models into your services and UI, so your users can
+        actually put them to work. From audio transcription and object detection
+        to AI mentors that have helped movers on the{" "}
+        <a href="/case-studies/yembo">Yembo</a> platform increase their deal
+        closure rates.
+      </p>
+      <ul class="ai-tags">
+        {inProduct.map(({ icon, label }) => (
+          <li>
+            <Icon name={icon} class="ai-icon" />
+            {label}
+          </li>
+        ))}
+      </ul>
+      <p class="ai-more">And that's only the beginning of what we can build.</p>
+    </article>
+    <article class="ai-panel build-side">
+      <h3>
+        <Icon name="code" class="inline-icon" />
+        AI in how we build
+      </h3>
+      <p>
+        We are experts in development with AI. It lets us take on large
+        codebases and deliver much faster, without lowering the bar.
+      </p>
+      <ul class="ai-list">
+        {inDevelopment.map(({ icon, title, text }) => (
+          <li>
+            <Icon name={icon} class="ai-icon" />
+            <div>
+              <strong>{title}</strong>
+              <span>{text}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </article>
+  </div>
+  <div class="ai-actions">
+    <a class="button primary" href="#contact" data-umami-event="ai-discuss">
+      Discuss your AI project <Icon name="arrow-right" class="inline-icon" />
+    </a>
+  </div>
+</section>

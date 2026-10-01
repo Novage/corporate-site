@@ -36,11 +36,11 @@ Find every occurrence with `grep -rn "<fact>" src` before changing one.
 | wt-tracker capacity | 20,000 peers, 1 vCPU, 2 GiB | Product card, wt-tracker case study (text, key facts, **diagram label**), 100k blog post, GitHub README |
 | Default trackers | `wss://tracker.webtorrent.dev`, `wss://tracker.openwebtorrent.com` | Overview, technical overview, privacy page |
 | Engines / players | HLS.js, Shaka Player, dash.js, Video.js 8 (VHS); Video.js 10 via HLS.js/dash.js | Overview, technical overview, P2P case study |
-| Location / time zone | Ukraine, UTC+2 (UTC+3 in summer); full working day with Europe, overlap with US mornings | "How we work" note on the home page |
-| Delivery rhythm | weekly demos, written status, one point of contact | "Delivery & process management" offer card, "How we work" step 3 and note |
+| Delivery rhythm | weekly demos, written status, one point of contact | "Delivery & process management" offer card, "How we work" step 3 |
 | Engagement models | full ownership, dedicated team, consulting | "How we work" cards, "For established companies" card |
 | Confidentiality, IP and security | NDA first; client owns code and IP; code in client repos; 2FA; least-privilege access; client data stays in client systems; access revoked at the end; code review; CI; no secrets in code; dependency scanning. **Not claimed:** full-disk encryption (unconfirmed) | "How we work" → security block (`HowWeWork.astro`). Add a practice only once the team really follows it; buyers check these in procurement |
-| Yembo | growth-stage startup; moving and insurance; 7 years; 10+ person team; 40+ countries; millions of videos; 10+ granted AI patents | Yembo case study, home case-studies card, Why Novage |
+| AI | in products: we integrate AI models into services and UI (audio transcription, object detection, AI mentors that help movers on the Yembo platform increase deal closure rates — **no number**, the 300% figure was removed on purpose); in development: general wording only, no examples — rewrites and refactoring of large codebases, very fast AI-assisted development; AI tool use follows each project's security requirements (no fixed policy to claim), every change reviewed and tested in CI | AI section on the home page (`AiSection.astro`); Yembo case study ("AI in the product, including live video calls") |
+| Yembo | Numbers (40+ countries, millions of videos, 7 years, 10+ people) live in the case study's key facts only, not repeated in its text; growth-stage startup; moving and insurance; 7 years; 10+ person team; 40+ countries; millions of videos; 10+ granted AI patents; mobile apps: React Native app in production; the AI-assisted rewrite to native Swift and Kotlin is **in progress** (say "are rewriting", not "rewrote") | Yembo case study, home case-studies card, Why Novage |
 
 Refresh live numbers occasionally:
 
@@ -89,7 +89,7 @@ curl -s "https://data.jsdelivr.com/v1/stats/packages/npm/p2p-media-loader-core?p
   - Every animation must stop under `prefers-reduced-motion`.
   - Don't fade elements to suggest "more", because it reads as failure. Use a label ("…and thousands more").
 - **Scroll animations** (`src/styles/home.css`) use CSS scroll-driven animations: longhand properties, timelines via CSS variables (the minifier breaks the shorthand), and `animation-duration: 1ms` for Firefox 159+. Firefox 156 shows the static page, and that's fine.
-- **Analytics events** on buttons: `hero-discuss`, `hero-open-source`, `nav-contact`, `lead-block`, `email-brief`, `email-link`, `wt-tracker-discuss`, `yembo-discuss`, `how-we-work-brief`, `founder-linkedin`. New calls to action get a `data-umami-event`.
+- **Analytics events** on buttons: `hero-discuss`, `hero-open-source`, `nav-contact`, `lead-block`, `email-brief`, `email-link`, `wt-tracker-discuss`, `yembo-discuss`, `how-we-work-brief`, `founder-linkedin`, `ai-discuss`. New calls to action get a `data-umami-event`.
 - **Line breaks next to links:** Astro's HTML compression drops a line break between text and a following link or bold tag, gluing the words ("Try the⟨live demo⟩"). Put `{" "}` at the end of the line. `npm run check` catches this.
 - **Colors:** use the tokens in `:root` of `main.css` (`--brand`, `--heading`, `--muted`, `--warm`…), not new hex values.
 

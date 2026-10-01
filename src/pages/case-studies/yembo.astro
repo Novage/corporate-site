@@ -5,13 +5,14 @@ import PageHeader from "../../components/shared/PageHeader.astro";
 import ContactBanner from "../../components/shared/ContactBanner.astro";
 import LeadBlock from "../../components/shared/LeadBlock.astro";
 import FloorPlanDiagram from "../../components/case-studies/FloorPlanDiagram.astro";
+import VideoCallDiagram from "../../components/case-studies/VideoCallDiagram.astro";
 import Layout from "../../layouts/Layout.astro";
 ---
 
 <Layout
   title="Yembo Case Study: Engineering for an AI Platform | Novage"
   canonical="case-studies/yembo"
-  description="Seven years as engineering partner to Yembo, an AI startup for moving and insurance in 40+ countries: full-stack development, 3D, video calls and AI."
+  description="Seven years as engineering partner to Yembo, an AI startup for moving and insurance in 40+ countries: full-stack, mobile apps, 3D, video calls and AI."
 >
   <Header />
   <div id="content">
@@ -23,11 +24,9 @@ import Layout from "../../layouts/Layout.astro";
       >
         <p class="lead">
           <a href="https://www.yembo.ai/">Yembo</a> is a growth-stage startup
-          building AI for the moving and insurance industries, deployed in{" "}
-          <strong>40+ countries</strong> and processing{" "}
-          <strong>millions of videos</strong>. For <strong>seven years</strong>,
-          our <strong>10+ person team</strong> has worked alongside Yembo's core
-          team as its engineering partner — across web, backend, mobile and QA.
+          building AI for the moving and insurance industries. We are its
+          long-term engineering partner, working alongside Yembo's core team
+          across web, backend, mobile and QA.
         </p>
         <div class="actions">
           <a
@@ -63,33 +62,29 @@ import Layout from "../../layouts/Layout.astro";
           where its AI understands images and videos of a home for virtual
           surveys, and has grown into insurance, with AI-powered 3D home
           inspections for claims and underwriting, and into property management.
-          Yembo holds 10+ granted AI patents, and its platform is deployed in
-          more than 40 countries.
+          Yembo holds 10+ granted AI patents.
         </p>
 
         <h2>The engagement</h2>
         <p>
-          We are not a vendor working through a ticket queue. Our team takes
-          responsibility for applications and modules across Yembo's products
-          and builds new features together with Yembo's core team — from the
-          first design discussions to production.
+          Our core task is developing the backend and frontend of Yembo's SaaS
+          web platforms for <a href="https://yembo.ai/moving">moving</a> and{" "}
+          <a href="https://yembo.ai/insurance">insurance</a>. We are not a
+          vendor working through a ticket queue: our team takes responsibility
+          for applications and modules across these products and builds new
+          features together with Yembo's core team — from the first design
+          discussions to production.
         </p>
-        <ul>
-          <li>
-            <strong>Full-stack development</strong> — frontend, backend and
-            mobile applications
-          </li>
-          <li>
-            <strong>Automated QA</strong> — end-to-end test automation for the
-            products we work on
-          </li>
-          <li>
-            <strong>Technology stack</strong> — React, TypeScript and
-            JavaScript, React Native, Node.js, PHP, AWS and Playwright
-          </li>
-        </ul>
+        <p>
+          <strong>Technology stack:</strong> React, TypeScript and JavaScript,
+          React Native, Swift, Kotlin, Node.js, PHP, AWS and Playwright.
+        </p>
 
-        <h2>What we build with Yembo's core team</h2>
+        <h2>Turning ideas into features with Yembo's core team</h2>
+        <p>
+          Yembo's CEO designs innovative prototypes; we help turn them into
+          production features that hold up under real use and scale.
+        </p>
 
         <h3>A 3D home editor for insurance claims</h3>
         <p>
@@ -97,11 +92,11 @@ import Layout from "../../layouts/Layout.astro";
           <a href="https://yembo.ai/insurance/claims">ScanMyHome®</a>,
           policyholders, inspectors and adjusters scan a home on their phone,
           and Yembo's AI 3D pipeline turns the scan into a 3D model of the
-          house. Our part starts there: together with Yembo's core team, we
-          built the in-browser 3D editor for that model. Users can adjust rooms,
-          walls, doors, windows, objects and the roof, with full undo and redo.
-          It is built on <a href="https://www.babylonjs.com/">Babylon.js</a>,
-          and we designed its architecture.
+          house. Our part starts there: we built the in-browser 3D editor for
+          that model. Users can adjust rooms, walls, doors, windows, objects and
+          the roof, with full undo and redo. It is built on{" "}
+          <a href="https://www.babylonjs.com/">Babylon.js</a>, and we designed
+          its architecture.
         </p>
         <p>
           The hard part was making editing fast. We designed the heuristic
@@ -112,7 +107,6 @@ import Layout from "../../layouts/Layout.astro";
           wall out into a bump-out, merges walls that line up into one, and
           joins corners that meet. The whole floor plan updates in a single
           move, where a generic vector editor would need many separate edits.
-          The result is a state-of-the-art editor that is easy to use.
         </p>
         <figure class="diagram-figure">
           <FloorPlanDiagram />
@@ -122,30 +116,47 @@ import Layout from "../../layouts/Layout.astro";
           </figcaption>
         </figure>
 
-        <h3>Live video calls</h3>
-        <p>
-          Real-time video calls built into Yembo's products, developed together
-          with the core team.
-        </p>
-
-        <h3>AI in the product</h3>
+        <h3>AI in the product, including live video calls</h3>
         <p>
           We integrate AI solutions into Yembo's products — both models
           developed in-house by Yembo's US team and services from outside
           vendors — so that AI results reach users as working product features.
+          Among them are AI mentors that help movers on the platform increase
+          their deal closure rates.
         </p>
-
-        <h3>From prototype to production</h3>
         <p>
-          Yembo's CEO designs innovative prototypes; we help turn them into
-          production features that hold up under real use and scale.
+          A key example is{" "}
+          <a href="https://yembo.ai/moving/surveys">Smart Consult</a>, Yembo's
+          live video consultation: the homeowner joins from their phone in one
+          click, the mover guides the walkthrough, and the AI builds the
+          inventory while they talk. We develop the real-time video calls and
+          integrate AI into them: <strong>live AI object detection</strong>,
+          which recognizes items as the camera moves through the home, and{" "}
+          <strong>Teleprompter</strong>, an AI assistant that prompts the mover
+          with the right follow-up question during the call.
+        </p>
+        <figure class="diagram-figure">
+          <VideoCallDiagram />
+          <figcaption>
+            An illustration of the idea: as the homeowner's camera moves through
+            the room, AI object detection adds each item to the inventory, and
+            Teleprompter suggests the mover's next question.
+          </figcaption>
+        </figure>
+
+        <h3>Mobile apps, from React Native to native</h3>
+        <p>
+          We brought Yembo's web SaaS platform to phones as a React Native app,
+          and we develop and support it alongside the web platform. Now, with
+          the help of AI, we are rewriting it as native applications:{" "}
+          <strong>iOS in Swift</strong> and <strong>Android in Kotlin</strong>.
         </p>
 
         <h2>Keeping a large codebase modern</h2>
         <p>
-          A platform deployed in more than 40 countries has to keep moving
-          without breaking. Staying on modern technology is part of our
-          responsibility, not an occasional project:
+          A platform movers and insurers rely on has to keep moving without
+          breaking. Staying on modern technology is part of our responsibility,
+          not an occasional project:
         </p>
         <ul>
           <li>
@@ -174,15 +185,22 @@ import Layout from "../../layouts/Layout.astro";
           and tests give AI coding tools the context to make the right change,
           and give our engineers a fast way to verify it.
         </p>
+        <p>
+          <strong>We set up the codebase for AI development.</strong> We add
+          skills that teach AI coding tools how the codebase is organized, speed
+          up the linters, and add command-line tools that let AI run checks and
+          see the results for itself. With this feedback loop, AI can carry a
+          feature through to completion, and our team develops faster.
+        </p>
 
         <h2>What it shows</h2>
         <p>
           This is how we prefer to work with every client: as part of the team,
           owning the outcome rather than renting out developers. We bring
-          full-stack engineering, architecture for complex features like live
-          video and 3D, experience turning AI and prototypes into production
-          features, and the discipline to keep a large codebase modern for the
-          long term.
+          full-stack engineering for SaaS platforms, architecture for complex
+          features like live video and 3D, mobile apps, experience turning AI
+          and prototypes into production features, and AI-assisted development
+          on a codebase we keep modern for the long term.
         </p>
 
         <LeadBlock title="Looking for a long-term engineering partner?">
