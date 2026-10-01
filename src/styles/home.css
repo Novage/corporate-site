@@ -37,7 +37,7 @@
 .stat {
   display: flex;
   gap: 14px;
-  padding: 20px 4px;
+  padding: 20px 20px 20px 4px;
   border-top: solid 1px var(--border);
 }
 
@@ -141,6 +141,108 @@
   font-size: 1.05em;
 }
 
+/* AI */
+
+.ai-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.ai-panel {
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.ai-panel.product-side {
+  background: var(--warm);
+  border: solid 1px var(--warm-border);
+}
+
+.ai-panel.build-side {
+  border: solid 1px var(--border);
+  border-top: solid 3px var(--brand);
+}
+
+.ai-panel h3 {
+  display: flex;
+  align-items: center;
+  font-size: 1.35em;
+}
+
+.ai-panel h3 .inline-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  color: var(--brand);
+}
+
+.ai-list {
+  display: grid;
+  gap: 14px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ai-list li {
+  display: flex;
+  gap: 14px;
+}
+
+.ai-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ai-tags li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  color: var(--heading);
+  background: #ffffff;
+  border: solid 1px var(--warm-border);
+  border-radius: 999px;
+}
+
+.ai-tags .ai-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--brand);
+}
+
+.ai-list .ai-icon {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+  color: var(--brand);
+}
+
+.ai-list strong {
+  display: block;
+  color: var(--heading);
+}
+
+.ai-list span {
+  color: var(--muted);
+}
+
+.home-page .ai-more {
+  margin-top: 22px;
+  font-style: italic;
+  color: var(--heading);
+}
+
+.ai-actions {
+  margin-top: 24px;
+}
+
 /* Who it's for */
 
 .audience-grid {
@@ -227,24 +329,6 @@
 }
 
 .home-page .step h3 a:hover {
-  color: var(--brand);
-}
-
-.work-note {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  margin-top: 28px !important;
-  padding: 16px 20px;
-  background: var(--warm);
-  border-radius: 8px;
-}
-
-.work-note .note-icon {
-  flex: none;
-  width: 22px;
-  height: 22px;
-  margin-top: 1px;
   color: var(--brand);
 }
 
@@ -519,6 +603,7 @@
     padding-top: 0;
   }
 
+  .ai-grid,
   .audience-grid,
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -593,10 +678,10 @@
     .home-page .stat,
     .home-page .offer,
     .home-page .callout,
+    .home-page .ai-panel,
     .home-page .audience,
     .home-page .model,
     .home-page .step,
-    .home-page .work-note,
     .home-page .trust-group,
     .home-page .reason,
     .home-page .note,

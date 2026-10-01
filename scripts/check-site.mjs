@@ -22,6 +22,7 @@ const BANNED = [
   },
   { re: /tracker\.novage\.com\.ua/i, why: "not a default tracker" },
   { re: /contact \[at\]/i, why: "email is a plain mailto link" },
+  { re: /300%/, why: "no number for the AI mentors' closure-rate increase" },
 ];
 
 const files = (dir) =>
