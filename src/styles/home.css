@@ -239,6 +239,23 @@
   color: var(--heading);
 }
 
+.home-page .ai-case-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 22px;
+  color: var(--brand);
+  text-decoration: none;
+}
+
+.home-page .ai-case-link .inline-icon {
+  margin: 0;
+}
+
+.home-page .ai-case-link:hover {
+  text-decoration: underline;
+}
+
 .ai-actions {
   margin-top: 24px;
 }

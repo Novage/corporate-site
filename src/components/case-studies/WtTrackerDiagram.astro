@@ -1,15 +1,26 @@
 ---
 // wt-tracker architecture: tens of thousands of peers keep WebSocket
-// connections to one small VPS, where µWebSockets.js handles the networking
-// natively and the TypeScript tracker core handles swarms and signaling.
+// connections to one free 2-core server. Each core runs a worker with its own
+// WebSocket and TLS layer and its own swarms; a connection moves to the worker
+// that holds its content.
 
 // A grid of peers; a label below says there are many more
 const peerRows = [70, 125, 180, 235, 290, 345];
 const peerCols = [40, 80, 120, 160];
 const peers = peerRows.flatMap((y) => peerCols.map((x) => ({ x, y })));
 
-// Connections from the nearest peer in each row into the networking layer
-const links = peerRows.map((y) => `M172 ${y} C230 ${y} 250 150 318 150`);
+// Two workers, one per core
+const workers = [
+  { label: "Core 1", y: 108, streams: ["Stream A", "Stream B"] },
+  { label: "Core 2", y: 256, streams: ["Stream C", "Stream D"] },
+];
+
+// Connections from the nearest peer in each row: the upper rows to the first
+// worker, the lower rows to the second
+const links = peerRows.map((y, i) => {
+  const to = workers[i < 3 ? 0 : 1].y + 50;
+  return `M172 ${y} C230 ${y} 260 ${to} 316 ${to}`;
+});
 
 // Signaling messages: announces in, offers and answers back out
 const cycle = 4;
@@ -37,13 +48,6 @@ const packets = links.flatMap((path, i) => {
 });
 const fade = (a: number, b: number) =>
   `0;${a};${+(a + 0.02).toFixed(2)};${+(b - 0.02).toFixed(2)};${b};1`;
-
-const chips = [
-  { x: 332, y: 238, label: "Object pools" },
-  { x: 462, y: 238, label: "Swarm index" },
-  { x: 332, y: 292, label: "Offer fan-out" },
-  { x: 462, y: 292, label: "Batched cleanup" },
-];
 ---
 
 <svg
@@ -54,23 +58,36 @@ const chips = [
 >
   <title id="wt-diagram-title">wt-tracker architecture</title>
   <desc id="wt-diagram-desc">
-    Tens of thousands of peers keep WebSocket connections to a single small VPS
-    with 1 virtual CPU and 2 GiB of memory. µWebSockets.js handles HTTP,
-    WebSocket and TLS natively, and the TypeScript tracker core handles swarms
-    with object pools, a swarm index, offer fan-out and batched cleanup.
+    Tens of thousands of peers keep WebSocket connections to one free Oracle
+    Cloud Ampere A1 server with 2 virtual CPUs and 12 GB of memory. Each core
+    runs a worker with its own WebSocket and TLS layer and its own swarms, and a
+    connection moves to the worker that holds the swarms of its stream.
   </desc>
+  <defs>
+    <marker
+      id="wt-arrow"
+      viewBox="0 0 10 10"
+      refX="8"
+      refY="5"
+      markerWidth="7"
+      markerHeight="7"
+      orient="auto"
+    >
+      <path d="M0 0 L10 5 L0 10 Z" class="arrow-head"></path>
+    </marker>
+  </defs>
 
   <text x="100" y="30" class="caption-strong">
-    20,000 peers
+    ~200,000 peers
   </text>
 
-  <!-- One small VPS -->
+  <!-- One free server -->
   <rect x="300" y="44" width="300" height="336" rx="16" class="server"></rect>
   <text x="450" y="30" class="caption-strong">
-    One small VPS
+    One free server
   </text>
   <text x="450" y="72" class="caption-muted">
-    1 vCPU · 2 GiB memory
+    Ampere A1 · 2 vCPU · 12 GB
   </text>
 
   <!-- WebSocket connections -->
@@ -115,42 +132,54 @@ const chips = [
     ))}
   </g>
 
-  <rect
-    x="318"
-    y="100"
-    width="264"
-    height="84"
-    rx="10"
-    class="layer-native"
-  ></rect>
-  <text x="450" y="135" class="layer-title">
-    µWebSockets.js
-  </text>
-  <text x="450" y="160" class="layer-muted">
-    native HTTP · WebSocket · TLS
-  </text>
-
-  <path d="M450 186 L450 204" class="connector"></path>
-
-  <rect
-    x="318"
-    y="206"
-    width="264"
-    height="158"
-    rx="10"
-    class="layer-core"
-  ></rect>
-  <text x="450" y="229" class="layer-title small">
-    TypeScript tracker core
-  </text>
-  {chips.map(({ x, y, label }) => (
+  <!-- One worker per core -->
+  {workers.map(({ label, y, streams }) => (
     <g>
-      <rect x={x} y={y + 6} width="106" height="40" rx="8" class="chip" />
-      <text x={x + 53} y={y + 31} class="chip-label">
+      <text x="318" y={y - 10} class="worker-label">
         {label}
       </text>
+      <rect
+        x="316"
+        y={y}
+        width="120"
+        height="100"
+        rx="10"
+        class="layer-native"
+      />
+      <text x="376" y={y + 46} class="layer-title small">
+        WebSocket
+      </text>
+      <text x="376" y={y + 68} class="layer-muted">
+        TLS · zero-copy
+      </text>
+      <path d={`M436 ${y + 50} L448 ${y + 50}`} class="connector" />
+      <rect x="448" y={y} width="138" height="100" rx="10" class="layer-core" />
+      <text x="517" y={y + 22} class="layer-title small">
+        Swarms
+      </text>
+      {streams.map((stream, i) => (
+        <g>
+          <rect
+            x="460"
+            y={y + 32 + i * 32}
+            width="114"
+            height="26"
+            rx="7"
+            class="chip"
+          />
+          <text x="517" y={y + 50 + i * 32} class="chip-label">
+            {stream}
+          </text>
+        </g>
+      ))}
     </g>
   ))}
+
+  <!-- A connection moves to the worker that holds its stream -->
+  <path d="M396 212 L396 250" class="move" marker-end="url(#wt-arrow)"></path>
+  <text x="404" y="236" class="move-label">
+    moves
+  </text>
 </svg>
 
 <style>
@@ -244,6 +273,26 @@ const chips = [
     font-size: 13.5px;
     text-anchor: middle;
     fill: var(--text);
+  }
+
+  .worker-label {
+    font-size: 13px;
+    fill: var(--muted);
+  }
+
+  .move {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 2;
+  }
+
+  .arrow-head {
+    fill: var(--brand);
+  }
+
+  .move-label {
+    font-size: 12.5px;
+    fill: var(--brand);
   }
 
   @media (prefers-reduced-motion: reduce) {

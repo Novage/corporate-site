@@ -71,32 +71,38 @@ import LeadBlock from "../shared/LeadBlock.astro";
         </div>
         <div>
           <h3>wt-tracker</h3>
-          <div class="meta">Open source · Works with P2P Media Loader</div>
+          <div class="meta">
+            Open source · Rust · Works with P2P Media Loader
+          </div>
         </div>
       </div>
-      <p class="tagline">Run your own P2P network on one small server</p>
+      <p class="tagline">Run your own P2P network on one free server</p>
       <p>
         The server that connects viewers to each other in a P2P Media Loader
         network. Public trackers are fine to start with; for production we
-        recommend running your own. It handles{" "}
-        <strong>20,000 simultaneous peers</strong> on a VPS with only 2 GiB
-        memory and 1 virtual CPU, and self-hosting keeps data about your
-        audience on your own infrastructure.
+        recommend running your own. It can serve about{" "}
+        <strong>200,000 simultaneous peers</strong> on a free 2-core Oracle
+        Cloud server (estimated), ~100,000 of them within the free traffic.
+        Self-hosting keeps data about your audience on your own infrastructure.
       </p>
       <div class="built">
         <div class="built-label">How we built it</div>
         <ul>
           <li>
-            A showcase of getting the most performance out of the Node.js stack,
-            with a µWebSockets.js I/O backend and an optimized hot path
+            Ported from our Node.js tracker to Rust with AI in two days, and
+            verified against the original
+          </li>
+          <li>
+            Multi-core, lock-free and zero-copy, with its own WebSocket
+            implementation
           </li>
           <li>
             Eliminates the need for complex horizontal scaling in many P2P video
             projects
           </li>
           <li>
-            Robust and well tested: CI, unit tests, static analysis, 100%
-            TypeScript
+            Robust and well tested: CI, differential tests, fuzzing and the
+            Autobahn WebSocket testsuite
           </li>
         </ul>
       </div>
@@ -104,9 +110,13 @@ import LeadBlock from "../shared/LeadBlock.astro";
         <a class="button primary small" href="/case-studies/wt-tracker">
           Case study
         </a>
-        <a href="https://github.com/novage/wt-tracker">
+        <a href="https://github.com/novage/wt-tracker-rust">
           <Icon name="github" class="inline-icon" />
           GitHub
+        </a>
+        <a href="https://github.com/novage/wt-tracker">
+          <Icon name="github" class="inline-icon" />
+          Node.js version
         </a>
       </div>
     </article>

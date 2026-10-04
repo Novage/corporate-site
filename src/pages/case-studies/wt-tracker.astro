@@ -13,10 +13,20 @@ const schema = [
   organization,
   {
     "@type": "SoftwareSourceCode",
+    name: "wt-tracker-rust",
+    description:
+      "Multi-core WebTorrent tracker in Rust for WebRTC signaling in P2P networks, with zero-copy message handling and its own WebSocket implementation.",
+    url: `${siteUrl}case-studies/wt-tracker`,
+    codeRepository: "https://github.com/novage/wt-tracker-rust",
+    programmingLanguage: "Rust",
+    license: "https://www.apache.org/licenses/LICENSE-2.0",
+    author: { "@id": organization["@id"] },
+  },
+  {
+    "@type": "SoftwareSourceCode",
     name: "wt-tracker",
     description:
-      "High-performance WebTorrent tracker for WebRTC signaling in P2P networks, built on Node.js and µWebSockets.js.",
-    url: `${siteUrl}case-studies/wt-tracker`,
+      "WebTorrent tracker for WebRTC signaling in P2P networks, built on Node.js and µWebSockets.js.",
     codeRepository: "https://github.com/novage/wt-tracker",
     programmingLanguage: "TypeScript",
     license: "https://www.apache.org/licenses/LICENSE-2.0",
@@ -26,10 +36,10 @@ const schema = [
 ---
 
 <Layout
-  title="wt-tracker: High-Performance WebTorrent Tracker | Novage"
+  title="wt-tracker: Multi-Core WebTorrent Tracker in Rust | Novage"
   canonical="case-studies/wt-tracker"
   schema={schema}
-  description="How we built wt-tracker, an open-source WebTorrent tracker on Node.js and µWebSockets.js that handles 20,000 peers on a VPS with 1 vCPU and 2 GiB of memory."
+  description="How we built wt-tracker in Rust with AI in two days: ~200k WebTorrent peers on a free 2-core Oracle Cloud server, ~100k within the free traffic."
 >
   <Header />
   <div id="content">
@@ -37,18 +47,29 @@ const schema = [
       <PageHeader
         eyebrow="Case study"
         title="wt-tracker"
-        accent="High-Performance WebTorrent Tracker"
+        accent="Multi-Core WebTorrent Tracker in Rust"
       >
         <p class="lead">
-          How we built a Node.js WebSocket server that handles{" "}
-          <strong>20,000 simultaneous peers</strong> on a VPS with only 1
-          virtual CPU and 2 GiB of memory — and why that matters for the cost of
-          P2P video.
+          How we ported our WebTorrent tracker from Node.js to Rust with AI in
+          two days, and built a server that can handle about{" "}
+          <strong>200,000 simultaneous peers</strong> on a free 2-core Oracle
+          Cloud instance (estimated) — and why that matters for the cost of P2P
+          video.
         </p>
         <div class="actions">
-          <a class="button primary" href="https://github.com/novage/wt-tracker">
+          <a
+            class="button primary"
+            href="https://github.com/novage/wt-tracker-rust"
+          >
             <Icon name="github" class="inline-icon" />
             View on GitHub
+          </a>
+          <a
+            class="button secondary"
+            href="https://github.com/novage/wt-tracker"
+          >
+            <Icon name="github" class="inline-icon" />
+            Node.js version
           </a>
           <a
             class="button secondary"
@@ -63,13 +84,16 @@ const schema = [
       <div class="page container content">
         <ul class="key-facts">
           <li>
-            <strong>20,000</strong> simultaneous WebSocket Secure peers
+            <strong>~200,000</strong> simultaneous WebSocket Secure peers
+            (estimated); ~100,000 within the free traffic, with a moderate
+            tracker configuration that doesn't affect P2P
           </li>
           <li>
-            <strong>1 vCPU, 2 GiB</strong> a single small VPS
+            <strong>2 vCPU, 12 GB</strong> Ampere A1, Oracle Cloud Free Tier
           </li>
           <li>
-            <strong>0</strong> load balancers or clusters needed
+            <strong>2 days</strong> from the first commit to production, with
+            AI-assisted development
           </li>
           <li>
             <strong>Apache-2.0</strong> open source
@@ -89,109 +113,164 @@ const schema = [
           Public trackers are fine to start with, but a production audience
           needs its own. The load is unusual: tens of thousands of long-lived
           TLS connections and a constant flow of small JSON messages, where
-          every announce can fan out into offers to many other peers. The
-          reference implementation is built on the standard Node.js networking
-          stack, which spends a lot of CPU and memory per connection at that
-          scale.
+          every announce can fan out into offers to many other peers.
         </p>
         <p>
-          Our goal was to serve a large audience from the cheapest possible
-          server: one small VPS, with no cluster and no load balancer.
+          Our goal was to serve 100,000 viewers from a free server, as one more
+          step toward making video delivery affordable for anyone. Oracle
+          Cloud's Always Free Tier offers a generous free server, but it has
+          been halved: its Arm-based Ampere A1 instance now has 2 cores and 12
+          GB of memory.
         </p>
+
+        <h2>Where we started</h2>
+        <p>
+          Our first tracker,{" "}
+          <a href="https://github.com/novage/wt-tracker">wt-tracker</a> for
+          Node.js, keeps its logic in TypeScript and hands HTTP, WebSocket and
+          TLS to{" "}
+          <a href="https://github.com/uNetworking/uWebSockets.js">
+            µWebSockets.js
+          </a>
+          , a native C++ networking stack. It is efficient per core, but Node.js
+          runs it on one core, so on a 2-core server half of the CPU stays idle.
+          Aquatic, a multi-threaded tracker in Rust, used 1.46 of the 2 cores at
+          42,000 peers on the same server. Neither could reach 100,000.
+        </p>
+        <p>
+          So we ported wt-tracker to Rust. The Node.js implementation remains
+          available, and both use the same configuration file.
+        </p>
+
+        <h2>Ported with AI, verified against the original</h2>
+        <p>
+          AI coding agents wrote most of the code; our engineers set the goals,
+          made the design decisions and reviewed every change. From the first
+          commit to real viewers in production took <strong>two days</strong>.
+          Speed did not come at the expense of correctness:
+        </p>
+        <ul>
+          <li>
+            <strong>A written specification</strong> is the source of truth for
+            behavior, and it changes together with the code.
+          </li>
+          <li>
+            <strong>Differential testing:</strong> random message sequences go
+            through both implementations, and the Rust tracker's replies must be
+            byte-identical to the Node.js tracker's.
+          </li>
+          <li>
+            <strong>Twin benchmarks:</strong> every Rust benchmark has an
+            identical JavaScript twin.
+          </li>
+          <li>
+            <strong>Conformance and fuzzing:</strong> all 517 cases of the
+            Autobahn WebSocket testsuite pass, and the WebSocket framing,
+            compression, HTTP upgrade and tracker protocol are fuzzed.
+          </li>
+          <li>
+            <strong>CI</strong> runs all of it on every change, with longer
+            fuzzing every night.
+          </li>
+        </ul>
 
         <h2>How we made it fast</h2>
 
         <figure class="diagram-figure">
           <WtTrackerDiagram />
           <figcaption>
-            Every peer keeps a WebSocket connection open. µWebSockets.js handles
-            the networking natively, and the TypeScript core handles the swarms,
-            all on one small server.
+            Every peer keeps a WebSocket connection open. Each core runs a
+            worker with its own WebSocket layer and its own swarms, and a
+            connection moves to the worker that holds its stream.
           </figcaption>
         </figure>
 
-        <h3>An unconventional choice: µWebSockets.js</h3>
+        <h3>Multi-core without locks</h3>
         <p>
-          Most Node.js servers, including the reference tracker, handle
-          networking with the standard Node.js stack. We took a different route:
-          wt-tracker keeps its logic in TypeScript, but hands HTTP, WebSocket
-          and TLS handling to{" "}
-          <a href="https://github.com/uNetworking/uWebSockets.js">
-            µWebSockets.js
-          </a>
-          , a native C++ networking stack. Each connection costs far less CPU
-          and memory, and plain (<code>ws://</code>) and secure (
-          <code>wss://</code>) connections are served by the same process over
-          IPv4 and IPv6.
+          Each CPU core runs a worker with its own share of the swarms, so
+          workers never wait on each other.
         </p>
 
-        <h3>Rejecting bad traffic before it costs anything</h3>
+        <h3>Swarms follow the content</h3>
         <p>
-          Connection limits and allowed-origin checks are applied during the
-          HTTP upgrade, before a WebSocket is even created. A malformed message
-          closes its connection immediately, so misbehaving clients can't tie up
-          the server.
+          The video, audio and every quality of one stream live on one worker,
+          and a viewer's connection moves to that worker at its first announce.
+          Almost every message is then handled on a single core, with no traffic
+          between threads.
         </p>
 
-        <h3>No unnecessary work per message</h3>
+        <h3>Its own WebSocket implementation</h3>
         <p>
-          Each peer's state is attached directly to its socket, so incoming
-          messages need no lookup to find their sender. Outgoing announce
-          responses and offers reuse the same message objects and are serialized
-          immediately instead of being allocated for every message. Debug
-          logging is checked before any output is built, so it costs nothing
-          when turned off.
+          Instead of µWebSockets, wt-tracker has its own WebSocket and TLS layer
+          built for this workload. Like µWebSockets, it reads every connection
+          through one shared buffer per worker, so a connection costs about 5–9
+          KB of memory. Because we control it, it can also move a live
+          connection, TLS session included, to another core — something
+          µWebSockets doesn't offer, and what lets swarms follow the content. In
+          our load tests on a single core, it needs up to a third less CPU per
+          message than the Node.js implementation on µWebSockets.js and about
+          3–5× less memory per connection.
         </p>
 
-        <h3>Memory designed around the garbage collector</h3>
+        <h3>Zero-copy messages</h3>
         <p>
-          With tens of thousands of peers joining and leaving, garbage
-          collection pauses are a real risk. wt-tracker keeps pools of up to
-          100,000 reusable peer and swarm-membership records, so churn recycles
-          memory instead of creating garbage. A peer's swarm memberships are a
-          linked list stored inside the peer record itself: the common case of a
-          peer in a single swarm needs no extra allocation at all.
+          WebRTC offers and answers are forwarded as slices of the received
+          message, never copied or re-encoded.
         </p>
 
-        <h3>Constant-time swarm operations</h3>
+        <h3>Less traffic per peer</h3>
         <p>
-          Swarms are found by info hash in hash maps, and each peer remembers
-          its position in its swarm's list. Removing a peer moves the last peer
-          into the freed slot, so leaving a swarm takes the same time whether it
-          has ten peers or ten thousand.
+          On a free server, outbound traffic is the scarcest resource. Outgoing
+          offers are compressed when the browser supports it, and reconnecting
+          viewers resume their TLS session instead of downloading the
+          certificate chain again. One peer costs about 38 bytes per second.
         </p>
 
-        <h3>Cheap offer fan-out</h3>
+        <h3>Proven ideas from the Node.js implementation</h3>
         <p>
-          When a peer announces with WebRTC offers, the tracker forwards them to
-          other peers in the swarm. If there are enough offers for everyone,
-          each peer gets one; otherwise the tracker starts at a random position
-          and walks the swarm — no shuffling and no temporary arrays.
-        </p>
-
-        <h3>Batched cleanup</h3>
-        <p>
-          Instead of a timer per peer, one sweep per announce interval removes
-          peers that have gone silent for two intervals. The cost of cleanup
-          stays flat no matter how many peers are connected.
-        </p>
-
-        <h3>Robust and well tested</h3>
-        <p>
-          100% TypeScript, with CI, unit tests and static analysis on every
-          change.
+          Swarm operations take constant time, whether a swarm has ten peers or
+          ten thousand. Offers fan out from a random position in the swarm with
+          no shuffling or temporary arrays. One sweep per announce interval
+          removes silent peers instead of a timer per peer. Connection limits
+          and allowed origins are checked during the HTTP upgrade, before a
+          WebSocket is even created.
         </p>
 
         <h2>The results</h2>
+        <p>
+          On a 2-core Oracle Cloud Always Free Ampere A1 server with real P2P
+          Media Loader viewers, at about 42,000 peers:
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Aquatic</th>
+              <th>wt-tracker</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CPU</td>
+              <td>1.46 cores</td>
+              <td>0.35 cores</td>
+            </tr>
+            <tr>
+              <td>Memory</td>
+              <td>1.9 GB</td>
+              <td>590 MB</td>
+            </tr>
+          </tbody>
+        </table>
         <ul>
           <li>
-            <strong>20,000 simultaneous WebSocket Secure peers</strong> on a VPS
-            with 1 virtual CPU and 2 GiB of memory — a server that costs a few
-            euros a month.
+            <strong>About 200,000 peers</strong> on the free server's 2 cores
+            and 12 GB (estimated); about 100,000 within the free 10 TB of
+            monthly outbound traffic.
           </li>
           <li>
             <strong>No complex horizontal scaling</strong> for many P2P video
-            projects: one small server replaces a cluster.
+            projects: one free server replaces a cluster.
           </li>
           <li>
             <strong>Private by design:</strong> self-hosting keeps information
@@ -199,35 +278,28 @@ const schema = [
           </li>
           <li>
             <strong>Production features:</strong> the WebTorrent "scrape"
-            extension, live statistics at <code>/stats.json</code>, allowed and
-            denied origins, connection limits, and a custom index page.
+            extension, Prometheus metrics and structured logs, allowed and
+            denied origins, connection limits, a custom index page and graceful
+            restarts.
           </li>
         </ul>
         <p>
-          For larger audiences, our article{" "}
-          <a href="/blog/p2p-video-delivery-for-up-to-100k-viewers-for-free">
-            P2P Video Delivery for up to 100k Viewers for Free
-          </a>{" "}
-          compares tracker options and sizing.
-        </p>
-
-        <h2>What's next: every CPU core</h2>
-        <p>
-          We are working on a multi-core mode. Incoming connections are spread
-          across socket worker threads, and swarms are split between tracker
-          workers — one per CPU core — by info hash. Each peer talks to the
-          worker that owns its swarm over a dedicated message channel, so
-          workers never share state or wait on locks.
+          How we tuned the server and Oracle's network, including the setting
+          that otherwise drops new connections at about 40,000 peers, is
+          described in our article{" "}
+          <a href="/blog/100k-webtorrent-peers-on-the-oracle-cloud-always-free-tier">
+            100k WebTorrent Peers on the Oracle Cloud Always Free Tier
+          </a>
+          .
         </p>
 
         <h2>What it shows</h2>
         <p>
-          wt-tracker is a showcase of how far the Node.js stack can go. Keep the
-          business logic in TypeScript, move the networking to native code, and
-          design data structures and memory use around the runtime — and one
-          small server can take on a load that would otherwise need a cluster.
-          The same approach often lets a team stay on Node.js instead of
-          rewriting a service in another language or scaling it out.
+          A rewrite used to be a months-long bet. With AI-assisted development,
+          held to a written specification, differential tests against the
+          original and conformance suites, it took two days to move a production
+          server to a new language — and the result does on one free server what
+          used to need a paid cluster.
         </p>
 
         <h2>Get wt-tracker</h2>
@@ -236,10 +308,14 @@ const schema = [
           works with <a href="/p2p-media-loader/overview">P2P Media Loader</a>{" "}
           and any WebTorrent-compatible client. Installation, configuration and
           deployment are covered in the{" "}
-          <a href="https://github.com/novage/wt-tracker#readme">
+          <a href="https://github.com/novage/wt-tracker-rust#readme">
             README on GitHub
           </a>
-          .
+          . The{" "}
+          <a href="https://github.com/novage/wt-tracker">
+            Node.js implementation
+          </a>{" "}
+          remains available for Node.js setups.
         </p>
 
         <LeadBlock title="Need a backend that does more with less?">

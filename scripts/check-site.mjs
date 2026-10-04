@@ -12,7 +12,6 @@ const BANNED = [
     re: /up to 80%/i,
     why: "P2P share grows with the audience (90% / 99% / 99.9%)",
   },
-  { re: /\b30,000\b|\b30k\b/i, why: "wt-tracker handles 20,000 peers" },
   { re: /\bcustomers?\b/i, why: 'say "clients"' },
   { re: /\bdecade\b|10\+ years/i, why: 'client retention is "many years"' },
   { re: /videos a year/i, why: 'say "millions of videos"' },
