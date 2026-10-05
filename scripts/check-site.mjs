@@ -21,6 +21,10 @@ const BANNED = [
   },
   { re: /tracker\.novage\.com\.ua/i, why: "not a default tracker" },
   { re: /contact \[at\]/i, why: "email is a plain mailto link" },
+  {
+    re: /\b(?:AI|growth-stage|venture-backed) startup\b|Yembo<\/strong>, a startup/i,
+    why: "Yembo is a company, not a startup",
+  },
   { re: /300%/, why: "no number for the AI mentors' closure-rate increase" },
 ];
 
