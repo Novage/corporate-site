@@ -59,6 +59,7 @@ curl -s "https://data.jsdelivr.com/v1/stats/packages/npm/p2p-media-loader-core?p
 - Numbers that depend on conditions say so: "in ideal conditions", "on a live stream".
 - Clients: publish only facts the client makes public or has approved. Never publish their funding, headcount or revenue. **Yembo must approve** the case study.
 - Scanning and the AI 3D pipeline are Yembo's. Novage built the 3D editor on top of them. Keep that boundary clear.
+- Yembo scope: Novage builds most of the UI and a large part of the backend, not all of it. Most ideas, prototypes and often the backend design come from Yembo and its **CTO** (not the CEO). In-house AI models are Yembo's; we integrate them. We designed the 3D editor's architecture and algorithms, but they belong to Yembo.
 
 `scripts/check-site.mjs` enforces the banned phrases. Update its `BANNED` list when a decision changes.
 
