@@ -67,13 +67,13 @@ import Layout from "../../layouts/Layout.astro";
 
         <h2>The engagement</h2>
         <p>
-          Our core task is developing the backend and frontend of Yembo's SaaS
-          web platforms for <a href="https://yembo.ai/moving">moving</a> and{" "}
-          <a href="https://yembo.ai/insurance">insurance</a>. We are not a
-          vendor working through a ticket queue: our team takes responsibility
-          for applications and modules across these products and builds new
-          features together with Yembo's core team — from the first design
-          discussions to production.
+          We build most of the user interface of Yembo's SaaS platforms for{" "}
+          <a href="https://yembo.ai/moving">moving</a> and{" "}
+          <a href="https://yembo.ai/insurance">insurance</a>, and a large part
+          of the backend. Product direction comes from Yembo, and its CTO often
+          designs the backend as well. Our team takes responsibility for the
+          applications and modules it owns, and works with Yembo's core team
+          from the first design discussions to production.
         </p>
         <p>
           <strong>Technology stack:</strong> React, TypeScript and JavaScript,
@@ -82,9 +82,39 @@ import Layout from "../../layouts/Layout.astro";
 
         <h2>Turning ideas into features with Yembo's core team</h2>
         <p>
-          Yembo's CEO designs innovative prototypes; we help turn them into
-          production features that hold up under real use and scale.
+          Most ideas start at Yembo: its CTO designs prototypes and sets the
+          technical direction. We help turn them into production features that
+          hold up under real use and scale.
         </p>
+
+        <h3>AI in the product, including live video calls</h3>
+        <p>
+          We integrate AI solutions into Yembo's products — both models
+          developed in-house by Yembo's US team and services from outside
+          vendors — so that AI results reach users as working product features.
+          Among them are AI mentors that help movers on the platform increase
+          their deal closure rates.
+        </p>
+        <p>
+          A key example is{" "}
+          <a href="https://yembo.ai/moving/surveys">Smart Consult</a>, Yembo's
+          live video consultation: the homeowner joins from their phone in one
+          click, the mover guides the walkthrough, and the AI builds the
+          inventory while they talk. Together with Yembo's core team, we develop
+          the video calls and integrate AI into them:{" "}
+          <strong>live AI object detection</strong>, which recognizes items as
+          the camera moves through the home, and <strong>Teleprompter</strong>,
+          an AI assistant that prompts the mover with the right follow-up
+          question during the call.
+        </p>
+        <figure class="diagram-figure">
+          <VideoCallDiagram />
+          <figcaption>
+            An illustration of the idea: as the homeowner's camera moves through
+            the room, AI object detection adds each item to the inventory, and
+            Teleprompter suggests the mover's next question.
+          </figcaption>
+        </figure>
 
         <h3>A 3D home editor for insurance claims</h3>
         <p>
@@ -106,41 +136,15 @@ import Layout from "../../layouts/Layout.astro";
           corner, the editor works out what they intend: it pushes part of a
           wall out into a bump-out, merges walls that line up into one, and
           joins corners that meet. The whole floor plan updates in a single
-          move, where a generic vector editor would need many separate edits.
+          move, where a generic vector editor would need many separate edits. As
+          with all our client work, the editor and its algorithms belong to
+          Yembo.
         </p>
         <figure class="diagram-figure">
           <FloorPlanDiagram />
           <figcaption>
             An illustration of the idea: drag one wall, and the rooms on both
             sides, the connected wall and the door update together.
-          </figcaption>
-        </figure>
-
-        <h3>AI in the product, including live video calls</h3>
-        <p>
-          We integrate AI solutions into Yembo's products — both models
-          developed in-house by Yembo's US team and services from outside
-          vendors — so that AI results reach users as working product features.
-          Among them are AI mentors that help movers on the platform increase
-          their deal closure rates.
-        </p>
-        <p>
-          A key example is{" "}
-          <a href="https://yembo.ai/moving/surveys">Smart Consult</a>, Yembo's
-          live video consultation: the homeowner joins from their phone in one
-          click, the mover guides the walkthrough, and the AI builds the
-          inventory while they talk. We develop the real-time video calls and
-          integrate AI into them: <strong>live AI object detection</strong>,
-          which recognizes items as the camera moves through the home, and{" "}
-          <strong>Teleprompter</strong>, an AI assistant that prompts the mover
-          with the right follow-up question during the call.
-        </p>
-        <figure class="diagram-figure">
-          <VideoCallDiagram />
-          <figcaption>
-            An illustration of the idea: as the homeowner's camera moves through
-            the room, AI object detection adds each item to the inventory, and
-            Teleprompter suggests the mover's next question.
           </figcaption>
         </figure>
 
@@ -161,8 +165,8 @@ import Layout from "../../layouts/Layout.astro";
         <ul>
           <li>
             <strong>
-              Migrated a large codebase from JavaScript and Redux to TypeScript
-              and TanStack Query
+              Migrated the large codebases we work on from JavaScript and Redux
+              to TypeScript and TanStack Query
             </strong>{" "}
             — safer changes through static types, and simpler, more consistent
             data fetching and caching
@@ -197,10 +201,10 @@ import Layout from "../../layouts/Layout.astro";
         <p>
           This is how we prefer to work with every client: as part of the team,
           owning the outcome rather than renting out developers. We bring
-          full-stack engineering for SaaS platforms, architecture for complex
-          features like live video and 3D, mobile apps, experience turning AI
-          and prototypes into production features, and AI-assisted development
-          on a codebase we keep modern for the long term.
+          full-stack engineering for SaaS platforms, complex features like live
+          video and 3D, mobile apps, experience turning AI and prototypes into
+          production features, and AI-assisted development on a codebase we keep
+          modern for the long term.
         </p>
 
         <LeadBlock title="Looking for a long-term engineering partner?">
