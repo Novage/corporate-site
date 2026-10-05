@@ -7,6 +7,8 @@ description: "Oracle halved its Always Free Arm instance to 2 cores and 12 GB of
 seoDescription: "How we serve ~100k WebTorrent peers on a free 2-core Oracle Cloud server: a Rust tracker ported with AI in 2 days, stateless network rules and egress tuning."
 ---
 
+import WtTrackerDiagram from "../../components/case-studies/WtTrackerDiagram.astro";
+
 Every viewer in a [P2P Media Loader](/p2p-media-loader/overview) network keeps a WebSocket connection to a **WebTorrent tracker**, which introduces viewers of the same stream to each other. In [P2P Video Delivery for up to 100k Viewers for Free](/blog/p2p-video-delivery-for-up-to-100k-viewers-for-free) we showed how to run a tracker for up to 100,000 simultaneous peers on the **Oracle Cloud Always Free Tier**, which then included an Arm-based Ampere A1 instance with **4 cores and 24 GB** of memory.
 
 Oracle has since **halved** that allowance: the Always Free Ampere A1 instance now has **2 cores and 12 GB**. We set ourselves a goal: **100,000 peers on the reduced free tier, for €0 a month.** It is part of a bigger aim behind P2P Media Loader: to bring the cost of video delivery close to zero, so that streaming to a large audience is affordable for anyone.
@@ -51,6 +53,15 @@ Speed did not come at the expense of correctness. The port is driven by a writte
 - **CI** runs all of it on every change, and longer fuzzing every night.
 
 The design keeps what made wt-tracker fast and adds every CPU core:
+
+<figure class="diagram-figure">
+  <WtTrackerDiagram />
+  <figcaption>
+    Every peer keeps a WebSocket connection open. Each core runs a worker with
+    its own WebSocket layer and its own swarms, and a connection moves to the
+    worker that holds its stream.
+  </figcaption>
+</figure>
 
 - **One worker per core, no locks:** each worker owns its own share of the swarms and never waits for another thread.
 - **Swarms follow the content:** the video, audio and every quality of one stream are kept on one worker, and a viewer's connection moves to that worker at its first announce. Almost every message is then handled on a single core, with no traffic between threads.
