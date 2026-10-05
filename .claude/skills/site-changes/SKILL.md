@@ -31,7 +31,7 @@ Find every occurrence with `grep -rn "<fact>" src` before changing one.
 |---|---|---|
 | Years in business | 15+ / "Fifteen years" | Home hero, stats strip, home page description (`index.astro`) |
 | GitHub stars | 2,000+ (all repos), 1,700+ (P2P Media Loader) | Stats strip; product card; P2P case study |
-| jsDelivr usage | "nearly 200 million times a month" | Products intro; P2P case study |
+| jsDelivr usage | "nearly 200 million times a month", always with the source ("from jsDelivr"); where there is room, add "not counting copies bundled from npm or self-hosted, which no public statistics track" (Products intro, P2P results list) or the short "not counting npm installs" (stats strip, P2P case study lead). Use the `p2p-media-loader-core` figure only: the integration packages load with it, so adding them up double-counts. Say "served" or "requests", never "downloads" (jsDelivr counts requests), and never "much more" (unprovable) | Stats strip ("Nearly 200M"); Products intro; home case-studies card; P2P case study (lead, results list, description) |
 | P2P share | 10 viewers → 90%, 100 → 99%, 1,000 → 99.9% (live, ideal conditions); VOD depends on concurrent viewers | Product card, overview, technical overview table, P2P case study |
 | wt-tracker capacity | 20,000 peers, 1 vCPU, 2 GiB | Product card, wt-tracker case study (text, key facts, **diagram label**), 100k blog post, GitHub README |
 | Default trackers | `wss://tracker.webtorrent.dev`, `wss://tracker.openwebtorrent.com` | Overview, technical overview, privacy page |
