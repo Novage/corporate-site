@@ -1,34 +1,54 @@
 ---
-import PageHeader from "../shared/PageHeader.astro";
-import Header from "../shared/Header.astro";
+import ContactBanner from "../shared/ContactBanner.astro";
 import Footer from "../shared/Footer.astro";
+import Header from "../shared/Header.astro";
+import PageHeader from "../shared/PageHeader.astro";
 import Layout from "../../layouts/Layout.astro";
+import { formatPostDate } from "./formatPostDate";
+import { organization, siteUrl } from "../../data/organization";
 import "../../styles/blog.css";
 
 const post = Astro.props.frontmatter ?? Astro.props;
+// `description` may contain links for the blog index; meta tags need plain text.
+const description =
+  post.seoDescription ?? post.description?.replace(/<[^>]+>/g, "");
+
+const schema = [
+  organization,
+  {
+    "@type": "BlogPosting",
+    headline: post.title,
+    description,
+    datePublished: post.date,
+    url: post.canonical ? `${siteUrl}${post.canonical}` : undefined,
+    author: String(post.author)
+      .split(",")
+      .map((name: string) => ({ "@type": "Person", name: name.trim() })),
+    publisher: { "@id": organization["@id"] },
+  },
+];
 ---
 
-<Layout title={post.title} canonical={post.canonical}>
+<Layout
+  title={post.title}
+  canonical={post.canonical}
+  description={description}
+  type="article"
+  schema={schema}
+>
   <Header />
   <div id="content">
     <article>
-      <PageHeader title={post.title} />
-      <div class="single-post container content">
-        <div class="content">
-          <slot />
-        </div>
-        <footer class="footer">
-          {
-            new Date(post.date).toLocaleDateString("en-GB", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })
-          }{" "}
-          | {post.author}
-        </footer>
+      <PageHeader eyebrow="Blog" eyebrowHref="/blog/" title={post.title}>
+        <p class="post-meta">
+          {formatPostDate(post.date)} · {post.author}
+        </p>
+      </PageHeader>
+      <div class="page post-body container content">
+        <slot />
       </div>
     </article>
+    <ContactBanner />
   </div>
   <Footer />
 </Layout>

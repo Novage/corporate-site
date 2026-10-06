@@ -4,7 +4,12 @@ date: "2025-02-17"
 title: "P2P Video Delivery for up to 100k Viewers for Free"
 slug: p2p-video-delivery-for-up-to-100k-viewers-for-free
 description: "This article explores how to scale video streaming to 100K+ peers by leveraging P2P technology alongside hybrid CDN strategies. It covers using public and dedicated trackers, and sharding techniques to achieve cost-effective, high-quality P2P delivery."
+seoDescription: "Scale P2P video streaming to 100k+ viewers for free: hybrid CDN + P2P, public vs dedicated WebTorrent trackers, and sharding for cost-effective delivery."
 ---
+
+import WtTrackerNodeDiagram from "../../components/case-studies/WtTrackerNodeDiagram.astro";
+
+> **Update (October 2026):** Oracle has halved its Always Free Arm instance to 2 cores and 12 GB of memory. Read how we serve about 100,000 peers on it with our new multi-core Rust tracker: [100k WebTorrent Peers on the Oracle Cloud Always Free Tier](/blog/100k-webtorrent-peers-on-the-oracle-cloud-always-free-tier).
 
 Our open-source [P2P Media Loader](https://github.com/novage/p2p-media-loader) JavaScript library (created by [Novage](https://novage.com.ua/) 🇺🇦) makes it simple, fast, and completely **free** to enable **P2P-assisted video delivery** on your **HTML** web pages, working seamlessly with **HLS** or **MPEG-DASH** segmented media formats. It also supports native **iOS** and **Android** mobile apps.
 For more details, check out our earlier articles and demo:
@@ -61,7 +66,18 @@ While easy to embed, it may not be optimal for large-scale deployments due to in
 
 [wt-tracker](https://github.com/Novage/wt-tracker) is built on [µWebSockets.js](https://github.com/uNetworking/uWebSockets.js), which offers better performance than standard Node.js network APIs. It can only utilize one CPU core, making it an excellent choice for small VPS instances with one or two cores. For instance, a 1-core VPS with 2 GB RAM (around €3.5/month) can handle 20,000 simultaneous peers with a wt-tracker.
 
+<figure class="diagram-figure">
+  <WtTrackerNodeDiagram />
+  <figcaption>
+    Every peer keeps a WebSocket connection open. µWebSockets.js handles the
+    networking natively, and the TypeScript core handles the swarms, all on one
+    small server.
+  </figcaption>
+</figure>
+
 It is great for projects expecting moderate loads and looking for an easy, budget-friendly setup but provides no benefits on multi-core servers.
+
+Its Rust port, [wt-tracker-rust](https://github.com/Novage/wt-tracker-rust), uses every CPU core: see [100k WebTorrent Peers on the Oracle Cloud Always Free Tier](/blog/100k-webtorrent-peers-on-the-oracle-cloud-always-free-tier).
 
 ### Aquatic
 
@@ -73,6 +89,8 @@ It is great for projects expecting moderate loads and looking for an easy, budge
 Ideal for larger-scale production environments that demand high concurrency and reliable performance.
 
 ## Free Tracker for up to 100k Simultaneous Peers
+
+> **Update (October 2026):** Oracle has reduced the Always Free Ampere A1 instance to 2 cores and 12 GB of memory. How we serve about 100,000 peers on it with our multi-core Rust tracker is described in [100k WebTorrent Peers on the Oracle Cloud Always Free Tier](/blog/100k-webtorrent-peers-on-the-oracle-cloud-always-free-tier).
 
 One of the most straightforward ways to run a **free** high-capacity tracker is by using the **Oracle Cloud Always Free Tier**, which offers:
 

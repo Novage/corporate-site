@@ -1,13 +1,65 @@
+---
+import Icon from "./Icon.astro";
+---
+
 <footer id="footer">
-  <div class="container" id="copyright">
-    © {new Date().getFullYear()} Novage, LLC
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <div class="footer-name">Novage</div>
+      <p>Software engineering &amp; R&amp;D</p>
+    </div>
+    <nav class="footer-links" aria-label="Products">
+      <div class="footer-heading">Products</div>
+      <ul>
+        <li>
+          <a href="/p2p-media-loader/overview">P2P Media Loader</a>
+        </li>
+        <li>
+          <a href="/case-studies/wt-tracker">wt-tracker</a>
+        </li>
+      </ul>
+    </nav>
+    <nav class="footer-links" aria-label="Company">
+      <div class="footer-heading">Company</div>
+      <ul>
+        <li>
+          <a href="/#services">Services</a>
+        </li>
+        <li>
+          <a href="/#case-studies">Case studies</a>
+        </li>
+        <li>
+          <a href="/blog/">Blog</a>
+        </li>
+        <li>
+          <a href="/#contact">Contact</a>
+        </li>
+        <li>
+          <a href="https://github.com/novage">
+            <Icon name="github" class="inline-icon" />
+            GitHub
+          </a>
+        </li>
+        <li>
+          <a href="https://www.linkedin.com/company/novage/">
+            <Icon name="linkedin" class="inline-icon" />
+            LinkedIn
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="container footer-bottom" id="copyright">
+    <span>© {new Date().getFullYear()} Novage, LLC</span>
+    <a href="/privacy">Privacy</a>
   </div>
 </footer>
 
 <script is:inline>
   function changeYear(copyright) {
     const year = Math.max(new Date().getFullYear(), 2024);
-    copyright.innerHTML = copyright.innerHTML.replace(/\d{4}/, year);
+    const span = copyright.querySelector("span");
+    span.textContent = span.textContent.replace(/\d{4}/, year);
   }
 
   changeYear(document.getElementById("copyright"));

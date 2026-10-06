@@ -1,0 +1,189 @@
+---
+author: Andriy Lysnevych
+date: "2026-10-04"
+title: "100k WebTorrent Peers on the Oracle Cloud Always Free Tier"
+slug: 100k-webtorrent-peers-on-the-oracle-cloud-always-free-tier
+description: "Oracle halved its Always Free Arm instance to 2 cores and 12 GB of memory. To keep a tracker for 100,000 P2P video viewers free, we ported wt-tracker to Rust with AI in two days, made Oracle's network rules stateless and tuned the tracker to fit the free 10 TB of monthly egress."
+seoDescription: "How we serve ~100k WebTorrent peers on a free 2-core Oracle Cloud server: a Rust tracker ported with AI in 2 days, stateless network rules and egress tuning."
+---
+
+import WtTrackerDiagram from "../../components/case-studies/WtTrackerDiagram.astro";
+
+Every viewer in a [P2P Media Loader](/p2p-media-loader/overview) network keeps a WebSocket connection to a **WebTorrent tracker**, which introduces viewers of the same stream to each other. In [P2P Video Delivery for up to 100k Viewers for Free](/blog/p2p-video-delivery-for-up-to-100k-viewers-for-free) we showed how to run a tracker for up to 100,000 simultaneous peers on the **Oracle Cloud Always Free Tier**, which then included an Arm-based Ampere A1 instance with **4 cores and 24 GB** of memory.
+
+Oracle has since **halved** that allowance: the Always Free Ampere A1 instance now has **2 cores and 12 GB**. We set ourselves a goal: **100,000 peers on the reduced free tier, for €0 a month.** It is part of a bigger aim behind P2P Media Loader: to bring the cost of video delivery close to zero, so that streaming to a large audience is affordable for anyone.
+
+This article describes how we got there in a few days: a new multi-core tracker written in Rust with AI-assisted development, an Oracle network setting that is easy to miss, and tracker tuning to fit Oracle's free outbound traffic.
+
+<ul class="key-facts">
+  <li>
+    <strong>~100k</strong> peers (estimated) within the free monthly traffic;
+    ~200k supported by the hardware
+  </li>
+  <li>
+    <strong>2 cores, 12 GB</strong> Always Free Ampere A1
+  </li>
+  <li>
+    <strong>2 days</strong> from the first commit to production
+  </li>
+  <li>
+    <strong>€0</strong> per month
+  </li>
+</ul>
+
+## Why existing trackers were not enough
+
+We measured both candidates on the same 2-core Ampere A1 server, serving real P2P Media Loader viewers. Every peer keeps one WebSocket connection, so peers and connections are the same thing here.
+
+- **[Aquatic](https://github.com/greatest-ape/aquatic)**, a multi-threaded Rust tracker that we recommended for the 4-core free tier, used **1.46 of the 2 cores and 1.9 GB** of memory at about 42,000 peers. That leaves room for maybe 55,000–60,000 peers, not 100,000.
+- **[wt-tracker](https://github.com/Novage/wt-tracker)**, our own tracker on Node.js and µWebSockets.js, is very efficient per core. But Node.js runs it on one core, so on a 2-core server half of the CPU stays idle.
+
+We needed wt-tracker's efficiency on every core.
+
+## wt-tracker-rust: ported with AI in two days
+
+[wt-tracker-rust](https://github.com/Novage/wt-tracker-rust) is a port of wt-tracker to Rust. We built it with **AI-assisted development**: AI coding agents wrote most of the code, while our engineers set the goals, made the design decisions and reviewed every change. From the first commit to real viewers in production took **two days**.
+
+Speed did not come at the expense of correctness. The port is driven by a written specification and checked from several sides:
+
+- **Differential testing against the original:** random message sequences go through both trackers, and wt-tracker-rust's replies must be **byte-identical** to wt-tracker's.
+- **Twin benchmarks:** every Rust benchmark has an identical JavaScript twin running against wt-tracker.
+- **The full WebSocket conformance suite:** all 517 cases of the Autobahn testsuite pass, with and without compression.
+- **Fuzzing** of the WebSocket framing, compression, HTTP upgrade and tracker protocol, plus property-based tests of the tracker state.
+- **CI** runs all of it on every change, and longer fuzzing every night.
+
+The design keeps what made wt-tracker fast and adds every CPU core:
+
+<figure class="diagram-figure">
+  <WtTrackerDiagram />
+  <figcaption>
+    Every peer keeps a WebSocket connection open. Each core runs a worker with
+    its own WebSocket layer and its own swarms, and a connection moves to the
+    worker that holds its stream.
+  </figcaption>
+</figure>
+
+- **One worker per core, no locks:** each worker owns its own share of the swarms and never waits for another thread.
+- **Swarms follow the content:** the video, audio and every quality of one stream are kept on one worker, and a viewer's connection moves to that worker at its first announce. Almost every message is then handled on a single core, with no traffic between threads.
+- **Zero-copy messages:** WebRTC offers and answers are forwarded as slices of the received message, never copied or re-encoded.
+- **Its own WebSocket implementation instead of µWebSockets:** like µWebSockets, it reads every connection through one shared buffer per worker, so a connection costs about **5–9 KB** of memory. Because we control it, it can do something µWebSockets doesn't offer: **move a live connection, TLS session included, to another core**. That is what lets swarms follow the content.
+- **A drop-in replacement:** the same configuration file and the same protocol as wt-tracker, plus Prometheus metrics and structured logs.
+
+More about the design is in our [wt-tracker case study](/case-studies/wt-tracker).
+
+On the same 2-core server and the same real traffic, at about 42,000 peers:
+
+|        |    Aquatic | wt-tracker-rust |
+| ------ | ---------: | --------------: |
+| CPU    | 1.46 cores |  **0.35 cores** |
+| Memory |     1.9 GB |      **590 MB** |
+
+That is **4× less CPU and 3× less memory**.
+
+It also beats our µWebSockets.js-based wt-tracker on its home ground. In our load tests on a single core, wt-tracker-rust needs **up to a third less CPU per message** and **about 3–5× less memory per connection**, and it scales to every core on top of that.
+
+The CPU is no longer the problem, but two other limits showed up.
+
+## Step 1: Make Oracle's network rules stateless
+
+At about **40,000 peers** the server seemed to hang. SSH stopped responding, and new viewers couldn't connect. Yet the server itself was healthy: its logs were clean, the CPU was mostly idle, and the viewers already connected kept working.
+
+The cause was **Oracle's network layer**, not the server. By default, the security list rules of an Oracle Cloud subnet are **stateful**: Oracle tracks every connection to remember that its replies are allowed. That tracking table has a limit per instance. With tens of thousands of long-lived WebSocket connections it fills up, and Oracle silently drops new connections before they reach the instance. In our measurements about **80% of new TCP connections timed out**.
+
+The fix is to make the tracker's rules **stateless**. Stateless rules are checked packet by packet, with no tracking table, so replies need their own egress rules.
+
+In Networking → Virtual cloud networks → your VCN → Subnets → your subnet → Security, edit the ingress rules and add egress rules:
+
+| Direction | Stateless | Address   | Protocol | Source port | Destination port |
+| --------- | --------- | --------- | -------- | ----------- | ---------------- |
+| Ingress   | Yes       | 0.0.0.0/0 | TCP      | All         | 443              |
+| Ingress   | Yes       | 0.0.0.0/0 | TCP      | All         | 80               |
+| Egress    | Yes       | 0.0.0.0/0 | TCP      | 443         | All              |
+| Egress    | Yes       | 0.0.0.0/0 | TCP      | 80          | All              |
+
+Keep the SSH rule and the default egress rule stateful: the server's own connections (updates, certificates) still need them. After the change every new connection got through, and the server accepted several times more new connections per second.
+
+## Step 2: Fit the free 10 TB of monthly egress
+
+Oracle's Always Free Tier includes **10 TB of outbound traffic per month**: an average of about **3.86 MB/s**, or 31 Mbit/s. Inbound traffic is free. For a tracker this is the real limit, not the CPU.
+
+We measured where the outbound traffic went:
+
+| Outbound traffic                                    | Share |
+| --------------------------------------------------- | ----: |
+| Tracker messages (mostly WebRTC offers and answers) |   54% |
+| TLS handshakes of new connections                   |   25% |
+| TCP/IP headers and acknowledgments                  |   18% |
+| WebSocket framing                                   |    3% |
+
+Three changes reduced it.
+
+**Compress outgoing offers.** Browsers already negotiate WebSocket compression (permessage-deflate) and compress what they send. wt-tracker-rust also compresses its outgoing messages above a size threshold. A WebRTC offer is about 1 KB of text and compresses well. Turning this on cut the server's outbound traffic by **27%**, with no measurable CPU cost.
+
+**Resume TLS sessions.** A viewer reconnects every few minutes, when it switches streams or its network changes. A full TLS handshake sends the certificate chain, about **3.7 KB**. With TLS session tickets, a reconnecting viewer resumes its previous session in about **0.2 KB**. wt-tracker-rust now issues session tickets by default, and the outbound overhead per new connection dropped by **39%**.
+
+**Send fewer messages.** The announce interval and the number of offers per announce set the message rate. Peers re-announce every 3 minutes and send up to 10 offers, which is plenty for P2P video.
+
+The settings we use:
+
+```json
+{
+  "servers": [
+    {
+      "server": {
+        "host": "0.0.0.0",
+        "port": 443,
+        "cert_file_name": "fullchain.pem",
+        "key_file_name": "privkey.pem"
+      },
+      "websockets": {
+        "path": "/*",
+        "maxPayloadLength": 65536,
+        "idleTimeout": 190,
+        "compression": 1,
+        "compressOutgoingMinSize": 256
+      }
+    }
+  ],
+  "tracker": { "maxOffers": 10, "announceInterval": 180 },
+  "workers": 2,
+  "reusePort": true
+}
+```
+
+After tuning, one peer costs about **38 bytes per second** of outbound traffic. That gives **3.86 MB/s ÷ 38 B/s ≈ 100,000 peers** within the free 10 TB.
+
+## How many peers can the server handle?
+
+Over a full day in production (33,000 peers on average, 47,000 at the daily peak), wt-tracker-rust used **0.82 CPU cores per 100,000 peers** and **about 15 KB of memory per peer**: at the peak, about **0.4 of one core** and **690 MB**. Extrapolated to the limits of the free server:
+
+| Limit                                     | Peers it allows (estimated) |
+| ----------------------------------------- | --------------------------: |
+| CPU (2 cores)                             |                    ~200,000 |
+| Memory (12 GB)                            |                    500,000+ |
+| Network bandwidth (2 Gbps)                |      far above any of these |
+| **Free outbound traffic (10 TB / month)** |                **~100,000** |
+
+The free server's hardware can handle **about 200,000 peers**. What limits it to about 100,000 is the free outbound traffic. Beyond that, extra traffic is billed per gigabyte, so the same free instance can grow with your audience without a larger server.
+
+These numbers come from a full day of production traffic, measured once a minute. The CPU estimate keeps headroom for the bursts of reconnecting viewers after a restart; memory and traffic grow linearly with the number of peers.
+
+## Run it yourself
+
+1. Create an **Ampere A1** instance with 2 cores and 12 GB of memory in the Always Free Tier.
+2. Make the ingress rules for ports 80 and 443 **stateless** and add the matching egress rules (see Step 1).
+3. Open ports 80 and 443 in the instance's firewall and get a free TLS certificate from Let's Encrypt.
+4. Build and run [wt-tracker-rust](https://github.com/Novage/wt-tracker-rust) with the settings from Step 2.
+5. Point P2P Media Loader at your tracker's `wss://` address.
+
+Installation and every setting are described in the [README on GitHub](https://github.com/Novage/wt-tracker-rust#readme). wt-tracker-rust is free and open source under the Apache-2.0 license, and it works with any WebTorrent-compatible client.
+
+## Conclusion
+
+A free 2-core server can be the tracker for a P2P video audience of about **100,000 simultaneous viewers**. It takes three things: a tracker that uses every core efficiently, stateless network rules so Oracle's connection tracking doesn't drop viewers, and tuning that keeps outbound traffic within the free 10 TB.
+
+With P2P Media Loader offloading most of the traffic from the CDN and a free server introducing up to 100,000 viewers to each other, a large P2P video audience no longer needs a large budget.
+
+It also shows what AI-assisted development can do when it is held to a high bar. A specification, differential tests against the original and conformance suites let us port a production server to a new language in **two days**, and run it on real traffic right away.
+
+If you need P2P video delivery, tracker infrastructure, or a backend rewritten to do more with less, [get in touch](#contact).
