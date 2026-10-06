@@ -155,7 +155,7 @@ After tuning, one peer costs about **38 bytes per second** of outbound traffic. 
 
 ## How many peers can the server handle?
 
-At about 47,000 peers in production, wt-tracker-rust uses **a third of one core** and **about 600 MB** of memory. Extrapolated to the limits of the free server:
+Over a full day in production (33,000 peers on average, 47,000 at the daily peak), wt-tracker-rust used **0.82 CPU cores per 100,000 peers** and **about 15 KB of memory per peer**: at the peak, about **0.4 of one core** and **690 MB**. Extrapolated to the limits of the free server:
 
 | Limit                                     | Peers it allows (estimated) |
 | ----------------------------------------- | --------------------------: |
@@ -166,7 +166,7 @@ At about 47,000 peers in production, wt-tracker-rust uses **a third of one core*
 
 The free server's hardware can handle **about 200,000 peers**. What limits it to about 100,000 is the free outbound traffic. Beyond that, extra traffic is billed per gigabyte, so the same free instance can grow with your audience without a larger server.
 
-These numbers come from a few hours of production traffic. We are collecting a full day of measurements and will update the article with the results.
+These numbers come from a full day of production traffic, measured once a minute. The CPU estimate keeps headroom for the bursts of reconnecting viewers after a restart; memory and traffic grow linearly with the number of peers.
 
 ## Run it yourself
 
