@@ -206,6 +206,28 @@ import Layout from "../../layouts/Layout.astro";
           what the origin has to deliver.
         </p>
 
+        <h3>AI-run release testing</h3>
+        <p>
+          Before each release, an AI assistant runs a written test plan in real
+          browsers. Several tabs join one swarm as peers, on every supported
+          engine, on live and on-demand streams, in Chrome and Safari. The
+          assistant seeks, changes playback rates, switches players and streams,
+          injects network faults and runs hour-long sessions. A diagnostics
+          ledger built into the library shows every open connection, request and
+          timer, so a leak or a stuck request shows up without reading logs.
+        </p>
+        <p>
+          The assistant records each finding with its evidence and traces it to
+          a cause; our engineers decide what to fix. It catches what unit tests
+          miss — stalls, slow recovery after network faults — and issues in
+          players and streams outside our code, which we report to their
+          maintainers.
+        </p>
+        <p>
+          The same plan runs again for maintenance releases, so a change in a
+          browser, a player or a stream is caught before viewers meet it.
+        </p>
+
         <h3>Safe with DRM</h3>
         <p>
           Peers exchange segments exactly as the CDN delivers them, still
