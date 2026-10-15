@@ -1,0 +1,303 @@
+---
+// wt-tracker architecture: tens of thousands of peers keep WebSocket
+// connections to one free 2-core server. Each core runs a worker with its own
+// WebSocket and TLS layer and its own swarms; a connection moves to the worker
+// that holds its content.
+
+// A grid of peers; a label below says there are many more
+const peerRows = [70, 125, 180, 235, 290, 345];
+const peerCols = [40, 80, 120, 160];
+const peers = peerRows.flatMap((y) => peerCols.map((x) => ({ x, y })));
+
+// Two workers, one per core
+const workers = [
+  { label: "Core 1", y: 108, streams: ["Stream A", "Stream B"] },
+  { label: "Core 2", y: 256, streams: ["Stream C", "Stream D"] },
+];
+
+// Connections from the nearest peer in each row: the upper rows to the first
+// worker, the lower rows to the second
+const links = peerRows.map((y, i) => {
+  const to = workers[i < 3 ? 0 : 1].y + 50;
+  return `M172 ${y} C230 ${y} 260 ${to} 316 ${to}`;
+});
+
+// Signaling messages: announces in, offers and answers back out
+const cycle = 4;
+const packets = links.flatMap((path, i) => {
+  const start = +((i * 0.07) % 0.4).toFixed(2);
+  const inEnd = +(start + 0.22).toFixed(2);
+  const outStart = +(inEnd + 0.12).toFixed(2);
+  const outEnd = +(outStart + 0.22).toFixed(2);
+  return [
+    {
+      path,
+      times: `0;${start};${inEnd};1`,
+      points: "0;0;1;1",
+      a: start,
+      b: inEnd,
+    },
+    {
+      path,
+      times: `0;${outStart};${outEnd};1`,
+      points: "1;1;0;0",
+      a: outStart,
+      b: outEnd,
+    },
+  ];
+});
+const fade = (a: number, b: number) =>
+  `0;${a};${+(a + 0.02).toFixed(2)};${+(b - 0.02).toFixed(2)};${b};1`;
+---
+
+<svg
+  class="diagram"
+  viewBox="0 0 620 400"
+  role="img"
+  aria-labelledby="wt-diagram-title wt-diagram-desc"
+>
+  <title id="wt-diagram-title">wt-tracker architecture</title>
+  <desc id="wt-diagram-desc">
+    Tens of thousands of peers keep WebSocket connections to one free Oracle
+    Cloud Ampere A1 server with 2 virtual CPUs and 12 GB of memory. Each core
+    runs a worker with its own WebSocket and TLS layer and its own swarms, and a
+    connection moves to the worker that holds the swarms of its stream.
+  </desc>
+  <defs>
+    <marker
+      id="wt-arrow"
+      viewBox="0 0 10 10"
+      refX="8"
+      refY="5"
+      markerWidth="7"
+      markerHeight="7"
+      orient="auto"
+    >
+      <path d="M0 0 L10 5 L0 10 Z" class="arrow-head"></path>
+    </marker>
+  </defs>
+
+  <text x="100" y="30" class="caption-strong">
+    ~200,000 peers
+  </text>
+
+  <!-- One free server -->
+  <rect x="300" y="44" width="300" height="336" rx="16" class="server"></rect>
+  <text x="450" y="30" class="caption-strong">
+    One free server
+  </text>
+  <text x="450" y="72" class="caption-muted">
+    Ampere A1 · 2 vCPU · 12 GB
+  </text>
+
+  <!-- WebSocket connections -->
+  {links.map((d) => (
+    <path d={d} class="link" />
+  ))}
+
+  <!-- Peers -->
+  {peers.map(({ x, y }) => (
+    <g>
+      <circle cx={x} cy={y} r="13" class="peer" />
+      <path
+        d={`M${x - 4} ${y - 6} L${x + 6} ${y} L${x - 4} ${y + 6} Z`}
+        class="play"
+      />
+    </g>
+  ))}
+  <text x="100" y="388" class="caption-muted">
+    …and thousands more
+  </text>
+
+  <!-- Signaling messages -->
+  <g class="packets" aria-hidden="true">
+    {packets.map(({ path, times, points, a, b }) => (
+      <circle r="4.5" class="packet" opacity="0">
+        <animateMotion
+          dur={`${cycle}s`}
+          repeatCount="indefinite"
+          path={path}
+          keyPoints={points}
+          keyTimes={times}
+          calcMode="linear"
+        />
+        <animate
+          attributeName="opacity"
+          dur={`${cycle}s`}
+          repeatCount="indefinite"
+          values="0;0;1;1;0;0"
+          keyTimes={fade(a, b)}
+        />
+      </circle>
+    ))}
+  </g>
+
+  <!-- One worker per core -->
+  {workers.map(({ label, y, streams }) => (
+    <g>
+      <text x="318" y={y - 10} class="worker-label">
+        {label}
+      </text>
+      <rect
+        x="316"
+        y={y}
+        width="120"
+        height="100"
+        rx="10"
+        class="layer-native"
+      />
+      <text x="376" y={y + 46} class="layer-title small">
+        WebSocket
+      </text>
+      <text x="376" y={y + 68} class="layer-muted">
+        TLS · zero-copy
+      </text>
+      <path d={`M436 ${y + 50} L448 ${y + 50}`} class="connector" />
+      <rect x="448" y={y} width="138" height="100" rx="10" class="layer-core" />
+      <text x="517" y={y + 22} class="layer-title small">
+        Swarms
+      </text>
+      {streams.map((stream, i) => (
+        <g>
+          <rect
+            x="460"
+            y={y + 32 + i * 32}
+            width="114"
+            height="26"
+            rx="7"
+            class="chip"
+          />
+          <text x="517" y={y + 50 + i * 32} class="chip-label">
+            {stream}
+          </text>
+        </g>
+      ))}
+    </g>
+  ))}
+
+  <!-- A connection moves to the worker that holds its stream -->
+  <path d="M396 212 L396 250" class="move" marker-end="url(#wt-arrow)"></path>
+  <text x="404" y="236" class="move-label">
+    moves
+  </text>
+</svg>
+
+<style>
+  .diagram {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: inherit;
+  }
+
+  .caption-strong {
+    font-size: 18px;
+    text-anchor: middle;
+    fill: var(--heading);
+  }
+
+  .caption-muted {
+    font-size: 14px;
+    text-anchor: middle;
+    fill: var(--muted);
+  }
+
+  .link {
+    fill: none;
+    stroke: #b8862f;
+    stroke-width: 1.5;
+    stroke-dasharray: 5 4;
+    opacity: 0.7;
+  }
+
+  .peer {
+    fill: #ffffff;
+    stroke: #cfc6bb;
+    stroke-width: 1.5;
+  }
+
+  .play {
+    fill: var(--brand);
+  }
+
+  .packet {
+    fill: #b8862f;
+  }
+
+  .server {
+    fill: var(--warm-bg);
+    stroke: #6b7780;
+    stroke-width: 2;
+  }
+
+  .layer-native {
+    fill: #ffffff;
+    stroke: var(--brand);
+    stroke-width: 2;
+  }
+
+  .layer-core {
+    fill: #ffffff;
+    stroke: #cfc6bb;
+    stroke-width: 1.5;
+  }
+
+  .layer-title {
+    font-size: 18px;
+    text-anchor: middle;
+    fill: var(--heading);
+  }
+
+  .layer-title.small {
+    font-size: 16px;
+  }
+
+  .layer-muted {
+    font-size: 13.5px;
+    text-anchor: middle;
+    fill: var(--muted);
+  }
+
+  .connector {
+    stroke: #6b7780;
+    stroke-width: 2;
+  }
+
+  .chip {
+    fill: var(--warm);
+    stroke: var(--warm-border);
+    stroke-width: 1.5;
+  }
+
+  .chip-label {
+    font-size: 13.5px;
+    text-anchor: middle;
+    fill: var(--text);
+  }
+
+  .worker-label {
+    font-size: 13px;
+    fill: var(--muted);
+  }
+
+  .move {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 2;
+  }
+
+  .arrow-head {
+    fill: var(--brand);
+  }
+
+  .move-label {
+    font-size: 12.5px;
+    fill: var(--brand);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .packets {
+      display: none;
+    }
+  }
+</style>

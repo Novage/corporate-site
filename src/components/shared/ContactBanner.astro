@@ -1,0 +1,58 @@
+---
+import "../../styles/contact-banner.css";
+import Icon from "./Icon.astro";
+
+const address = "contact@novage.com.ua";
+const brief = [
+  "What we want to build:",
+  "",
+  "Current stage (idea / prototype / in production):",
+  "",
+  "Timeline:",
+  "",
+  "Company / website:",
+  "",
+].join("\n");
+const briefHref = `mailto:${address}?subject=${encodeURIComponent("Project inquiry")}&body=${encodeURIComponent(brief)}`;
+---
+
+<section id="contact" class="contact-banner">
+  <div class="container contact-inner">
+    <div class="contact-pitch">
+      <div class="contact-mark">
+        <Icon name="message" />
+      </div>
+      <div>
+        <h2>Discuss your next product with us</h2>
+        <p>
+          Share a brief outline of what you intend to build. We will respond
+          with a proposed team composition, delivery plan, and first milestone.
+        </p>
+        <a class="button light" data-umami-event="email-brief" href={briefHref}>
+          Email us a brief <Icon name="arrow-right" class="inline-icon" />
+        </a>
+      </div>
+    </div>
+    <ul class="contact-details">
+      <li>
+        <Icon name="user" class="inline-icon" />
+        <a
+          href="https://www.linkedin.com/in/lysnevych/"
+          data-umami-event="founder-linkedin"
+        >
+          Talk to Andriy, Founder
+        </a>
+      </li>
+      <li>
+        <Icon name="mail" class="inline-icon" />
+        <a data-umami-event="email-link" href={`mailto:${address}`}>
+          {address}
+        </a>
+      </li>
+      <li>
+        <Icon name="github" class="inline-icon" />
+        <a href="https://github.com/novage">github.com/novage</a>
+      </li>
+    </ul>
+  </div>
+</section>

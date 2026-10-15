@@ -3,6 +3,8 @@ import type { APIRoute } from "astro";
 const robotsTxt = `
 User-agent: *
 Allow: /
+
+Sitemap: https://novage.com.ua/sitemap-index.xml
 `.trim();
 
 export const GET: APIRoute = () => {

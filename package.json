@@ -8,12 +8,16 @@
     "host": "astro dev --host",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "node scripts/check-site.mjs",
+    "og-image": "node scripts/generate-og-image.mjs",
+    "linkedin-images": "node scripts/generate-linkedin-images.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
     "@astrojs/mdx": "^8.0.1",
     "@astrojs/react": "^6.0.6",
+    "@astrojs/sitemap": "^3.7.4",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "astro": "^7.3.3",
