@@ -17,7 +17,7 @@ This article describes how we got there in a few days: a new multi-core tracker 
 
 <ul class="key-facts">
   <li>
-    <strong>125k</strong> peers in production on the free server; ~100k on
+    <strong>160k</strong> peers in production on the free server; ~100k on
     average within the free monthly traffic, ~200k+ supported by the hardware
   </li>
   <li>
@@ -155,7 +155,7 @@ After tuning, one peer costs about **35 bytes per second** of outbound traffic (
 
 ## How many peers can the server handle?
 
-In production on 14–15 October 2026, wt-tracker-rust reached **125,000 peers** and served **100,000–111,000 peers for more than six hours** on the same free server. At 111,000 peers it used **0.7 of its 2 CPU cores** (35% of each core), **1.65 GB** of memory (about 15 KB per peer) and **3.5–3.7 MB/s** of outbound traffic. Extrapolated to the limits of the free server:
+In production on 14–15 October 2026, wt-tracker-rust reached **160,000 peers** and served **107,000 peers on average over 24 hours** on the same free server. At 158,000 peers it used **1.15 of its 2 CPU cores** (about 58% of each core), **2.2 GB** of memory (about 14 KB per peer) and **5.3–5.4 MB/s** of outbound traffic. Extrapolated to the limits of the free server:
 
 | Limit                                     | Peers it allows (estimated) |
 | ----------------------------------------- | --------------------------: |
@@ -180,7 +180,7 @@ Installation and every setting are described in the [README on GitHub](https://g
 
 ## Conclusion
 
-A free 2-core server can be the tracker for a P2P video audience of about **100,000 simultaneous viewers**: ours served 125,000 at the peak. It takes three things: a tracker that uses every core efficiently, stateless network rules so Oracle's connection tracking doesn't drop viewers, and tuning that keeps outbound traffic within the free 10 TB.
+A free 2-core server can be the tracker for a P2P video audience of about **100,000 simultaneous viewers**: ours served 160,000 at the peak. It takes three things: a tracker that uses every core efficiently, stateless network rules so Oracle's connection tracking doesn't drop viewers, and tuning that keeps outbound traffic within the free 10 TB.
 
 With P2P Media Loader offloading most of the traffic from the CDN and a free server introducing up to 100,000 viewers to each other, a large P2P video audience no longer needs a large budget.
 
