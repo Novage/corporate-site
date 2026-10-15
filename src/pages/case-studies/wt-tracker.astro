@@ -39,7 +39,7 @@ const schema = [
   title="wt-tracker: Multi-Core WebTorrent Tracker in Rust | Novage"
   canonical="case-studies/wt-tracker"
   schema={schema}
-  description="How we built wt-tracker in Rust with AI in two days: ~200k WebTorrent peers on a free 2-core Oracle Cloud server, ~100k within the free traffic."
+  description="How we built wt-tracker in Rust with AI in two days: 125k WebTorrent peers in production on a free 2-core Oracle Cloud server, ~100k on average within the free traffic."
 >
   <Header />
   <div id="content">
@@ -51,10 +51,10 @@ const schema = [
       >
         <p class="lead">
           How we ported our WebTorrent tracker from Node.js to Rust with AI in
-          two days, and built a server that can handle about{" "}
-          <strong>200,000 simultaneous peers</strong> on a free 2-core Oracle
-          Cloud instance (estimated) — and why that matters for the cost of P2P
-          video.
+          two days, and built a server that served{" "}
+          <strong>125,000 simultaneous peers</strong> in production on a free
+          2-core Oracle Cloud instance — and why that matters for the cost of
+          P2P video.
         </p>
         <div class="actions">
           <a
@@ -84,9 +84,9 @@ const schema = [
       <div class="page container content">
         <ul class="key-facts">
           <li>
-            <strong>~200,000</strong> simultaneous WebSocket Secure peers
-            (estimated); ~100,000 within the free traffic, with a moderate
-            tracker configuration that doesn't affect P2P
+            <strong>125,000</strong> simultaneous WebSocket Secure peers in
+            production; ~100,000 on average within the free traffic, ~200,000+
+            supported by the hardware
           </li>
           <li>
             <strong>2 vCPU, 12 GB</strong> Ampere A1, Oracle Cloud Free Tier
@@ -264,9 +264,10 @@ const schema = [
         </table>
         <ul>
           <li>
-            <strong>About 200,000 peers</strong> on the free server's 2 cores
-            and 12 GB (estimated); about 100,000 within the free 10 TB of
-            monthly outbound traffic.
+            <strong>Over 100,000 peers in production</strong> (125,000 at the
+            peak) on the free server's 2 cores, at about a third of its CPU;
+            about 100,000 on average within the free 10 TB of monthly outbound
+            traffic.
           </li>
           <li>
             <strong>No complex horizontal scaling</strong> for many P2P video

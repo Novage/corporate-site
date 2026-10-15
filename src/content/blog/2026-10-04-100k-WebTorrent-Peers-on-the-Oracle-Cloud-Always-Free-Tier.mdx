@@ -17,8 +17,8 @@ This article describes how we got there in a few days: a new multi-core tracker 
 
 <ul class="key-facts">
   <li>
-    <strong>~100k</strong> peers (estimated) within the free monthly traffic;
-    ~200k supported by the hardware
+    <strong>125k</strong> peers in production on the free server; ~100k on
+    average within the free monthly traffic, ~200k+ supported by the hardware
   </li>
   <li>
     <strong>2 cores, 12 GB</strong> Always Free Ampere A1
@@ -151,22 +151,22 @@ The settings we use:
 }
 ```
 
-After tuning, one peer costs about **38 bytes per second** of outbound traffic. That gives **3.86 MB/s ÷ 38 B/s ≈ 100,000 peers** within the free 10 TB.
+After tuning, one peer costs about **35 bytes per second** of outbound traffic (33–38 B/s in production). That gives **3.86 MB/s ÷ 35 B/s ≈ 100,000 peers** on average within the free 10 TB, and production confirmed it: at 100,000–111,000 peers the tracker sent 3.5–3.7 MB/s.
 
 ## How many peers can the server handle?
 
-Over a full day in production (33,000 peers on average, 47,000 at the daily peak), wt-tracker-rust used **0.82 CPU cores per 100,000 peers** and **about 15 KB of memory per peer**: at the peak, about **0.4 of one core** and **690 MB**. Extrapolated to the limits of the free server:
+In production on 14–15 October 2026, wt-tracker-rust reached **125,000 peers** and served **100,000–111,000 peers for more than six hours** on the same free server. At 111,000 peers it used **0.7 of its 2 CPU cores** (35% of each core), **1.65 GB** of memory (about 15 KB per peer) and **3.5–3.7 MB/s** of outbound traffic. Extrapolated to the limits of the free server:
 
 | Limit                                     | Peers it allows (estimated) |
 | ----------------------------------------- | --------------------------: |
-| CPU (2 cores)                             |                    ~200,000 |
+| CPU (2 cores)                             |                    ~250,000 |
 | Memory (12 GB)                            |                    500,000+ |
 | Network bandwidth (2 Gbps)                |      far above any of these |
 | **Free outbound traffic (10 TB / month)** |                **~100,000** |
 
-The free server's hardware can handle **about 200,000 peers**. What limits it to about 100,000 is the free outbound traffic. Beyond that, extra traffic is billed per gigabyte, so the same free instance can grow with your audience without a larger server.
+The free server's hardware can handle **more than 200,000 peers**. What limits it to about 100,000 on average is the free outbound traffic. Beyond that, extra traffic is billed per gigabyte, so the same free instance can grow with your audience without a larger server.
 
-These numbers come from a full day of production traffic, measured once a minute. The CPU estimate keeps headroom for the bursts of reconnecting viewers after a restart; memory and traffic grow linearly with the number of peers.
+These numbers are measured once a minute in production. The CPU estimate keeps headroom for the bursts of reconnecting viewers after a restart and for the fast start of one big live event, whose viewers share one core; memory and traffic grow linearly with the number of peers.
 
 ## Run it yourself
 
@@ -180,7 +180,7 @@ Installation and every setting are described in the [README on GitHub](https://g
 
 ## Conclusion
 
-A free 2-core server can be the tracker for a P2P video audience of about **100,000 simultaneous viewers**. It takes three things: a tracker that uses every core efficiently, stateless network rules so Oracle's connection tracking doesn't drop viewers, and tuning that keeps outbound traffic within the free 10 TB.
+A free 2-core server can be the tracker for a P2P video audience of about **100,000 simultaneous viewers**: ours served 125,000 at the peak. It takes three things: a tracker that uses every core efficiently, stateless network rules so Oracle's connection tracking doesn't drop viewers, and tuning that keeps outbound traffic within the free 10 TB.
 
 With P2P Media Loader offloading most of the traffic from the CDN and a free server introducing up to 100,000 viewers to each other, a large P2P video audience no longer needs a large budget.
 
