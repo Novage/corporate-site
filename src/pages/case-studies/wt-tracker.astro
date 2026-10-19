@@ -39,7 +39,7 @@ const schema = [
   title="wt-tracker: Multi-Core WebTorrent Tracker in Rust | Novage"
   canonical="case-studies/wt-tracker"
   schema={schema}
-  description="How we built wt-tracker in Rust with AI in two days: 160k WebTorrent peers in production on a free 2-core Oracle Cloud server, ~100k on average within the free traffic."
+  description="How we built wt-tracker in Rust with AI in two days: 216k WebTorrent peers in production on a free 2-core Oracle Cloud server, ~120k on average within the free traffic."
 >
   <Header />
   <div id="content">
@@ -52,7 +52,7 @@ const schema = [
         <p class="lead">
           How we ported our WebTorrent tracker from Node.js to Rust with AI in
           two days, and built a server that served{" "}
-          <strong>160,000 simultaneous peers</strong> in production on a free
+          <strong>216,000 simultaneous peers</strong> in production on a free
           2-core Oracle Cloud instance — and why that matters for the cost of
           P2P video.
         </p>
@@ -84,9 +84,8 @@ const schema = [
       <div class="page container content">
         <ul class="key-facts">
           <li>
-            <strong>160,000</strong> simultaneous WebSocket Secure peers in
-            production; ~100,000 on average within the free traffic, ~200,000+
-            supported by the hardware
+            <strong>216,000</strong> simultaneous WebSocket Secure peers in
+            production; ~120,000 on average within the free traffic
           </li>
           <li>
             <strong>2 vCPU, 12 GB</strong> Ampere A1, Oracle Cloud Free Tier
@@ -264,10 +263,10 @@ const schema = [
         </table>
         <ul>
           <li>
-            <strong>Over 100,000 peers in production</strong> (160,000 at the
-            peak) on the free server's 2 cores, with about 40% of its CPU still
-            free; about 100,000 on average within the free 10 TB of monthly
-            outbound traffic.
+            <strong>Over 200,000 peers in production</strong> (216,000 at the
+            peak) on the free server's 2 cores, close to their limit; about
+            120,000 on average within the free 10 TB of monthly outbound
+            traffic.
           </li>
           <li>
             <strong>No complex horizontal scaling</strong> for many P2P video

@@ -17,8 +17,8 @@ This article describes how we got there in a few days: a new multi-core tracker 
 
 <ul class="key-facts">
   <li>
-    <strong>160k</strong> peers in production on the free server; ~100k on
-    average within the free monthly traffic, ~200k+ supported by the hardware
+    <strong>216k</strong> peers in production on the free server; ~120k on
+    average within the free monthly traffic
   </li>
   <li>
     <strong>2 cores, 12 GB</strong> Always Free Ampere A1
@@ -122,7 +122,7 @@ Three changes reduced it.
 
 **Resume TLS sessions.** A viewer reconnects every few minutes, when it switches streams or its network changes. A full TLS handshake sends the certificate chain, about **3.7 KB**. With TLS session tickets, a reconnecting viewer resumes its previous session in about **0.2 KB**. wt-tracker-rust now issues session tickets by default, and the outbound overhead per new connection dropped by **39%**.
 
-**Send fewer messages.** The announce interval and the number of offers per announce set the message rate. Peers re-announce every 3 minutes and send up to 10 offers, which is plenty for P2P video.
+**Send fewer messages.** The announce interval and the number of offers per announce set the message rate. Peers re-announce every 3 minutes, and the tracker forwards up to 5 offers per announce, the same limit the official WebTorrent client uses. Most announces get fewer: a small swarm has fewer peers to offer to. The limit matters in big live events, where large swarms would otherwise multiply the offers and answers.
 
 The settings we use:
 
@@ -145,28 +145,28 @@ The settings we use:
       }
     }
   ],
-  "tracker": { "maxOffers": 10, "announceInterval": 180 },
+  "tracker": { "maxOffers": 5, "announceInterval": 180 },
   "workers": 2,
   "reusePort": true
 }
 ```
 
-After tuning, one peer costs about **35 bytes per second** of outbound traffic (33–38 B/s in production). That gives **3.86 MB/s ÷ 35 B/s ≈ 100,000 peers** on average within the free 10 TB, and production confirmed it: at 100,000–111,000 peers the tracker sent 3.5–3.7 MB/s.
+After tuning, one peer costs about **31 bytes per second** of outbound traffic (29–34 B/s in production). That gives **3.86 MB/s ÷ 31 B/s ≈ 120,000 peers** on average within the free 10 TB.
 
 ## How many peers can the server handle?
 
-In production on 14–15 October 2026, wt-tracker-rust reached **160,000 peers** and served **107,000 peers on average over 24 hours** on the same free server. At 158,000 peers it used **1.15 of its 2 CPU cores** (about 58% of each core), **2.2 GB** of memory (about 14 KB per peer) and **5.3–5.4 MB/s** of outbound traffic. Extrapolated to the limits of the free server:
+In production on 17–19 October 2026, wt-tracker-rust reached **216,000 peers** (243,000 WebSocket connections) and served **150,000 peers on average over two days** on the same free server. At the peak it used **1.3–1.6 of its 2 CPU cores**, **2.9 GB** of memory (about 14 KB per peer) and about **7 MB/s** of outbound traffic. The limits of the free server:
 
-| Limit                                     | Peers it allows (estimated) |
-| ----------------------------------------- | --------------------------: |
-| CPU (2 cores)                             |                    ~250,000 |
-| Memory (12 GB)                            |                    500,000+ |
-| Network bandwidth (2 Gbps)                |      far above any of these |
-| **Free outbound traffic (10 TB / month)** |                **~100,000** |
+| Limit                                     |            Peers it allows |
+| ----------------------------------------- | -------------------------: |
+| CPU (2 cores)                             | ~220,000 (216,000 reached) |
+| Memory (12 GB)                            |       500,000+ (estimated) |
+| Network bandwidth (2 Gbps)                |     far above any of these |
+| **Free outbound traffic (10 TB / month)** |    **~120,000 on average** |
 
-The free server's hardware can handle **more than 200,000 peers**. What limits it to about 100,000 on average is the free outbound traffic. Beyond that, extra traffic is billed per gigabyte, so the same free instance can grow with your audience without a larger server.
+The free server's hardware handled **216,000 peers**, close to the limit of its 2 cores. What limits it to about 120,000 on average is the free outbound traffic. Beyond that, extra traffic is billed per gigabyte, so the same free instance can grow with your audience without a larger server.
 
-These numbers are measured once a minute in production. The CPU estimate keeps headroom for the bursts of reconnecting viewers after a restart and for the fast start of one big live event, whose viewers share one core; memory and traffic grow linearly with the number of peers.
+These numbers are measured once a minute in production. The viewers of one big live event share one core, so a single huge event reaches the CPU limit earlier than many smaller streams; memory and traffic grow linearly with the number of peers.
 
 ## Run it yourself
 
@@ -180,9 +180,9 @@ Installation and every setting are described in the [README on GitHub](https://g
 
 ## Conclusion
 
-A free 2-core server can be the tracker for a P2P video audience of about **100,000 simultaneous viewers**: ours served 160,000 at the peak. It takes three things: a tracker that uses every core efficiently, stateless network rules so Oracle's connection tracking doesn't drop viewers, and tuning that keeps outbound traffic within the free 10 TB.
+A free 2-core server can be the tracker for a P2P video audience of **more than 100,000 simultaneous viewers**: ours served 216,000 at the peak, and about 120,000 on average fit the free traffic. It takes three things: a tracker that uses every core efficiently, stateless network rules so Oracle's connection tracking doesn't drop viewers, and tuning that keeps outbound traffic within the free 10 TB.
 
-With P2P Media Loader offloading most of the traffic from the CDN and a free server introducing up to 100,000 viewers to each other, a large P2P video audience no longer needs a large budget.
+With P2P Media Loader offloading most of the traffic from the CDN and a free server introducing more than 100,000 viewers to each other, a large P2P video audience no longer needs a large budget.
 
 It also shows what AI-assisted development can do when it is held to a high bar. A specification, differential tests against the original and conformance suites let us port a production server to a new language in **two days**, and run it on real traffic right away.
 
