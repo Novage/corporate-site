@@ -1,0 +1,327 @@
+---
+// P2P-assisted delivery: the CDN feeds a few viewers over HTTP, and the swarm
+// spreads the stream between viewers over P2P, fading out to suggest scale.
+
+const peerW = 58;
+const peerH = 40;
+
+const rows = [
+  { y: 150, xs: [210, 350], opacity: 1 },
+  { y: 238, xs: [140, 280, 420], opacity: 1 },
+  { y: 326, xs: [70, 210, 350, 490], opacity: 0.75 },
+  { y: 408, xs: [40, 160, 280, 400, 520], opacity: 0.3 },
+];
+
+// P2P links: each peer feeds the two nearest peers in the row below.
+type Link = {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  o: number;
+  step: number;
+};
+
+// HTTP links: the CDN feeds the first row of viewers (step 0 of the flow).
+const http: Link[] = rows[0].xs.map((x) => ({
+  x1: 280 + (x - 280) * 0.2,
+  y1: 88,
+  x2: x,
+  y2: rows[0].y - peerH / 2 - 6,
+  o: 1,
+  step: 0,
+}));
+
+const down: Link[] = [];
+for (let r = 0; r < rows.length - 1; r++) {
+  const from = rows[r];
+  const to = rows[r + 1];
+  from.xs.forEach((x) => {
+    const nearest = [...to.xs]
+      .sort((a, b) => Math.abs(a - x) - Math.abs(b - x))
+      .slice(0, 2);
+    nearest.forEach((tx) =>
+      down.push({
+        x1: x,
+        y1: from.y + peerH / 2,
+        x2: tx,
+        y2: to.y - peerH / 2 - 6,
+        o: to.opacity,
+        step: r + 1,
+      }),
+    );
+  });
+}
+
+// Flow animation: one segment cascades from the CDN down the swarm, one row
+// per step, then the cycle pauses briefly and repeats.
+const cycle = 5;
+const stepStart = 0.21;
+const stepLength = 0.17;
+const timing = (step: number) => {
+  const start = +(step * stepStart).toFixed(3);
+  const end = +(start + stepLength).toFixed(3);
+  return {
+    motionTimes: `0;${start};${end};1`,
+    fadeTimes: `0;${start};${+(start + 0.02).toFixed(3)};${+(end - 0.02).toFixed(3)};${end};1`,
+  };
+};
+const packets = [...http, ...down].map((link) => ({
+  ...link,
+  path: `M${link.x1} ${link.y1} L${link.x2} ${link.y2}`,
+  kind: link.step === 0 ? "http" : "p2p",
+  ...timing(link.step),
+}));
+
+// Peers in the same row also trade segments with their neighbors.
+const across = rows.slice(1, 3).flatMap((row) =>
+  row.xs.slice(0, -1).map((x, i) => ({
+    x1: x + peerW / 2 + 6,
+    x2: row.xs[i + 1] - peerW / 2 - 6,
+    y: row.y,
+    o: row.opacity,
+  })),
+);
+---
+
+<svg
+  class="diagram"
+  viewBox="0 0 560 500"
+  role="img"
+  aria-labelledby="p2p-delivery-title p2p-delivery-desc"
+>
+  <title id="p2p-delivery-title">P2P-assisted media delivery</title>
+  <desc id="p2p-delivery-desc">
+    The CDN delivers the source stream over HTTP to the first viewers. Viewers
+    then share video segments with each other over P2P, so the swarm grows
+    without adding load on the CDN.
+  </desc>
+
+  <defs>
+    <marker
+      id="dd-arrow-http"
+      viewBox="0 0 10 10"
+      refX="9"
+      refY="5"
+      markerWidth="7"
+      markerHeight="7"
+      orient="auto-start-reverse"
+    >
+      <path d="M0 0 10 5 0 10z" class="fill-http"></path>
+    </marker>
+    <marker
+      id="dd-arrow-p2p"
+      viewBox="0 0 10 10"
+      refX="9"
+      refY="5"
+      markerWidth="7"
+      markerHeight="7"
+      orient="auto-start-reverse"
+    >
+      <path d="M0 0 10 5 0 10z" class="fill-p2p"></path>
+    </marker>
+  </defs>
+
+  <!-- CDN -->
+  <rect x="190" y="18" width="180" height="70" rx="14" class="source"></rect>
+  <g transform="translate(212 38)" class="stroke-http" fill="none">
+    <path
+      d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    ></path>
+  </g>
+  <text x="248" y="50" class="label-strong">
+    CDN
+  </text>
+  <text x="248" y="72" class="label-muted">
+    source stream
+  </text>
+
+  <!-- HTTP from CDN to the first viewers -->
+  {http.map(({ x1, y1, x2, y2 }) => (
+    <line
+      x1={x1}
+      y1={y1}
+      x2={x2}
+      y2={y2}
+      class="link-http"
+      marker-end="url(#dd-arrow-http)"
+    />
+  ))}
+
+  <!-- P2P between viewers -->
+  {down.map(({ x1, y1, x2, y2, o }) => (
+    <line
+      x1={x1}
+      y1={y1}
+      x2={x2}
+      y2={y2}
+      class="link-p2p"
+      opacity={o}
+      marker-end="url(#dd-arrow-p2p)"
+    />
+  ))}
+  {across.map(({ x1, x2, y, o }) => (
+    <line
+      x1={x1}
+      y1={y}
+      x2={x2}
+      y2={y}
+      class="link-p2p dashed"
+      opacity={o}
+      marker-start="url(#dd-arrow-p2p)"
+      marker-end="url(#dd-arrow-p2p)"
+    />
+  ))}
+
+  <!-- Segments flowing from the CDN through the swarm -->
+  <g class="packets" aria-hidden="true">
+    {packets.map(({ path, kind, o, motionTimes, fadeTimes }) => (
+      <circle r="4.5" class={`packet ${kind}`} opacity="0">
+        <animateMotion
+          dur={`${cycle}s`}
+          repeatCount="indefinite"
+          path={path}
+          keyPoints="0;0;1;1"
+          keyTimes={motionTimes}
+          calcMode="linear"
+        />
+        <animate
+          attributeName="opacity"
+          dur={`${cycle}s`}
+          repeatCount="indefinite"
+          values={`0;0;${o};${o};0;0`}
+          keyTimes={fadeTimes}
+        />
+      </circle>
+    ))}
+  </g>
+
+  <!-- Viewers -->
+  {rows.map(({ y, xs, opacity }) =>
+    xs.map((x) => (
+      <g opacity={opacity}>
+        <rect
+          x={x - peerW / 2}
+          y={y - peerH / 2}
+          width={peerW}
+          height={peerH}
+          rx="8"
+          class="peer"
+        />
+        <path
+          d={`M${x - 6} ${y - 9} L${x + 9} ${y} L${x - 6} ${y + 9} Z`}
+          class="play"
+        />
+      </g>
+    )),
+  )}
+
+  <!-- Legend -->
+  <g transform="translate(70 472)">
+    <line
+      x1="0"
+      y1="0"
+      x2="34"
+      y2="0"
+      class="link-http"
+      marker-end="url(#dd-arrow-http)"
+    ></line>
+    <text x="44" y="6" class="legend">
+      HTTP from the CDN
+    </text>
+    <line
+      x1="230"
+      y1="0"
+      x2="264"
+      y2="0"
+      class="link-p2p"
+      marker-end="url(#dd-arrow-p2p)"
+    ></line>
+    <text x="274" y="6" class="legend">
+      P2P between viewers
+    </text>
+  </g>
+</svg>
+
+<style>
+  .diagram {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: inherit;
+  }
+
+  .source {
+    fill: #ffffff;
+    stroke: #6b7780;
+    stroke-width: 2;
+  }
+
+  .peer {
+    fill: #ffffff;
+    stroke: #cfc6bb;
+    stroke-width: 1.5;
+  }
+
+  .play {
+    fill: var(--brand);
+  }
+
+  .link-http {
+    stroke: #6b7780;
+    stroke-width: 2.5;
+  }
+
+  .link-p2p {
+    stroke: var(--brand);
+    stroke-width: 1.75;
+  }
+
+  .dashed {
+    stroke-dasharray: 4 4;
+  }
+
+  .fill-http {
+    fill: #6b7780;
+  }
+
+  .fill-p2p {
+    fill: var(--brand);
+  }
+
+  .stroke-http {
+    stroke: #6b7780;
+  }
+
+  .packet.http {
+    fill: #6b7780;
+  }
+
+  .packet.p2p {
+    fill: var(--brand);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .packets {
+      display: none;
+    }
+  }
+
+  .label-strong {
+    font-size: 22px;
+    fill: var(--heading);
+  }
+
+  .label-muted {
+    font-size: 15px;
+    fill: var(--muted);
+  }
+
+  .legend {
+    font-size: 17px;
+    fill: var(--text);
+  }
+</style>

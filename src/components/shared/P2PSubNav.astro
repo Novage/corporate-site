@@ -1,0 +1,36 @@
+---
+import Icon from "./Icon.astro";
+
+interface Props {
+  current: "overview" | "technical-overview" | "demo" | "case-study";
+}
+
+const { current } = Astro.props;
+
+const pages = [
+  { id: "overview", href: "/p2p-media-loader/overview", label: "Overview" },
+  {
+    id: "technical-overview",
+    href: "/p2p-media-loader/technical-overview",
+    label: "Technical overview",
+  },
+  { id: "demo", href: "/p2p-media-loader/demo", label: "Live demo" },
+  {
+    id: "case-study",
+    href: "/case-studies/p2p-media-loader",
+    label: "Case study",
+  },
+];
+---
+
+<nav class="subnav" aria-label="P2P Media Loader">
+  {pages.map(({ id, href, label }) => (
+    <a href={href} aria-current={id === current ? "page" : undefined}>
+      {label}
+    </a>
+  ))}
+  <a href="https://github.com/novage/p2p-media-loader">
+    <Icon name="github" class="inline-icon" />
+    GitHub
+  </a>
+</nav>

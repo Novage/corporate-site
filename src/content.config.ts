@@ -8,6 +8,8 @@ const blogCollection = defineCollection({
     title: z.string(),
     date: z.string(),
     description: z.string(),
+    // Short (≤160 chars) plain-text description for search results; falls back to `description`.
+    seoDescription: z.string().max(160).optional(),
     author: z.string(),
   }),
 });

@@ -2,118 +2,327 @@
 import Footer from "../../components/shared/Footer.astro";
 import Header from "../../components/shared/Header.astro";
 import ImageBlock from "../../components/shared/ImageBlock.astro";
+import P2PNetworkDiagram from "../../components/p2p/P2PNetworkDiagram.astro";
 import PageHeader from "../../components/shared/PageHeader.astro";
+import P2PSubNav from "../../components/shared/P2PSubNav.astro";
 import Layout from "../../layouts/Layout.astro";
-import img from "../../../public/images/p2p-media-loader-network.png";
+import LeadBlock from "../../components/shared/LeadBlock.astro";
+import ContactBanner from "../../components/shared/ContactBanner.astro";
 ---
 
 <Layout
-  title="P2P Media Loader"
+  title="How P2P Media Loader Works: WebRTC P2P Video | Novage"
   canonical="p2p-media-loader/technical-overview"
+  description="How P2P Media Loader builds a P2P video network: WebRTC, STUN and WebTorrent trackers, how peers share HLS and DASH segments, integrations, DRM and browsers."
 >
   <Header />
   <div id="content">
     <article>
-      <PageHeader htmlTitle="P2P Media Loader<br>Technical Overview" />
+      <PageHeader title="P2P Media Loader" accent="Technical Overview">
+        <P2PSubNav current="technical-overview" />
+      </PageHeader>
       <div class="page container content">
         <h2>Key components of the P2P network</h2>
-        <ImageBlock imgSrc={img} alt="P2P Media Loader network">
+        <ImageBlock>
+          <P2PNetworkDiagram slot="image" />
           <p>All the components of the P2P network are free and open-source.</p>
           <p>
-            <strong>P2P Media Loader</strong> is an open-source JavaScript library
-            that uses features of modern web browsers (i.e. HTML5 video and WebRTC)
-            to deliver media over P2P and do playback via integrations with many
-            popular HTML5 video players. It doesn’t require any web browser plugins
-            or add-ons to function.
+            <strong>P2P Media Loader</strong> is an open-source JavaScript
+            library that uses features of modern web browsers (HTML5 video and
+            WebRTC) to deliver media over P2P and play it through integrations
+            with popular HTML5 video players. It doesn't require any browser
+            plugins or add-ons.
           </p>
-          <p><strong>P2P Media Loader</strong> web browser requirements are:</p>
+          <p>
+            <strong>P2P Media Loader</strong> requires these browser features:
+          </p>
           <ul>
             <li>
-              <strong>WebRTC Data Channels</strong> support to exchange data between
+              <strong>WebRTC Data Channels</strong> to exchange data between
               peers
             </li>
             <li>
-              <strong>Media Source Extensions</strong> or <strong
-                >Managed Media Source</strong
-              > are required by Hls.js and Shaka Player engines for media playback
+              <strong>Media Source Extensions</strong> or{" "}
+              <strong>Managed Media Source</strong>, required by HLS.js, Shaka
+              Player and other MSE-based engines for media playback
             </li>
           </ul>
           <p>
-            <a href="https://en.wikipedia.org/wiki/STUN">STUN</a> server is used
-            by <a
-              href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API"
-              >WebRTC</a
-            > to gather <a
-              href="https://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment"
-              >ICE</a
-            > candidates. There are many running public servers available on <a
-              href="https://gist.github.com/mondain/b0ec1cf5f60ae726202e"
-              >Public STUN server list</a
-            >.
+            A <a href="https://en.wikipedia.org/wiki/STUN">STUN</a> server is
+            used by{" "}
+            <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API">
+              WebRTC
+            </a>{" "}
+            to gather{" "}
+            <a href="https://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment">
+              ICE
+            </a>{" "}
+            candidates. There are many running public servers on the{" "}
+            <a href="https://gist.github.com/mondain/b0ec1cf5f60ae726202e">
+              Public STUN server list
+            </a>
+            .
           </p>
           <p>
-            <a href="https://webtorrent.io/">WebTorrent</a> tracker is used for WebRTC
-            signaling and to create swarms of peers that download the same media
-            stream. Few running public trackers are available:
-            <a href="https://openwebtorrent.com/">https://openwebtorrent.com/</a
-            >, <a href="https://tracker.webtorrent.dev/"
-              >https://tracker.webtorrent.dev/</a
-            >. It is possible to run personal WebTorrent tracker using
-            open-source implementations: <a
-              href="https://github.com/webtorrent/bittorrent-tracker"
-              >bittorrent-tracker</a
-            >, <a href="https://github.com/Novage/wt-tracker">wt-tracker</a>,
-            <a href="https://github.com/greatest-ape/aquatic">Aquatic</a>,
-            <a href="https://github.com/OpenWebTorrent/openwebtorrent-tracker"
-              >OpenWebtorrent Tracker</a
-            >.
+            A compatible <a href="https://webtorrent.io/">WebTorrent</a> tracker
+            is used for WebRTC signaling and to create swarms of peers that
+            download the same media stream. Public trackers are available at{" "}
+            <code>wss://tracker.webtorrent.dev</code> and{" "}
+            <code>wss://tracker.openwebtorrent.com</code>. You can run your own
+            tracker with open-source implementations:{" "}
+            <a href="/case-studies/wt-tracker">wt-tracker</a>,{" "}
+            <a href="https://github.com/greatest-ape/aquatic">Aquatic</a>,{" "}
+            <a href="https://github.com/OpenWebTorrent/openwebtorrent-tracker">
+              OpenWebtorrent Tracker
+            </a>
+            ,{" "}
+            <a href="https://github.com/webtorrent/bittorrent-tracker">
+              bittorrent-tracker
+            </a>
+            .
           </p>
         </ImageBlock>
 
         <p>
           P2P Media Loader is configured to use public STUN and WebTorrent
-          servers by default. It means that it is not required to run any
-          server-side software for the P2P network to function.
+          servers by default, so for simple use cases you don't need to run any
+          server-side software. For production, we recommend running your own
+          tracker.
         </p>
+
         <h2>How it works</h2>
         <p>
-          A web browser runs a video player integrated with P2P Media Loader
-          library. An instance of P2P Media Loader is called peer. Many peers
-          form the P2P network.
+          A web browser runs a video player integrated with the P2P Media Loader
+          library. Each instance of the library is called a{" "}
+          <strong>peer</strong>, and many peers together form the P2P network.
         </p>
         <p>
-          P2P Media Loader starts to download initial media segments over
-          HTTP(S) from source server or CDN. This allows beginning media
-          playback faster. Also, in case of no peers, it will continue to
-          download segments over HTTP(S) that will not differ from traditional
-          media stream download over HTTP.
+          P2P Media Loader first downloads media segments over HTTP(S) from the
+          source server or CDN, so playback starts quickly. If no peers are
+          available, it keeps downloading over HTTP(S), just like a traditional
+          media stream.
         </p>
         <p>
-          After that P2P Media Loader sends media stream details and its
-          connection details (ICE candidates) to WebTorrent trackers and obtains
-          from them list of other peers that are downloading the same media
-          stream.
+          It then sends media stream details and connection information (ICE
+          candidates) to WebTorrent trackers, which return a list of other peers
+          watching the same stream.
         </p>
         <p>
-          P2P Media Loader connects and starts to download media segments from
-          the obtained peers as well as sharing already downloaded segments to
-          them.
+          P2P Media Loader connects to these peers, downloads media segments
+          from them, and shares the segments it already has.
         </p>
         <p>
-          From time to time random peers from the P2P swarm download new
-          segments over HTTP(S) and share them to others over P2P.
+          Segments the swarm doesn't hold yet are downloaded over HTTP(S) and
+          then distributed to others over P2P. Each such segment has one{" "}
+          <strong>elected owner</strong>, chosen with{" "}
+          <a href="https://en.wikipedia.org/wiki/Rendezvous_hashing">
+            rendezvous hashing
+          </a>{" "}
+          applied to a P2P mesh: every peer scores itself and its connected
+          neighbors for that segment — not the whole swarm — and the lowest
+          score fetches it. The decision is local, so it needs no coordination
+          round trip and works even though no peer sees the entire swarm.
+          Ownership rotates from segment to segment, so no peer becomes the
+          swarm's permanent origin, and if an owner is late, the others cover
+          for it before playback is at risk.
         </p>
+
+        <h3>A manifest-driven core</h3>
+        <p>
+          Since version 5.0, the core parses HLS and MPEG-DASH manifests itself.
+          A player integration hands over every manifest the player fetches,
+          routes segment requests through the core, and reports playback state.
+          Segment identity comes from the manifest — the HLS media sequence
+          number or the DASH presentation time — so peers on different players
+          derive the same identity for the same segment and share one swarm.
+          DASH <code>SegmentBase</code> streams share too: the core reads the
+          segment index from the <code>sidx</code> box in the response the
+          player already fetched.
+        </p>
+
+        <h3>How much traffic goes over P2P</h3>
+        <p>
+          In ideal conditions each segment is downloaded over HTTP(S) once and
+          then shared between peers, so for N viewers of a live stream about 1/N
+          of the traffic goes over HTTP(S) and the rest over P2P:
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Viewers of a live stream</th>
+              <th>HTTP(S)</th>
+              <th>P2P (ideal conditions)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2</td>
+              <td>50%</td>
+              <td>50%</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td>10%</td>
+              <td>90%</td>
+            </tr>
+            <tr>
+              <td>20</td>
+              <td>5%</td>
+              <td>95%</td>
+            </tr>
+            <tr>
+              <td>100</td>
+              <td>1%</td>
+              <td>99%</td>
+            </tr>
+            <tr>
+              <td>1,000</td>
+              <td>0.1%</td>
+              <td>99.9%</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Version 5.0 brings live streams closer to this ideal. The
+          rendezvous-hashing election stops peers from racing for their own
+          copies of new segments, and placing the player deeper in the live
+          window gives peers time to supply segments before the player asks.
+        </p>
+        <p>
+          For video on demand, the ratio depends on how many viewers watch the
+          same part of the video at the same time. In real-world conditions it
+          also depends on network conditions and peer connectivity.
+        </p>
+
+        <h2>Integrations and packages</h2>
+        <ul>
+          <li>
+            <a href="https://npmjs.com/package/p2p-media-loader-core">
+              p2p-media-loader-core
+            </a>{" "}
+            — the core, with HLS and MPEG-DASH manifest parsers
+          </li>
+          <li>
+            <a href="https://npmjs.com/package/p2p-media-loader-hlsjs">
+              p2p-media-loader-hlsjs
+            </a>{" "}
+            — HLS.js integration
+          </li>
+          <li>
+            <a href="https://npmjs.com/package/p2p-media-loader-shaka">
+              p2p-media-loader-shaka
+            </a>{" "}
+            — Shaka Player integration
+          </li>
+          <li>
+            <a href="https://npmjs.com/package/p2p-media-loader-dashjs">
+              p2p-media-loader-dashjs
+            </a>{" "}
+            — dash.js integration
+          </li>
+          <li>
+            <a href="https://npmjs.com/package/p2p-media-loader-videojs">
+              p2p-media-loader-videojs
+            </a>{" "}
+            — Video.js 8 integration
+          </li>
+        </ul>
+        <p>
+          Video.js 10 needs no separate package: it plays through HLS.js and
+          dash.js, which the existing integrations drive. Players such as
+          Vidstack, Clappr, MediaElement, Plyr, DPlayer, OpenPlayerJS and
+          PlayerJS work through the integration for the engine they are built
+          on.
+        </p>
+        <p>
+          All packages are available as ES modules on the jsDelivr CDN. The core
+          comes in three builds — with both manifest parsers, HLS only, or DASH
+          only — so a page carries only the parsers it uses. Every integration
+          also ships an IIFE build for older browsers and Smart TVs.
+        </p>
+
+        <h2>DRM and encrypted streams</h2>
+        <p>
+          P2P Media Loader works with DRM-protected and encrypted streams,
+          including Widevine, PlayReady, FairPlay and HLS AES-128:
+        </p>
+        <ul>
+          <li>
+            Peers exchange segments exactly as the CDN delivers them, still
+            encrypted. Decryption stays in the video player; the library never
+            decrypts media and never stores or shares decrypted data.
+          </li>
+          <li>
+            Key and license requests are never intercepted and never travel
+            between peers — they always go directly to your license server.
+          </li>
+          <li>
+            Not applicable to per-session encryption or forensic watermarking,
+            where every viewer receives different bytes for the same segment.
+            P2P must be disabled for such content.
+          </li>
+        </ul>
+
         <h2>Web browsers support</h2>
         <ul>
-          <li>Chrome</li>
-          <li>Firefox</li>
-          <li>macOS Safari</li>
-          <li>iPadOS Safari (iPad)</li>
-          <li>iOS Safari (iPhone, iOS version 17.1+)</li>
-          <li>Edge</li>
+          <li>Chrome on desktops and Android</li>
+          <li>Firefox on desktops and Android</li>
+          <li>Safari on macOS</li>
+          <li>Safari on iPadOS (iPad)</li>
+          <li>Safari on iOS (iPhone, iOS 17.1+ required)</li>
+          <li>Edge on Windows</li>
         </ul>
+        <p>
+          It also runs inside{" "}
+          <a href="/blog/integrate-p2p-video-streaming-into-mobile-application">
+            native iOS and Android apps
+          </a>
+          , including with native players.
+        </p>
+
+        <h2>Documentation</h2>
+        <ul>
+          <li>
+            Guides{" "}
+            <a href="/blog/setting-up-p2p-video-on-a-web-page-in-5-minutes-for-free">
+              for HTML pages and web apps
+            </a>{" "}
+            and{" "}
+            <a href="/blog/integrate-p2p-video-streaming-into-mobile-application">
+              for native mobile apps
+            </a>
+          </li>
+          <li>
+            <a href="https://novage.github.io/p2p-media-loader/docs/latest/">
+              API documentation
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/novage/p2p-media-loader">
+              GitHub repository
+            </a>{" "}
+            — source code, migration guide, changelog and FAQ
+          </li>
+        </ul>
+
+        <h2>The engineering behind it</h2>
+        <p>
+          P2P Media Loader is built and maintained by Novage. Read the{" "}
+          <a href="/case-studies/p2p-media-loader">case study</a> for how its
+          architecture evolved over eight years, the key engineering decisions
+          behind it, and what we're building next.
+        </p>
+
+        <LeadBlock title="Need help integrating or scaling P2P Media Loader?">
+          The team behind P2P Media Loader integrates it into your players and
+          apps, builds custom P2P CDNs, runs tracker infrastructure, and
+          supports it all in production. We also take on the complete
+          development cycle for other products — product design, development,
+          QA, and delivery.
+        </LeadBlock>
       </div>
     </article>
+    <ContactBanner />
   </div>
   <Footer />
 </Layout>

@@ -1,0 +1,459 @@
+---
+// An AI-assisted live video call, illustrated: as the homeowner's camera pans
+// through the room, AI object detection boxes the items and adds them to the
+// inventory, and Teleprompter suggests the mover's next question. A generic
+// drawing, not Yembo's interface.
+
+const cycle = 12;
+// Opacity keyframes for something that appears at `start` (fraction of the
+// cycle) and stays until everything clears at the end of the cycle.
+const appear = (start: number) => ({
+  values: "0;0;1;1;0;0",
+  keyTimes: `0;${start};${+(start + 0.025).toFixed(3)};0.92;0.95;1`,
+});
+
+// Scene coordinates; the camera pans 280 units to the right.
+const pan = 280;
+const detections = [
+  { label: "Sofa", x: 38, y: 160, w: 144, h: 80, at: 0.08 },
+  { label: "Floor lamp", x: 198, y: 98, w: 44, h: 146, at: 0.16 },
+  { label: "TV", x: 256, y: 124, w: 122, h: 118, at: 0.26 },
+  { label: "Bookcase", x: 414, y: 90, w: 78, h: 152, at: 0.42 },
+  { label: "Plant", x: 538, y: 150, w: 52, h: 92, at: 0.64 },
+].map((d) => ({ ...d, tagWidth: d.label.length * 7.6 + 16 }));
+
+const prompts = [
+  {
+    text: "Listening to the call…",
+    muted: true,
+    values: "1;1;0;0;1",
+    keyTimes: "0;0.3;0.32;0.97;1",
+  },
+  {
+    text: "Ask: is the TV wall-mounted, or does it stay on its stand?",
+    values: "0;0;1;1;0;0",
+    keyTimes: "0;0.32;0.34;0.6;0.62;1",
+  },
+  {
+    text: "Ask: will you pack the books yourself, or should we?",
+    values: "0;0;1;1;0;0",
+    keyTimes: "0;0.62;0.64;0.92;0.95;1",
+  },
+];
+---
+
+<svg
+  class="diagram video-call"
+  viewBox="0 0 620 400"
+  role="img"
+  aria-labelledby="vc-title vc-desc"
+>
+  <title id="vc-title">An AI-assisted live video call</title>
+  <desc id="vc-desc">
+    The mover's screen during a live video call. As the homeowner's camera pans
+    through the living room, AI object detection draws a box around the sofa,
+    the floor lamp, the TV, the bookcase and the plant, and adds each one to the
+    inventory. Below the video, Teleprompter suggests the mover's next question,
+    such as whether the TV is wall-mounted.
+  </desc>
+
+  <defs>
+    <clipPath id="vc-clip">
+      <rect x="24" y="56" width="360" height="236" rx="8"></rect>
+    </clipPath>
+  </defs>
+
+  <!-- Call window -->
+  <rect x="10" y="10" width="600" height="380" rx="14" class="window"></rect>
+  <path
+    d="M10 24 a14 14 0 0 1 14 -14 h572 a14 14 0 0 1 14 14 v20 h-600 z"
+    class="window-bar"
+  ></path>
+  <circle cx="28" cy="27" r="4" class="dot"></circle>
+  <circle cx="42" cy="27" r="4" class="dot"></circle>
+  <circle cx="56" cy="27" r="4" class="dot"></circle>
+  <text x="310" y="32" class="bar-label">
+    Live video call — mover's screen
+  </text>
+  <rect x="540" y="18" width="56" height="20" rx="10" class="live"></rect>
+  <circle cx="553" cy="28" r="4" class="live-dot"></circle>
+  <text x="562" y="33" class="live-label">
+    LIVE
+  </text>
+
+  <!-- Homeowner's camera -->
+  <g clip-path="url(#vc-clip)">
+    <g class="scene">
+      <animateTransform
+        attributeName="transform"
+        type="translate"
+        dur={`${cycle}s`}
+        repeatCount="indefinite"
+        values={`0 0;0 0;-${pan} 0;-${pan} 0;0 0;0 0`}
+        keyTimes="0;0.06;0.82;0.96;0.965;1"
+      />
+      <animate
+        attributeName="opacity"
+        dur={`${cycle}s`}
+        repeatCount="indefinite"
+        values="1;1;0;0;1"
+        keyTimes="0;0.92;0.95;0.97;1"
+      />
+      <!-- Room -->
+      <rect x="24" y="56" width="680" height="176" class="wall"></rect>
+      <rect x="24" y="232" width="680" height="60" class="floor"></rect>
+      <rect x="80" y="86" width="64" height="46" class="picture"></rect>
+      <rect x="512" y="78" width="64" height="70" class="glass"></rect>
+      <path d="M544 78 v70 M512 113 h64" class="frame"></path>
+
+      <!-- Sofa -->
+      <rect x="50" y="168" width="120" height="40" rx="8" class="fabric"></rect>
+      <rect
+        x="44"
+        y="196"
+        width="132"
+        height="36"
+        rx="6"
+        class="fabric-dark"
+      ></rect>
+      <rect x="52" y="232" width="6" height="6" class="wood"></rect>
+      <rect x="162" y="232" width="6" height="6" class="wood"></rect>
+
+      <!-- Floor lamp -->
+      <path d="M220 128 V236" class="pole"></path>
+      <path d="M204 128 L236 128 L229 104 L211 104 Z" class="shade"></path>
+      <ellipse cx="220" cy="238" rx="13" ry="3.5" class="metal"></ellipse>
+
+      <!-- TV on a stand -->
+      <rect x="272" y="130" width="90" height="58" rx="3" class="screen"></rect>
+      <rect x="311" y="188" width="12" height="14" class="metal"></rect>
+      <rect x="262" y="202" width="110" height="34" rx="3" class="wood"></rect>
+      <path d="M317 206 v26" class="frame"></path>
+
+      <!-- Bookcase -->
+      <rect x="420" y="96" width="66" height="140" class="wood"></rect>
+      <path d="M424 132 h58 M424 168 h58 M424 204 h58" class="shelf"></path>
+      <rect x="428" y="110" width="7" height="22" class="book-a"></rect>
+      <rect x="437" y="114" width="6" height="18" class="book-b"></rect>
+      <rect x="445" y="108" width="8" height="24" class="book-c"></rect>
+      <rect x="430" y="148" width="8" height="20" class="book-c"></rect>
+      <rect x="440" y="146" width="7" height="22" class="book-a"></rect>
+      <rect x="460" y="150" width="9" height="18" class="book-b"></rect>
+      <rect x="434" y="184" width="7" height="20" class="book-b"></rect>
+      <rect x="443" y="182" width="8" height="22" class="book-a"></rect>
+
+      <!-- Plant -->
+      <ellipse cx="556" cy="182" rx="10" ry="24" class="leaf"></ellipse>
+      <ellipse cx="572" cy="186" rx="9" ry="20" class="leaf"></ellipse>
+      <ellipse cx="564" cy="170" rx="8" ry="22" class="leaf"></ellipse>
+      <path d="M548 210 h32 l-4 28 h-24 z" class="pot"></path>
+
+      <!-- AI object detection -->
+      {detections.map(({ label, x, y, w, h, at, tagWidth }) => (
+        <g class="reveal" opacity="0">
+          <animate
+            attributeName="opacity"
+            dur={`${cycle}s`}
+            repeatCount="indefinite"
+            {...appear(at)}
+          />
+          <rect x={x} y={y} width={w} height={h} rx="4" class="box" />
+          <rect x={x} y={y - 20} width={tagWidth} height="20" class="tag" />
+          <text x={x + 8} y={y - 6} class="tag-label">
+            {label}
+          </text>
+        </g>
+      ))}
+    </g>
+  </g>
+  <rect
+    x="32"
+    y="262"
+    width="150"
+    height="22"
+    rx="11"
+    class="camera-tag"
+  ></rect>
+  <text x="107" y="277" class="camera-label">
+    Homeowner's camera
+  </text>
+
+  <!-- Inventory, built while they talk -->
+  <rect x="398" y="56" width="198" height="236" rx="8" class="panel"></rect>
+  <text x="414" y="82" class="panel-title">
+    Inventory
+  </text>
+  <text x="414" y="100" class="panel-muted">
+    built by AI as you talk
+  </text>
+  {detections.map(({ label, at }, i) => (
+    <g class="reveal" opacity="0">
+      <animate
+        attributeName="opacity"
+        dur={`${cycle}s`}
+        repeatCount="indefinite"
+        {...appear(at + 0.02)}
+      />
+      <circle cx="424" cy={128 + i * 34} r="9" class="check" />
+      <path d={`M419.5 ${128 + i * 34} l3 3 l5.5 -6`} class="check-mark" />
+      <text x="442" y={133 + i * 34} class="item-label">
+        {label}
+      </text>
+    </g>
+  ))}
+
+  <!-- Teleprompter -->
+  <rect x="24" y="304" width="572" height="72" rx="8" class="prompter"></rect>
+  <rect x="24" y="304" width="5" height="72" class="prompter-accent"></rect>
+  <text x="44" y="330" class="prompter-title">
+    TELEPROMPTER
+  </text>
+  {prompts.map(({ text, muted, values, keyTimes }, i) => (
+    <text
+      x="44"
+      y="356"
+      class:list={[
+        "prompt",
+        { muted, "final-prompt": i === prompts.length - 1 },
+      ]}
+      opacity={i === 0 ? "1" : "0"}
+    >
+      <animate
+        attributeName="opacity"
+        dur={`${cycle}s`}
+        repeatCount="indefinite"
+        values={values}
+        keyTimes={keyTimes}
+      />
+      {text}
+    </text>
+  ))}
+</svg>
+
+<style>
+  .diagram {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: inherit;
+  }
+
+  .window {
+    fill: #ffffff;
+    stroke: #cfc6bb;
+    stroke-width: 1.5;
+  }
+
+  .window-bar {
+    fill: var(--warm);
+    stroke: #cfc6bb;
+    stroke-width: 1.5;
+  }
+
+  .dot {
+    fill: #cfc6bb;
+  }
+
+  .bar-label {
+    font-size: 14px;
+    text-anchor: middle;
+    fill: var(--muted);
+  }
+
+  .live {
+    fill: var(--brand);
+  }
+
+  .live-dot {
+    fill: #ffffff;
+  }
+
+  .live-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    fill: #ffffff;
+  }
+
+  .wall {
+    fill: #efe9e1;
+  }
+
+  .floor {
+    fill: #ddd1c3;
+  }
+
+  .picture {
+    fill: #d8cfc4;
+    stroke: #b9a993;
+    stroke-width: 3;
+  }
+
+  .glass {
+    fill: #dde7ec;
+    stroke: #b9a993;
+    stroke-width: 3;
+  }
+
+  .frame {
+    fill: none;
+    stroke: #b9a993;
+    stroke-width: 2;
+  }
+
+  .fabric {
+    fill: #a3a9b4;
+  }
+
+  .fabric-dark {
+    fill: #8a919d;
+  }
+
+  .wood {
+    fill: #a8896c;
+  }
+
+  .shelf {
+    stroke: #8a6e55;
+    stroke-width: 3;
+  }
+
+  .book-a {
+    fill: var(--brand);
+  }
+
+  .book-b {
+    fill: #3f63b0;
+  }
+
+  .book-c {
+    fill: #2a8c7e;
+  }
+
+  .pole {
+    stroke: #6b6b6b;
+    stroke-width: 3;
+  }
+
+  .shade {
+    fill: #efdcae;
+    stroke: #c9b07a;
+    stroke-width: 1.5;
+  }
+
+  .metal {
+    fill: #6b6b6b;
+  }
+
+  .screen {
+    fill: #3a3a3a;
+  }
+
+  .leaf {
+    fill: #5f8f5a;
+  }
+
+  .pot {
+    fill: #c07a52;
+  }
+
+  .box {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 2.5;
+  }
+
+  .tag {
+    fill: var(--brand);
+  }
+
+  .tag-label {
+    font-size: 13px;
+    fill: #ffffff;
+  }
+
+  .camera-tag {
+    fill: rgba(31, 31, 31, 0.65);
+  }
+
+  .camera-label {
+    font-size: 12.5px;
+    text-anchor: middle;
+    fill: #ffffff;
+  }
+
+  .panel {
+    fill: #ffffff;
+    stroke: var(--border);
+    stroke-width: 1.5;
+  }
+
+  .panel-title {
+    font-size: 17px;
+    fill: var(--heading);
+  }
+
+  .panel-muted {
+    font-size: 13px;
+    fill: var(--subtle);
+  }
+
+  .check {
+    fill: var(--brand);
+  }
+
+  .check-mark {
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .item-label {
+    font-size: 15px;
+    fill: var(--text);
+  }
+
+  .prompter {
+    fill: var(--warm);
+  }
+
+  .prompter-accent {
+    fill: var(--brand);
+  }
+
+  .prompter-title {
+    font-size: 12.5px;
+    letter-spacing: 0.15em;
+    fill: var(--brand);
+  }
+
+  .prompt {
+    font-size: 16px;
+    fill: var(--heading);
+  }
+
+  .prompt.muted {
+    font-style: italic;
+    fill: var(--subtle);
+  }
+
+  /* Without motion, show the finished state: every item detected and listed,
+     and the last prompt. CSS overrides the values SMIL animates. */
+  @media (prefers-reduced-motion: reduce) {
+    .scene {
+      transform: none !important;
+      opacity: 1 !important;
+    }
+
+    .reveal,
+    .final-prompt {
+      opacity: 1 !important;
+    }
+
+    .prompt:not(.final-prompt) {
+      opacity: 0 !important;
+    }
+  }
+</style>

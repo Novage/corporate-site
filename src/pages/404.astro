@@ -1,19 +1,21 @@
 ---
 import Footer from "../components/shared/Footer.astro";
 import Header from "../components/shared/Header.astro";
+import PageHeader from "../components/shared/PageHeader.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Page not found">
   <Header />
   <div id="content">
-    <article>
-      <div class="container">
-        <h2>404</h2>
-        <p><strong>Page not found :(</strong></p>
-        <p>The requested page could not be found.</p>
+    <PageHeader eyebrow="404" title="Page not found">
+      <p class="lead">The requested page could not be found.</p>
+      <div class="actions">
+        <a class="button primary" href="/">
+          Go to the home page
+        </a>
       </div>
-    </article>
+    </PageHeader>
   </div>
   <Footer />
 </Layout>
