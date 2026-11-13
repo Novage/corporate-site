@@ -44,6 +44,12 @@ const structuredData =
       crossorigin
     />
     <link
+      rel="preload"
+      href="/fonts/gstatic-Manrope-Variable.woff2"
+      as="font"
+      crossorigin
+    />
+    <link
       rel="icon"
       type="image/webp"
       sizes="96x96"
@@ -105,6 +111,9 @@ const structuredData =
     )}
   </head>
   <body>
+    <a class="skip-link" href="#content">
+      Skip to content
+    </a>
     <slot />
   </body>
 </html>

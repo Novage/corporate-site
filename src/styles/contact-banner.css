@@ -80,6 +80,11 @@
   border-bottom-color: #ffffff;
 }
 
+/* The brand-red focus ring would vanish on the red banner */
+.contact-banner :focus-visible {
+  outline-color: #ffffff;
+}
+
 @media (min-width: 768px) {
   .contact-banner {
     padding: 52px 0;

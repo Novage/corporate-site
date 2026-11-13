@@ -54,6 +54,7 @@
 }
 
 .stat .value {
+  font-family: var(--font-heading);
   font-size: 1.45em;
   font-weight: 700;
   line-height: 1.2;
@@ -235,7 +236,7 @@
 
 .home-page .ai-more {
   margin-top: 22px;
-  font-style: italic;
+  font-weight: 700;
   color: var(--heading);
 }
 
@@ -286,6 +287,7 @@
 }
 
 .audience h3 em {
+  font-style: normal;
   color: var(--brand);
 }
 
@@ -451,14 +453,19 @@
   border: solid 1px var(--warm-border);
   border-radius: 8px;
   transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    border-color 0.3s var(--ease),
+    box-shadow 0.3s var(--ease),
+    transform 0.3s var(--ease);
 }
 
 .home-page .case-card:hover {
   color: var(--text);
   border-color: var(--brand);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 14px rgba(var(--shadow-color), 0.1);
+}
+
+.home-page .case-card:active {
+  transform: translateY(1px);
 }
 
 .case-card .case-kind {
@@ -514,7 +521,7 @@
   border: solid 1px var(--border);
   border-top: solid 3px var(--brand);
   border-radius: 8px;
-  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 9px rgba(var(--shadow-color), 0.08);
 }
 
 .product-head {
