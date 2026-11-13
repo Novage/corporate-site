@@ -92,6 +92,7 @@ curl -s "https://data.jsdelivr.com/v1/stats/packages/npm/p2p-media-loader-core?p
 - **Scroll animations** (`src/styles/home.css`) use CSS scroll-driven animations: longhand properties, timelines via CSS variables (the minifier breaks the shorthand), and `animation-duration: 1ms` for Firefox 159+. Firefox 156 shows the static page, and that's fine.
 - **Analytics events** on buttons: `hero-discuss`, `hero-open-source`, `nav-contact`, `lead-block`, `email-brief`, `email-link`, `wt-tracker-discuss`, `yembo-discuss`, `how-we-work-brief`, `founder-linkedin`, `ai-discuss`. New calls to action get a `data-umami-event`.
 - **Line breaks next to links:** Astro's HTML compression drops a line break between text and a following link or bold tag, gluing the words ("Try the⟨live demo⟩"). Put `{" "}` at the end of the line. `npm run check` catches this.
+- **Fonts:** headings (`h1`–`h4`) and stat numbers use Manrope (`--font-heading`); body text, labels, buttons and bold words inside text use Titillium Web (`--font-body`). All font files are self-hosted in `public/fonts/` (no requests to Google, so the privacy page needs no change). `.section-label` is an `h2` but keeps the body font. A new weight of Titillium Web needs its own file, or the browser fakes it; Manrope is one variable file for every weight.
 - **Colors:** use the tokens in `:root` of `main.css` (`--brand`, `--heading`, `--muted`, `--warm`…), not new hex values.
 
 ## 6. Before you finish

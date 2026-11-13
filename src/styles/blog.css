@@ -26,7 +26,7 @@
   border: solid 1px var(--border);
   border-top: solid 3px var(--brand);
   border-radius: 8px;
-  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 9px rgba(var(--shadow-color), 0.08);
 }
 
 .post-card h2 {
@@ -37,7 +37,7 @@
 .post-card h2 a {
   color: var(--heading);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color 0.3s var(--ease);
 }
 
 .post-card h2 a:hover {

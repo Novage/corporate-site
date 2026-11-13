@@ -15,6 +15,36 @@
     U+FFFD;
 }
 
+/* Without its own file, the browser would draw bold by thickening the
+   regular letters */
+@font-face {
+  font-family: "Titillium Web";
+  font-display: swap;
+  font-style: normal;
+  font-weight: 700;
+  src:
+    local("Titillium Web Bold"),
+    local("TitilliumWeb-Bold"),
+    url(/fonts/gstatic-TitilliumWeb-Bold.woff2) format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF,
+    U+FFFD;
+}
+
+/* Headings and stat numbers; one variable file covers every weight */
+@font-face {
+  font-family: "Manrope";
+  font-display: swap;
+  font-style: normal;
+  font-weight: 200 800;
+  src: url(/fonts/gstatic-Manrope-Variable.woff2) format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF,
+    U+FFFD;
+}
+
 /* Tokens */
 
 :root {
@@ -30,7 +60,13 @@
   --warm-border: #ebe4dc;
   --warm-bg: #faf8f5;
   --dark: #333333;
+  --font-body: "Titillium Web", sans-serif;
+  --font-heading: "Manrope", "Titillium Web", sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* Shadows take the warm hue of the page instead of black */
+  --shadow-color: 70, 45, 25;
+  /* Fast start, soft stop: one curve for every transition */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --header-height: 95px;
 }
 
@@ -59,12 +95,49 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  font-family: "Titillium Web", sans-serif;
+  font-family: var(--font-body);
   font-size: 1em;
   font-weight: 400;
   line-height: 1.5;
   color: var(--text);
   background: #ffffff;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+:focus-visible {
+  outline: solid 2px var(--brand);
+  outline-offset: 2px;
+}
+
+/* Keyboard users can jump past the header; the link shows only on focus */
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 101;
+  padding: 8px 16px;
+  color: #ffffff;
+  text-decoration: none;
+  background: var(--brand);
+  border-radius: 6px;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
 }
 
 #content {
@@ -120,7 +193,7 @@ body {
   left: 0;
   z-index: 100;
   background-color: #ffffff;
-  box-shadow: 0 0.25em 0.25em -0.25em rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0.25em 0.25em -0.25em rgba(var(--shadow-color), 0.45);
 }
 
 #navbar {
@@ -186,7 +259,7 @@ body {
   height: 3px;
   width: 0;
   background-color: var(--brand);
-  transition: width 0.2s ease;
+  transition: width 0.3s var(--ease);
 }
 
 #navbar .menu a:hover span::after {
@@ -201,6 +274,9 @@ body {
   text-decoration: none;
   background: var(--brand);
   border-radius: 6px;
+  transition:
+    background-color 0.3s var(--ease),
+    transform 0.3s var(--ease);
 }
 
 #navbar .nav-cta:hover {
@@ -363,6 +439,8 @@ body {
   margin: 0 0 28px;
   padding-left: 12px;
   border-left: solid 4px var(--brand);
+  /* A label, not a heading: it keeps the body font */
+  font-family: var(--font-body);
   font-size: 0.85em;
   font-weight: 400;
   letter-spacing: 0.2em;
@@ -397,6 +475,15 @@ body {
 .page p,
 .page li {
   line-height: 1.6;
+}
+
+/* About 90 characters of Titillium Web, the width of the diagrams; tables,
+   code, figures and styled lists such as key facts keep the full width */
+.page > p,
+.page > ul:not([class]),
+.page > ol:not([class]),
+.page > blockquote {
+  max-width: 40em;
 }
 
 .page h2 {
@@ -528,6 +615,7 @@ body {
 
 .page .key-facts strong {
   display: block;
+  font-family: var(--font-heading);
   font-size: 1.5em;
   line-height: 1.2;
   color: var(--heading);
@@ -605,8 +693,16 @@ body {
   border: solid 2px var(--brand);
   border-radius: 6px;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+    background-color 0.3s var(--ease),
+    border-color 0.3s var(--ease),
+    color 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+
+/* Pressed feedback */
+.button:active,
+#navbar .nav-cta:active {
+  transform: translateY(1px);
 }
 
 .button .inline-icon {
@@ -661,6 +757,10 @@ body {
   padding: 36px 0 24px;
   color: #cfcfcf;
   background-color: var(--dark);
+}
+
+#footer :focus-visible {
+  outline-color: var(--brand-light);
 }
 
 #footer a {
