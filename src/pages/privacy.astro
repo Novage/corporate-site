@@ -14,7 +14,7 @@ import Layout from "../layouts/Layout.astro";
   <div id="content">
     <article>
       <PageHeader title="Privacy Policy">
-        <p class="lead">Last updated: September 24, 2026</p>
+        <p class="lead">Last updated: November 13, 2026</p>
       </PageHeader>
       <div class="page container content">
         <p>
@@ -75,9 +75,12 @@ import Layout from "../layouts/Layout.astro";
             by Google and Twilio. These services receive your IP address.
           </li>
           <li>
-            <strong>The video stream.</strong> The demo video is served by
-            Amazon Web Services, which receives standard request data such as
-            your IP address.
+            <strong>The video streams.</strong> The demo video is served from
+            our own stream on Cloudflare (<code>live.novage.workers.dev</code>).
+            Players that only play MPEG-DASH load a public test stream from the
+            DASH Industry Forum (<code>livesim2.dashif.org</code>) instead.
+            These services receive standard request data such as your IP
+            address.
           </li>
           <li>
             <strong>GitHub button.</strong> The demo page loads GitHub's star

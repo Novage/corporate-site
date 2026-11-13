@@ -23,19 +23,25 @@ import { P2PVideoDemoWrapper } from "../../components/shared/P2PVideoDemoWrapper
         <P2PSubNav current="demo" />
       </PageHeader>
       <div class="container">
-        <script async defer is:inline src="https://buttons.github.io/buttons.js"
+        <script
+          async
+          defer
+          is:inline
+          src="https://buttons.github.io/buttons.js"
         ></script>
         <a
           class="github-button"
           href="https://github.com/Novage/p2p-media-loader"
           data-size="large"
           data-show-count="true"
-          aria-label="Star Novage/p2p-media-loader on GitHub">GitHub</a
+          aria-label="Star Novage/p2p-media-loader on GitHub"
         >
+          GitHub
+        </a>
       </div>
       <P2PVideoDemoWrapper
         debugToolsEnabled={false}
-        streamUrl="https://fcc3ddae59ed.us-west-2.playback.live-video.net/api/video/v1/us-west-2.893648527354.channel.DmumNckWFTqz.m3u8"
+        streamUrl="https://live.novage.workers.dev/bbb/live.m3u8"
         client:only="react"
       />
       <div class="container content">
