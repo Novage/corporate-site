@@ -683,9 +683,12 @@
 }
 
 /* Scroll effects: CSS scroll-driven animations, no JavaScript. Browsers
-   without support, and visitors who prefer reduced motion, see the static page. */
+   without support, and visitors who prefer reduced motion, see the static page.
+   Safari also sees the static page: it runs these animations on a separate
+   thread and, after a jump to an anchor, can leave cards dimmed or blank.
+   Only Safari supports hanging-punctuation, so the test excludes it. */
 
-@supports (animation-timeline: view()) {
+@supports (animation-timeline: view()) and (not (hanging-punctuation: first)) {
   @media (prefers-reduced-motion: no-preference) {
     /* Timelines go through variables so the CSS minifier can't fold them into
        the animation shorthand, which browsers would reject. Each animation
