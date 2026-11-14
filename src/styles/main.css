@@ -313,6 +313,11 @@ li {
 /* Page header, shared by every page; `large` is the home page hero */
 
 .page-header {
+  position: relative;
+  /* Header art (header-art.css) sits at z-index -1: above this background,
+     below the text, and clipped to the header */
+  isolation: isolate;
+  overflow: hidden;
   padding: 32px 0 28px;
   background: var(--warm-bg);
   border-bottom: solid 1px var(--warm-border);

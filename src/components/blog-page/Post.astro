@@ -39,7 +39,13 @@ const schema = [
   <Header />
   <div id="content">
     <article>
-      <PageHeader eyebrow="Blog" eyebrowHref="/blog/" title={post.title}>
+      <PageHeader
+        eyebrow="Blog"
+        eyebrowHref="/blog/"
+        title={post.title}
+        art="code"
+        artSize={0.5}
+      >
         <p class="post-meta">
           {formatPostDate(post.date)} · {post.author}
         </p>

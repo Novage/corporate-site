@@ -1,0 +1,642 @@
+---
+// Animated art behind a page header, one per kind of page. CSS only; it
+// shows on wide screens, where it fits beside the text (header-art.css).
+import "../../styles/header-art.css";
+
+export type HeaderArtKind = "assembly" | "p2p" | "tracker" | "stack" | "code";
+
+interface Props {
+  kind: HeaderArtKind;
+  /**
+   * Size of the art, 1 for the tall home hero. Each page sets it to fit its
+   * header at desktop width; the size does not follow the header height, so
+   * the art never grows when a narrower window wraps the text.
+   */
+  size?: number;
+}
+
+const { kind, size = 1 } = Astro.props;
+
+// An SVG path from one point to another
+type Point = readonly [number, number, ...unknown[]];
+const line = ([x1, y1]: Point, [x2, y2]: Point) => `M${x1} ${y1} L${x2} ${y2}`;
+
+// Timing of a red or blue packet on a P2P link
+const pulseStyle = (i: number) =>
+  `--d: ${(2.2 + ((i * 0.37) % 1.4)).toFixed(2)}s; --delay: -${((i * 0.83) % 3).toFixed(2)}s`;
+
+// ---- P2P: peers on the top slab, each linked to its two nearest neighbours.
+// Coordinates are on a 220px slab; the label sits at the bottom left.
+const peers: [number, number, string][] = [
+  [36, 36, "white"],
+  [104, 26, "red"],
+  [176, 42, "white"],
+  [64, 92, "blue"],
+  [134, 84, "red"],
+  [196, 112, "white"],
+  [24, 132, "white"],
+  [100, 128, "red"],
+  [160, 150, "blue"],
+  [204, 186, "red"],
+  [134, 196, "white"],
+  [184, 74, "blue"],
+];
+// Keyed by the pair, so a link that two peers both choose shows once
+const peerLinks = new Map<string, string>();
+peers.forEach(([x, y], i) => {
+  peers
+    .map(([u, v], j) => [Math.hypot(u - x, v - y), j] as const)
+    .sort((a, b) => a[0] - b[0])
+    .slice(1, 3)
+    .forEach(([, j]) => {
+      const [a, b] = [Math.min(i, j), Math.max(i, j)];
+      peerLinks.set(`${a},${b}`, line(peers[a], peers[b]));
+    });
+});
+const peerPaths = [...peerLinks.values()];
+// HTTP beams rise from the CDN's rack to the two peers right above it
+const beamPeers = [3, 7];
+// The CDN's rack: the colours of the two LEDs on each of its three units
+const rackLeds = [
+  ["red", "blue"],
+  ["blue", ""],
+  ["", "red"],
+];
+
+// ---- Tracker: the tracker is the hub in the middle of the peers. Each peer
+// keeps a connection to it (amber), and the peers it introduced exchange
+// video directly (red). Coordinates are on a 220px slab around (110, 110).
+const ring: [number, number, string][] = Array.from({ length: 10 }, (_, k) => {
+  const a = (k / 10) * 2 * Math.PI - Math.PI / 2;
+  const r = k % 2 ? 90 : 76;
+  return [
+    Math.round(110 + r * Math.cos(a)),
+    Math.round(110 + r * Math.sin(a)),
+    ["white", "red", "blue", "white", "red"][k % 5],
+  ];
+});
+const ringLinks = [
+  ...ring.map((_, k) => [k, (k + 1) % ring.length]),
+  [0, 3],
+  [2, 6],
+  [5, 8],
+].map(([i, j]) => line(ring[i], ring[j]));
+const spokes = ring.map((peer) => line([110, 110], peer));
+
+// ---- Assembly: glass blocks that drop onto a base, then light up as one system
+const blocks = [
+  [22, 22, 56, 56, 34, ""],
+  [150, 20, 72, 44, 24, ""],
+  [20, 150, 44, 72, 28, ""],
+  [102, 102, 56, 56, 56, "core"],
+  [192, 128, 42, 42, 20, ""],
+  [104, 200, 100, 34, 16, ""],
+] as const;
+const centres = blocks.map(([x, y, w, d]) => [x + w / 2, y + d / 2] as const);
+const assemblyLinks = [
+  [0, 3],
+  [1, 3],
+  [2, 3],
+  [4, 3],
+  [5, 3],
+  [0, 1],
+  [2, 5],
+].map(([a, b]) => line(centres[a], centres[b]));
+
+// ---- Stack: a sparkle, the usual sign for AI, as a four-point star
+const sparkle = (x: number, y: number, r: number) =>
+  `M${x} ${y - r} Q${x} ${y} ${x + r} ${y} Q${x} ${y} ${x} ${y + r} ` +
+  `Q${x} ${y} ${x - r} ${y} Q${x} ${y} ${x} ${y - r} Z`;
+
+// ---- Code: each line is an indent level and tokens of (width, colour)
+// prettier-ignore
+const codeLines: [number, [number, string][]][] = [
+  [0, [[44, "kw"], [88, "id"], [14, "p"]]],
+  [1, [[56, "kw"], [70, "fn"], [30, "p"], [90, "str"], [14, "p"]]],
+  [1, [[36, "kw"], [60, "id"], [14, "p"], [110, "fn"], [20, "p"]]],
+  [2, [[80, "id"], [14, "p"], [54, "num"], [14, "p"]]],
+  [2, [[150, "cm"]]],
+  [2, [[36, "kw"], [64, "id"], [24, "p"], [96, "fn"], [20, "p"]]],
+  [1, [[14, "p"]]],
+  [0, []],
+  [0, [[56, "kw"], [40, "kw"], [100, "fn"], [20, "p"]]],
+  [1, [[40, "kw"], [120, "id"], [14, "p"], [70, "str"]]],
+  [1, [[64, "fn"], [30, "p"], [84, "id"], [20, "p"]]],
+  [0, [[14, "p"]]],
+];
+---
+
+<div
+  class:list={["header-art", `art-${kind}`]}
+  style={`--size: ${size}`}
+  aria-hidden="true"
+>
+  <div class="stage">
+    <div class="art-frame">
+      {kind === "p2p" && (
+        <div class="scene">
+          <div class="iso">
+            <div class="base" />
+            <div class="slab slab-cdn">
+              <svg class="drawing" viewBox="0 0 220 220">
+                {/* The rack sits on the front left, which stays in view
+                    under the slab above */}
+                {rackLeds.map(([a, b], k) => {
+                  const y = 76 + k * 24;
+                  return (
+                    <>
+                      <rect
+                        class="rack"
+                        x="28"
+                        y={y}
+                        width="74"
+                        height="18"
+                        rx="5"
+                      />
+                      <circle
+                        class:list={["led", a]}
+                        cx="39"
+                        cy={y + 9}
+                        r="2.5"
+                      />
+                      <circle
+                        class:list={["led", b]}
+                        cx="47"
+                        cy={y + 9}
+                        r="2.5"
+                      />
+                      <rect
+                        class="slot"
+                        x="58"
+                        y={y + 7}
+                        width="36"
+                        height="4"
+                        rx="2"
+                      />
+                    </>
+                  );
+                })}
+              </svg>
+              <span>CDN</span>
+            </div>
+            {beamPeers.map((i, n) => (
+              <span
+                class="beam"
+                style={`left: ${(peers[i][0] / 220) * 100}%; top: ${(peers[i][1] / 220) * 100}%; --d: ${2.2 + n * 0.6}s; --bd: -${n * 0.9}s`}
+              />
+            ))}
+            <div class="slab slab-p2p">
+              <svg class="drawing" viewBox="0 0 220 220">
+                {peerPaths.map((d) => (
+                  <path class="plink" d={d} />
+                ))}
+                {peerPaths.map((d, i) =>
+                  i % 2 ? null : (
+                    <path
+                      class:list={["ppulse", { blue: i % 4 === 2 }]}
+                      pathLength="100"
+                      style={pulseStyle(i)}
+                      d={d}
+                    />
+                  ),
+                )}
+                {peers.map(([x, y, colour], i) => (
+                  <>
+                    {[1, 4, 9].includes(i) && (
+                      <circle
+                        class="pping"
+                        cx={x}
+                        cy={y}
+                        r="6"
+                        style={`--pd: -${((i * 0.9) % 3).toFixed(1)}s`}
+                      />
+                    )}
+                    <circle class={`peer ${colour}`} cx={x} cy={y} r="6" />
+                  </>
+                ))}
+              </svg>
+              <span>P2P</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {kind === "tracker" && (
+        <div class="scene">
+          <div class="iso">
+            <div class="base" />
+            <div class="slab">
+              <svg class="drawing" viewBox="0 0 220 220">
+                {spokes.map((d) => (
+                  <path class="spoke" d={d} />
+                ))}
+                {spokes.map((d, i) => (
+                  <path
+                    class="signal"
+                    pathLength="100"
+                    style={`--d: ${(2.4 + ((i * 0.43) % 1.2)).toFixed(2)}s; --delay: -${((i * 0.61) % 2.4).toFixed(2)}s`}
+                    d={d}
+                  />
+                ))}
+                {ringLinks.map((d) => (
+                  <path class="plink" d={d} />
+                ))}
+                {ringLinks.map((d, i) =>
+                  i % 3 ? null : (
+                    <path
+                      class:list={["ppulse", { blue: i % 2 }]}
+                      pathLength="100"
+                      style={pulseStyle(i)}
+                      d={d}
+                    />
+                  ),
+                )}
+                {ring.map(([x, y, colour], i) => (
+                  <>
+                    {i % 3 === 1 && (
+                      <circle
+                        class="pping"
+                        cx={x}
+                        cy={y}
+                        r="6"
+                        style={`--pd: -${(i * 0.7) % 3}s`}
+                      />
+                    )}
+                    <circle class={`peer ${colour}`} cx={x} cy={y} r="6" />
+                  </>
+                ))}
+              </svg>
+            </div>
+            <div
+              class="cube hub"
+              style="left: 88px; top: 88px; width: 44px; height: 44px; --h: 34px"
+            >
+              <i class="f-top" />
+              <i class="f-left" />
+              <i class="f-front" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {kind === "assembly" && (
+        <div class="scene">
+          <div class="iso">
+            <div class="base" />
+            <div class="glass plate">
+              <svg class="links" viewBox="0 0 260 260">
+                {assemblyLinks.map((d) => (
+                  <path class="alink" d={d} />
+                ))}
+                {assemblyLinks.map((d, i) => (
+                  <path
+                    class:list={["apulse", { blue: i % 2 }]}
+                    pathLength="100"
+                    style={`--d: ${(2.2 + i * 0.3).toFixed(1)}s; --delay: -${(i * 0.6).toFixed(1)}s`}
+                    d={d}
+                  />
+                ))}
+              </svg>
+            </div>
+            {blocks.map(([x, y, w, d, h, cls], i) => (
+              <div
+                class:list={["cube", cls]}
+                style={`left: ${x}px; top: ${y}px; width: ${w}px; height: ${d}px; --h: ${h}px; --t: ${(i * 0.45).toFixed(2)}s`}
+              >
+                <i class="f-top" />
+                <i class="f-left" />
+                <i class="f-front" />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {kind === "stack" && (
+        <div class="scene">
+          <div class="iso">
+            <div class="base" />
+            {/* Bottom to top. QA is the muted foundation; the browser on top
+                shows the main work. */}
+            <div class="slab slab-qa" style="--i: 0">
+              <svg class="drawing" viewBox="0 0 220 220">
+                <g class="muted">
+                  {[96, 74, 110, 84].map((width, k) => {
+                    const y = 40 + k * 24;
+                    return (
+                      <g class="row">
+                        <circle cx="40" cy={y} r="8" />
+                        <path d={`M36 ${y} l3 3 l6 -7`} />
+                        <rect
+                          x="56"
+                          y={y - 3}
+                          width={width}
+                          height="6"
+                          rx="3"
+                        />
+                      </g>
+                    );
+                  })}
+                  <rect
+                    class="track"
+                    x="32"
+                    y="136"
+                    width="150"
+                    height="8"
+                    rx="4"
+                  />
+                  <rect
+                    class="fill"
+                    x="32"
+                    y="136"
+                    width="128"
+                    height="8"
+                    rx="4"
+                  />
+                </g>
+              </svg>
+              <span>QA</span>
+            </div>
+            <div class="slab" style="--i: 1">
+              <svg class="drawing" viewBox="0 0 220 220">
+                {/* The front-left of a slab stays in view under the slab
+                    above, so the API and the database sit there; the
+                    servers, which matter less, go to the right. The AI model
+                    sits in the front-right corner, which also stays in view. */}
+                <rect class="box" x="26" y="20" width="78" height="40" rx="7" />
+                <text class="tag" x="65" y="45">
+                  API
+                </text>
+                <path class="link" d="M65 60 V74" />
+                <path class="link-head" d="M61 69 l4 7 l4 -7" />
+                <path class="db" d="M37 86 v42 a28 9 0 0 0 56 0 v-42" />
+                <ellipse class="db" cx="65" cy="86" rx="28" ry="9" />
+                <path
+                  class="db-ring"
+                  d="M37 100 a28 9 0 0 0 56 0 M37 114 a28 9 0 0 0 56 0"
+                />
+                <text class="tag small" x="65" y="131">
+                  DB
+                </text>
+                {[
+                  ["red", "blue"],
+                  ["blue", ""],
+                ].map(([a, b], k) => {
+                  const y = 20 + k * 21;
+                  return (
+                    <>
+                      <rect
+                        class="unit"
+                        x="118"
+                        y={y}
+                        width="72"
+                        height="15"
+                        rx="4"
+                      />
+                      <circle
+                        class:list={["led", a]}
+                        cx="128"
+                        cy={y + 7.5}
+                        r="2.5"
+                      />
+                      <circle
+                        class:list={["led", b]}
+                        cx="136"
+                        cy={y + 7.5}
+                        r="2.5"
+                      />
+                    </>
+                  );
+                })}
+                <path class="link" d="M93 112 C118 112 128 140 142 150" />
+                <rect
+                  class="ai-block"
+                  x="142"
+                  y="140"
+                  width="58"
+                  height="44"
+                  rx="8"
+                />
+                <path class="spark" d={sparkle(158, 162, 8)} />
+                <text class="ai-tag" x="182" y="167">
+                  AI
+                </text>
+              </svg>
+              <span>Backend</span>
+            </div>
+            <div class="slab" style="--i: 2">
+              <svg class="drawing" viewBox="0 0 220 220">
+                {/* The phone sits on the left, which stays in view; its
+                    camera finds a sofa, as AI object detection does in a
+                    video call */}
+                <rect
+                  class="phone"
+                  x="14"
+                  y="10"
+                  width="64"
+                  height="134"
+                  rx="12"
+                />
+                <rect
+                  class="notch"
+                  x="35"
+                  y="15"
+                  width="22"
+                  height="5"
+                  rx="2.5"
+                />
+                <rect
+                  class="camera"
+                  x="21"
+                  y="26"
+                  width="50"
+                  height="78"
+                  rx="4"
+                />
+                <path class="floor" d="M21 86 H71" />
+                <rect
+                  class="sofa"
+                  x="29"
+                  y="66"
+                  width="34"
+                  height="16"
+                  rx="4"
+                />
+                <rect
+                  class="sofa-back"
+                  x="31"
+                  y="58"
+                  width="30"
+                  height="10"
+                  rx="3"
+                />
+                <rect
+                  class="detect"
+                  x="25"
+                  y="52"
+                  width="42"
+                  height="34"
+                  rx="2"
+                />
+                <rect
+                  class="detect-tag"
+                  x="25"
+                  y="45"
+                  width="22"
+                  height="7"
+                  rx="1.5"
+                />
+                <path class="spark" d={sparkle(62, 36, 5)} />
+                <rect
+                  class="line"
+                  x="23"
+                  y="112"
+                  width="46"
+                  height="5"
+                  rx="2.5"
+                />
+                <rect
+                  class="cta"
+                  x="23"
+                  y="122"
+                  width="46"
+                  height="11"
+                  rx="5.5"
+                />
+                <rect
+                  class="home"
+                  x="38"
+                  y="137"
+                  width="16"
+                  height="3"
+                  rx="1.5"
+                />
+              </svg>
+              <span>Mobile</span>
+            </div>
+            <div class="slab" style="--i: 3">
+              <svg class="drawing" viewBox="0 0 220 220">
+                {/* The mover's web app during a call: the video, the
+                    inventory the AI builds, and a suggestion from the AI
+                    assistant */}
+                <rect
+                  class="frame"
+                  x="22"
+                  y="24"
+                  width="176"
+                  height="124"
+                  rx="9"
+                />
+                <path class="frame-bar" d="M22 42 H198" />
+                {[33, 42, 51].map((cx) => (
+                  <circle class="dot" cx={cx} cy="33" r="2.6" />
+                ))}
+                <rect
+                  class="address"
+                  x="64"
+                  y="28.5"
+                  width="118"
+                  height="9"
+                  rx="4.5"
+                />
+                <rect
+                  class="video"
+                  x="32"
+                  y="50"
+                  width="78"
+                  height="54"
+                  rx="4"
+                />
+                <path class="play" d="M64 68 l14 9 l-14 9 Z" />
+                {[52, 40, 46].map((width, k) => (
+                  <>
+                    <circle class="check" cx="122" cy={56 + k * 14} r="4" />
+                    <rect
+                      class="line"
+                      x="130"
+                      y={53.5 + k * 14}
+                      width={width}
+                      height="5"
+                      rx="2.5"
+                    />
+                  </>
+                ))}
+                <rect
+                  class="bubble"
+                  x="56"
+                  y="110"
+                  width="128"
+                  height="30"
+                  rx="10"
+                />
+                <path class="spark blue" d={sparkle(71, 125, 7)} />
+                <rect
+                  class="bubble-line"
+                  x="84"
+                  y="117"
+                  width="88"
+                  height="5"
+                  rx="2.5"
+                />
+                <rect
+                  class="bubble-line"
+                  x="84"
+                  y="128"
+                  width="62"
+                  height="5"
+                  rx="2.5"
+                />
+              </svg>
+              <span>Frontend</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {kind === "code" && (
+        <div class="scene">
+          <div class="window">
+            <div class="shadow" />
+            <div class="glass editor">
+              <div class="bar">
+                <span />
+                <span />
+                <span />
+                <em class="tab" />
+                <em class="tab dim" />
+              </div>
+              <div class="code">
+                {codeLines.map(([indent, tokens], n) => (
+                  <div
+                    class="code-line"
+                    style={`--n: ${n}; --indent: ${indent}`}
+                  >
+                    <b class="num-col">{n + 1}</b>
+                    {tokens.map(([width, colour]) => (
+                      <i class={colour} style={`width: ${width}px`} />
+                    ))}
+                    <span class="caret" />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div class="terminal">
+              <div class="t-line">
+                <i class="prompt" />
+                <i style="width: 96px" />
+              </div>
+              <div class="t-line">
+                <i style="width: 70px" />
+                <i style="width: 40px" />
+              </div>
+              <div class="t-line ok">
+                <i class="check" />
+                <i style="width: 84px" />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</div>
