@@ -1,13 +1,27 @@
 ---
+import HeaderArt, { type HeaderArtKind } from "./HeaderArt.astro";
+
 interface Props {
   title: string;
   accent?: string;
   eyebrow?: string;
   eyebrowHref?: string;
   large?: boolean;
+  /** Animated art behind the header, chosen to match the page */
+  art?: HeaderArtKind;
+  /** Size of the art (1 = home hero), chosen to fit this header */
+  artSize?: number;
 }
 
-const { title, accent, eyebrow, eyebrowHref, large = false } = Astro.props;
+const {
+  title,
+  accent,
+  eyebrow,
+  eyebrowHref,
+  large = false,
+  art,
+  artSize,
+} = Astro.props;
 ---
 
 <header class:list={["page-header", { large }]}>
@@ -23,4 +37,5 @@ const { title, accent, eyebrow, eyebrowHref, large = false } = Astro.props;
     </h1>
     <slot />
   </div>
+  {art && <HeaderArt kind={art} size={artSize} />}
 </header>

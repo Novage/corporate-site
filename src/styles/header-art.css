@@ -1,0 +1,1057 @@
+/* Animated art behind page headers (HeaderArt.astro). CSS only.
+   From 1200px the text column is 1140px wide and the art fits to its right.
+   On tablets (768 to 1199px) the column fills most of the width, so the art
+   is smaller, a little dimmer and fades out toward the left, behind the
+   right part of the text. Phones keep the plain header. */
+
+/* Behind the header's text: .page-header (main.css) isolates the stacking
+   and clips the art */
+.header-art {
+  --art-blue: #3f63b0;
+  /* The colour of the grid lines on glass and on the tops of blocks */
+  --grid: rgba(151, 46, 45, 0.07);
+  /* Size factors: one for the screen width, one set by the page to fit
+     its header (--size, from HeaderArt's size prop) */
+  --w-scale: 1;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  display: none;
+  pointer-events: none;
+}
+
+/* The stage follows the text column, so the art keeps its distance from
+   the text on any screen width */
+.header-art .stage {
+  position: relative;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.header-art .art-frame {
+  position: absolute;
+  top: 0;
+  right: -63px;
+  bottom: 0;
+  width: 780px;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0%, #000 45%);
+}
+
+/* A label line ("CASE STUDY ———") runs across the top of some headers: the
+   art starts below it. 78px is the header's top padding plus the label line
+   and its margin. */
+.page-header:has(.section-label) .header-art .art-frame {
+  top: 78px;
+}
+
+@media (min-width: 768px) {
+  .header-art {
+    display: block;
+  }
+}
+
+@media (min-width: 1200px) {
+  .header-art .stage {
+    max-width: 1140px;
+  }
+}
+
+.header-art .scene {
+  position: absolute;
+  top: 50%;
+  perspective: 1600px;
+  scale: calc(var(--w-scale) * var(--size));
+}
+
+/* ---- Shared: isometric scene, glass, solid boxes, light pulses ---- */
+
+.header-art .iso {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(58deg) rotateZ(-42deg);
+}
+
+.header-art .base {
+  position: absolute;
+  inset: -40px;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(var(--shadow-color), 0.14),
+    transparent
+  );
+  transform: translateZ(-30px);
+}
+
+.header-art .glass,
+.header-art .slab {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.96);
+  background-size: 23px 23px;
+  border: solid 1px rgba(151, 46, 45, 0.4);
+  border-radius: 22px;
+  box-shadow: 0 0 0 6px rgba(151, 46, 45, 0.04);
+}
+
+.header-art .glass,
+.header-art .slab,
+.header-art .f-top {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+}
+
+/* Labels and drawings on slabs */
+.header-art .slab span {
+  position: absolute;
+  bottom: 44px;
+  left: 44px;
+  font:
+    700 20px "Manrope",
+    sans-serif;
+  color: var(--brand);
+}
+
+/* The lower, plainer layer: the CDN, QA */
+.art-p2p .slab-cdn span,
+.art-stack .slab-qa span {
+  color: rgba(85, 85, 85, 0.55);
+}
+
+.header-art .drawing {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.header-art .led {
+  fill: rgba(31, 31, 31, 0.25);
+}
+
+.header-art .led.red {
+  fill: var(--brand);
+}
+
+.header-art .led.blue {
+  fill: var(--art-blue);
+}
+
+/* A packet: a short dash that runs along its link */
+.header-art .apulse,
+.header-art .ppulse,
+.header-art .signal {
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 10 90;
+  animation: art-pulse var(--d) linear infinite;
+  animation-delay: var(--delay);
+}
+
+.header-art .apulse.blue,
+.header-art .ppulse.blue {
+  stroke: var(--art-blue);
+}
+
+@keyframes art-pulse {
+  from {
+    stroke-dashoffset: 10;
+  }
+  to {
+    stroke-dashoffset: -90;
+  }
+}
+
+@keyframes art-bob {
+  from {
+    translate: 0 -6px;
+  }
+  to {
+    translate: 0 8px;
+  }
+}
+
+/* =============== Assembly (home) =============== */
+
+.art-assembly .scene {
+  right: 100px;
+  width: 250px;
+  height: 250px;
+  margin-top: -70px;
+}
+
+/* The plate sits 2px below the blocks, not level with their bottoms: at
+   one depth Safari has no clear order and drew the running links over the
+   blocks */
+.art-assembly .plate {
+  border-radius: 18px;
+  transform: translateZ(-2px);
+}
+
+.art-assembly .links {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: art-links 12s ease infinite;
+}
+
+/* A box from three faces: the top and the two sides that face the viewer.
+   The sides stand up from the left and bottom edges of the footprint and
+   overlap by 1px, so no seam shows at the near corner. */
+.header-art .cube {
+  position: absolute;
+  transform-style: preserve-3d;
+}
+
+.header-art .cube i {
+  position: absolute;
+  display: block;
+  /* The border counts inside the size: otherwise the sides come out 2px
+     taller and wider than the block, and their edges cross the top */
+  box-sizing: border-box;
+  border: solid 1px rgba(151, 46, 45, 0.4);
+}
+
+/* Each block of the assembly falls into place, stays, and leaves with the
+   rest. Opacity goes on the faces: on the box it would flatten the 3D. */
+.art-assembly .cube {
+  animation: art-drop 12s var(--ease) infinite backwards;
+  animation-delay: var(--t);
+}
+
+.art-assembly .cube i {
+  animation: art-drop-fade 12s ease infinite backwards;
+  animation-delay: var(--t);
+}
+
+.header-art .f-top {
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.97);
+  background-size: 12px 12px;
+  transform: translateZ(var(--h));
+}
+
+.header-art .f-front {
+  top: 100%;
+  left: -1px;
+  width: calc(100% + 1px);
+  height: var(--h);
+  background: rgba(240, 233, 225, 0.97);
+  transform-origin: 50% 0;
+  transform: rotateX(90deg);
+}
+
+.header-art .f-left {
+  top: 0;
+  left: calc(var(--h) * -1);
+  width: var(--h);
+  height: calc(100% + 1px);
+  background: rgba(228, 218, 207, 0.97);
+  transform-origin: 100% 50%;
+  transform: rotateY(90deg);
+}
+
+/* The core: soft rose, so it leads without dominating the header */
+.art-assembly .core .f-top {
+  --grid: rgba(151, 46, 45, 0.1);
+  background-color: #f2d4d3;
+  border-color: rgba(151, 46, 45, 0.75);
+  animation:
+    art-drop-fade 12s ease infinite backwards,
+    art-core 12s ease infinite;
+  animation-delay: var(--t), 0s;
+}
+
+.art-assembly .core .f-front {
+  background: #e3b6b4;
+  border-color: rgba(151, 46, 45, 0.6);
+}
+
+.art-assembly .core .f-left {
+  background: #d39d9b;
+  border-color: rgba(151, 46, 45, 0.6);
+}
+
+.art-assembly .alink {
+  fill: none;
+  stroke: rgba(151, 46, 45, 0.6);
+  stroke-width: 2;
+}
+
+.art-assembly .apulse {
+  stroke: var(--brand);
+  stroke-width: 4;
+  /* No glow filter here: in Safari an animated filter takes the links out
+     of the 3D order, and they were drawn over the blocks */
+}
+
+@keyframes art-drop {
+  0% {
+    transform: translateZ(170px);
+  }
+  9%,
+  100% {
+    transform: translateZ(0);
+  }
+}
+
+@keyframes art-drop-fade {
+  0% {
+    opacity: 0;
+  }
+  5%,
+  80% {
+    opacity: 1;
+  }
+  88%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Links and packets light up once every block is in place */
+@keyframes art-links {
+  0%,
+  32% {
+    opacity: 0;
+  }
+  38%,
+  86% {
+    opacity: 1;
+  }
+  92%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes art-core {
+  0%,
+  34% {
+    box-shadow: none;
+  }
+  44%,
+  80% {
+    box-shadow: 0 0 28px rgba(215, 110, 109, 0.5);
+  }
+  92%,
+  100% {
+    box-shadow: none;
+  }
+}
+
+/* =============== P2P (P2P Media Loader and wt-tracker) =============== */
+
+/* Two layers: the CDN below, the peers' P2P network above. Grey HTTP beams
+   rise from the CDN to two peers; the rest of the traffic moves over P2P. */
+.art-p2p .scene {
+  right: 110px;
+  width: 220px;
+  height: 220px;
+  margin-top: -88px;
+  animation: art-bob 7s ease-in-out infinite alternate;
+}
+
+.art-p2p .slab-p2p {
+  transform: translateZ(100px);
+}
+
+.art-p2p .rack {
+  fill: #ffffff;
+  stroke: rgba(31, 31, 31, 0.5);
+  stroke-width: 1.5;
+}
+
+.art-p2p .slot {
+  fill: rgba(31, 31, 31, 0.14);
+}
+
+.header-art .plink {
+  fill: none;
+  stroke: rgba(151, 46, 45, 0.4);
+  stroke-width: 1.5;
+}
+
+.header-art .ppulse {
+  stroke: var(--brand);
+  stroke-width: 3;
+}
+
+.art-p2p .ppulse {
+  filter: drop-shadow(0 0 3px rgba(215, 110, 109, 0.9));
+}
+
+.art-p2p .ppulse.blue {
+  filter: drop-shadow(0 0 3px rgba(63, 99, 176, 0.8));
+}
+
+/* The tracker's slab carries a block too: no glow filter on its packets
+   (see the assembly), and the slab sits 2px below the block */
+.art-tracker .ppulse {
+  stroke-width: 3.5;
+}
+
+.art-tracker .slab {
+  transform: translateZ(-2px);
+}
+
+.header-art .peer {
+  stroke-width: 2;
+}
+
+.header-art .peer.white {
+  fill: #ffffff;
+  stroke: rgba(151, 46, 45, 0.75);
+}
+
+.header-art .peer.red {
+  fill: var(--brand);
+  stroke: rgba(151, 46, 45, 0.2);
+}
+
+.header-art .peer.blue {
+  fill: var(--art-blue);
+  stroke: rgba(63, 99, 176, 0.2);
+}
+
+.header-art .pping {
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: art-ping 3s ease-out infinite;
+  animation-delay: var(--pd, 0s);
+}
+
+@keyframes art-ping {
+  from {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(3.2);
+  }
+}
+
+/* An HTTP beam: a grey line that stands up from the CDN slab to a peer */
+.art-p2p .beam {
+  position: absolute;
+  width: 2px;
+  height: 100px;
+  margin-left: -1px;
+  background: linear-gradient(
+    rgba(107, 119, 128, 0.55),
+    rgba(107, 119, 128, 0.15)
+  );
+  transform-origin: 50% 0;
+  transform: rotateX(90deg);
+}
+
+.art-p2p .beam::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -1px;
+  width: 4px;
+  height: 14px;
+  border-radius: 2px;
+  background: #6b7780;
+  box-shadow: 0 0 6px rgba(107, 119, 128, 0.8);
+  animation: art-beam var(--d, 2.4s) linear infinite;
+  animation-delay: var(--bd, 0s);
+}
+
+/* From the bottom of the 100px beam to its top, less the packet's 14px */
+@keyframes art-beam {
+  to {
+    translate: 0 86px;
+  }
+}
+
+/* =============== Tracker (wt-tracker) =============== */
+
+/* One P2P layer with the tracker as its hub: each peer keeps a connection
+   to the tracker (amber, the signaling colour of the site's diagrams), and
+   the peers it introduced exchange video directly (red) */
+.art-tracker .scene {
+  right: 125px;
+  width: 220px;
+  height: 220px;
+  margin-top: -125px;
+  animation: art-bob 7s ease-in-out infinite alternate;
+}
+
+.art-tracker .spoke {
+  fill: none;
+  stroke: rgba(184, 134, 47, 0.5);
+  stroke-width: 1.5;
+}
+
+.art-tracker .signal {
+  stroke: #b8862f;
+  stroke-width: 3.5;
+  stroke-dasharray: 8 92;
+}
+
+.art-tracker .hub i {
+  border-color: rgba(184, 134, 47, 0.8);
+}
+
+.art-tracker .hub .f-top {
+  --grid: rgba(184, 134, 47, 0.14);
+  background-color: #f7ead0;
+  animation: art-hub 3.2s ease-in-out infinite alternate;
+}
+
+.art-tracker .hub .f-front {
+  background: #eed7a8;
+}
+
+.art-tracker .hub .f-left {
+  background: #e2c48c;
+}
+
+@keyframes art-hub {
+  from {
+    box-shadow: 0 0 10px rgba(184, 134, 47, 0.25);
+  }
+  to {
+    box-shadow: 0 0 30px rgba(184, 134, 47, 0.7);
+  }
+}
+
+/* =============== Stack (Yembo) =============== */
+
+.art-stack .scene {
+  right: 110px;
+  width: 220px;
+  height: 220px;
+  margin-top: -35px;
+}
+
+.art-stack .slab {
+  /* No stagger: with one timing, each slab stays above the one below it */
+  transform: translateZ(calc(var(--i) * 22px));
+  animation: art-slab 7s var(--ease) infinite;
+}
+
+/* The slabs move apart and back; at the ends they keep the transform above */
+@keyframes art-slab {
+  38%,
+  66% {
+    transform: translateZ(calc(var(--i) * 74px + 8px));
+  }
+}
+
+/* The label sits far enough from the front edges that the slab above
+   covers it while the stack is closed; it comes into view with the drawing
+   as the slabs move apart */
+.art-stack .slab span {
+  letter-spacing: 0.01em;
+}
+
+.art-stack .box,
+.art-stack .unit,
+.art-stack .frame,
+.art-stack .phone {
+  fill: #ffffff;
+  stroke: rgba(31, 31, 31, 0.55);
+  stroke-width: 1.5;
+}
+
+.art-stack .box {
+  stroke: var(--brand);
+}
+
+.art-stack .tag {
+  font:
+    700 15px "Manrope",
+    sans-serif;
+  letter-spacing: 0.08em;
+  text-anchor: middle;
+  fill: var(--brand);
+}
+
+.art-stack .tag.small {
+  font-size: 11px;
+  fill: var(--art-blue);
+}
+
+.art-stack .link {
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+
+.art-stack .link-head {
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.art-stack .db {
+  fill: #ffffff;
+  stroke: var(--art-blue);
+  stroke-width: 1.5;
+}
+
+.art-stack .db-ring {
+  fill: none;
+  stroke: rgba(63, 99, 176, 0.5);
+  stroke-width: 1.2;
+}
+
+.art-stack .frame-bar {
+  stroke: rgba(31, 31, 31, 0.25);
+  stroke-width: 1.2;
+}
+
+.art-stack .dot {
+  fill: rgba(151, 46, 45, 0.45);
+}
+
+.art-stack .address,
+.art-stack .line {
+  fill: rgba(31, 31, 31, 0.14);
+}
+
+.art-stack .cta {
+  fill: var(--brand);
+}
+
+.art-stack .notch,
+.art-stack .home {
+  fill: rgba(31, 31, 31, 0.5);
+}
+
+/* Mobile: the phone's camera finds a sofa */
+.art-stack .camera {
+  fill: var(--warm);
+}
+
+.art-stack .floor {
+  stroke: rgba(31, 31, 31, 0.18);
+  stroke-width: 1;
+}
+
+.art-stack .sofa,
+.art-stack .sofa-back {
+  fill: rgba(63, 99, 176, 0.35);
+}
+
+.art-stack .detect {
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 1.5;
+}
+
+.art-stack .detect-tag {
+  fill: var(--brand);
+}
+
+/* Frontend: the call's video, the inventory and an AI suggestion */
+.art-stack .video {
+  fill: rgba(31, 31, 31, 0.12);
+}
+
+.art-stack .play {
+  fill: rgba(255, 255, 255, 0.9);
+}
+
+.art-stack .check {
+  fill: rgba(63, 99, 176, 0.45);
+}
+
+.art-stack .bubble {
+  fill: rgba(63, 99, 176, 0.08);
+  stroke: rgba(63, 99, 176, 0.6);
+  stroke-width: 1.2;
+}
+
+.art-stack .bubble-line {
+  fill: rgba(63, 99, 176, 0.45);
+}
+
+/* AI: a model in the backend, detection on the phone, a suggestion in the
+   web app. The sparkle is the usual sign for AI. */
+.art-stack .ai-block {
+  fill: #ffffff;
+  stroke: var(--art-blue);
+  stroke-width: 1.5;
+}
+
+.art-stack .ai-tag {
+  font:
+    700 14px "Manrope",
+    sans-serif;
+  letter-spacing: 0.06em;
+  text-anchor: middle;
+  fill: var(--art-blue);
+}
+
+.art-stack .spark {
+  fill: var(--brand);
+}
+
+.art-stack .spark.blue {
+  fill: var(--art-blue);
+}
+
+/* While the stack is open, the AI parts light up in turn, from the backend
+   up: their outlines thicken for a moment. An outline, not a glow filter: in
+   Safari an animated filter takes a slab out of the 3D order. */
+.art-stack .ai-block,
+.art-stack .detect,
+.art-stack .bubble {
+  animation: art-ai 7s ease-in-out infinite;
+}
+
+.art-stack .detect {
+  animation-delay: 0.5s;
+}
+
+.art-stack .bubble {
+  animation-delay: 1s;
+}
+
+@keyframes art-ai {
+  0%,
+  38%,
+  56%,
+  100% {
+    stroke-width: 1.5;
+  }
+  46% {
+    stroke-width: 3.5;
+  }
+}
+
+/* QA stays in the background: grey and pale blue only */
+.art-stack .muted circle {
+  fill: none;
+  stroke: rgba(63, 99, 176, 0.4);
+  stroke-width: 1.3;
+}
+
+.art-stack .muted path {
+  fill: none;
+  stroke: rgba(63, 99, 176, 0.5);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.art-stack .row rect {
+  fill: rgba(31, 31, 31, 0.1);
+}
+
+.art-stack .track {
+  fill: rgba(31, 31, 31, 0.08);
+}
+
+.art-stack .fill {
+  fill: rgba(63, 99, 176, 0.3);
+}
+
+/* =============== Code editor (blog) =============== */
+
+/* Upright, facing the viewer with a slight turn */
+.art-code .scene {
+  right: -20px;
+  width: 380px;
+  height: 290px;
+  margin-top: -140px;
+  perspective: 1200px;
+}
+
+.art-code .window {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateY(-16deg) rotateX(6deg);
+  animation: art-window 10s ease-in-out infinite alternate;
+}
+
+@keyframes art-window {
+  to {
+    transform: rotateY(-10deg) rotateX(3deg);
+  }
+}
+
+.art-code .shadow {
+  position: absolute;
+  right: 10%;
+  bottom: -36px;
+  left: 10%;
+  height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(var(--shadow-color), 0.14),
+    transparent
+  );
+}
+
+.art-code .editor {
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.art-code .bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  background: rgba(245, 241, 236, 0.9);
+  border-bottom: solid 1px rgba(151, 46, 45, 0.2);
+}
+
+.art-code .bar span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(151, 46, 45, 0.4);
+}
+
+.art-code .tab {
+  width: 64px;
+  height: 16px;
+  margin-left: 10px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: inset 0 -2px 0 var(--brand);
+}
+
+.art-code .tab.dim {
+  width: 52px;
+  margin-left: 0;
+  background: transparent;
+  border: solid 1px rgba(151, 46, 45, 0.15);
+  box-shadow: none;
+}
+
+.art-code .code {
+  padding: 12px 0;
+}
+
+.art-code .code-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 19px;
+  padding-left: calc(10px + var(--indent) * 22px);
+  clip-path: inset(0 100% 0 0);
+  animation: art-type 12s steps(14, end) infinite;
+  animation-delay: calc(var(--n) * 0.5s);
+}
+
+/* Each line types in, stays, and the whole file clears at the end */
+@keyframes art-type {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    opacity: 1;
+  }
+  4% {
+    clip-path: inset(0 0 0 0);
+  }
+  84% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+  92%,
+  100% {
+    clip-path: inset(0 0 0 0);
+    opacity: 0;
+  }
+}
+
+.art-code .num-col {
+  width: 18px;
+  margin-right: calc(var(--indent) * 22px);
+  margin-left: calc(var(--indent) * -22px);
+  font: 500 10px var(--mono);
+  text-align: right;
+  color: rgba(51, 51, 51, 0.3);
+}
+
+.art-code .code-line i {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.art-code .kw {
+  background: var(--brand);
+}
+
+.art-code .fn {
+  background: var(--art-blue);
+}
+
+.art-code .id {
+  background: rgba(31, 31, 31, 0.45);
+}
+
+.art-code .str {
+  background: rgba(63, 99, 176, 0.45);
+}
+
+.art-code .num {
+  background: rgba(151, 46, 45, 0.5);
+}
+
+.art-code .p {
+  background: rgba(31, 31, 31, 0.2);
+}
+
+.art-code .cm {
+  background: rgba(31, 31, 31, 0.12);
+}
+
+/* The caret shows on a line only while that line is the newest one */
+.art-code .caret {
+  width: 2px;
+  height: 14px;
+  background: var(--brand);
+  opacity: 0;
+  animation: art-caret 12s step-end infinite;
+  animation-delay: calc(var(--n) * 0.5s);
+}
+
+@keyframes art-caret {
+  0% {
+    opacity: 1;
+  }
+  4.2% {
+    opacity: 0;
+  }
+}
+
+/* A small dark terminal floating in front of the editor's corner */
+.art-code .terminal {
+  position: absolute;
+  bottom: -26px;
+  left: -46px;
+  display: grid;
+  gap: 9px;
+  width: 170px;
+  padding: 16px;
+  background: var(--heading);
+  border-radius: 14px;
+  box-shadow: 0 0 0 6px rgba(31, 31, 31, 0.06);
+  transform: translateZ(40px);
+  animation: art-term-float 5s ease-in-out infinite alternate;
+}
+
+@keyframes art-term-float {
+  to {
+    transform: translateZ(52px) translateY(-4px);
+  }
+}
+
+.art-code .t-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.art-code .t-line i {
+  display: block;
+  height: 7px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.art-code .t-line .prompt {
+  width: 8px;
+  background: var(--brand-light);
+}
+
+.art-code .ok {
+  animation: art-ok 12s steps(1, end) infinite;
+}
+
+.art-code .t-line .check {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #6ea8ff;
+  box-shadow: 0 0 8px rgba(110, 168, 255, 0.8);
+}
+
+@keyframes art-ok {
+  0%,
+  52% {
+    opacity: 0;
+  }
+  53%,
+  90% {
+    opacity: 1;
+  }
+  91%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* =============== Without motion: a still, finished picture =============== */
+
+@media (prefers-reduced-motion: reduce) {
+  .header-art *,
+  .header-art *::before,
+  .header-art *::after {
+    animation: none !important;
+  }
+
+  .art-stack .slab {
+    transform: translateZ(calc(var(--i) * 74px + 8px));
+  }
+
+  .art-code .code-line {
+    clip-path: none;
+  }
+
+  .art-code .ok {
+    opacity: 0;
+  }
+}
+
+/* On tablets the text column fills the width, so the frame moves to the
+   screen edge (it keeps its right offset, the stage is the full width) and
+   the art is smaller, dimmer, and fades out over the text. The wider
+   tracker and editor move a little more to the right. */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .header-art {
+    --w-scale: 0.78;
+  }
+
+  .header-art .art-frame {
+    width: 623px;
+    opacity: 0.85;
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      rgba(0, 0, 0, 0.2) 224px,
+      #000 515px
+    );
+  }
+
+  .art-tracker .scene {
+    right: 119px;
+  }
+
+  .art-code .scene {
+    right: -10px;
+  }
+}
