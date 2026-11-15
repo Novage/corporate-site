@@ -28,7 +28,7 @@ import { P2PVideoDemoWrapper } from "../../components/shared/P2PVideoDemoWrapper
       >
         <P2PSubNav current="demo" />
       </PageHeader>
-      <div class="container">
+      <div class="container stars">
         <script
           async
           defer
@@ -63,3 +63,15 @@ import { P2PVideoDemoWrapper } from "../../components/shared/P2PVideoDemoWrapper
   </div>
   <Footer />
 </Layout>
+
+<style>
+  /* The GitHub button sits halfway between the header and the demo, 28px
+     from each. The demo has a 50px top margin of its own
+     (p2p-media-loader-demo); the negative margin below the button takes
+     22px of it back, which leaves 28px. Flex drops the inline line gap. */
+  .stars {
+    display: flex;
+    padding-top: 28px;
+    margin-bottom: -22px;
+  }
+</style>
