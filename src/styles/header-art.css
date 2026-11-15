@@ -1,8 +1,9 @@
 /* Animated art behind page headers (HeaderArt.astro). CSS only.
    From 1200px the text column is 1140px wide and the art fits to its right.
-   On tablets (768 to 1199px) the column fills most of the width, so the art
-   is smaller, a little dimmer and fades out toward the left, behind the
-   right part of the text. Phones keep the plain header. */
+   From 1024 to 1199px the column fills most of the width, so the art is
+   smaller and moves to the screen edge. From 768 to 1023px it is also a
+   little dimmer and fades out toward the left, behind the right part of the
+   text. Phones keep the plain header. */
 
 /* Behind the header's text: .page-header (main.css) isolates the stacking
    and clips the art */
@@ -1027,23 +1028,22 @@
   }
 }
 
-/* On tablets the text column fills the width, so the frame moves to the
-   screen edge (it keeps its right offset, the stage is the full width) and
-   the art is smaller, dimmer, and fades out over the text. The wider
-   tracker and editor move a little more to the right. */
+/* Below 1200px the text column fills most of the width, so the frame moves
+   to the screen edge (it keeps its right offset, the stage is the full
+   width) and the art is smaller. The wider tracker and editor move a little
+   more to the right. */
 @media (min-width: 768px) and (max-width: 1199px) {
   .header-art {
-    --w-scale: 0.78;
+    --w-scale: 0.8;
   }
 
   .header-art .art-frame {
     width: 623px;
-    opacity: 0.85;
     mask-image: linear-gradient(
       to right,
       transparent 0,
-      rgba(0, 0, 0, 0.2) 224px,
-      #000 515px
+      rgba(0, 0, 0, 0.35) 160px,
+      #000 330px
     );
   }
 
@@ -1053,5 +1053,23 @@
 
   .art-code .scene {
     right: -10px;
+  }
+}
+
+/* Below 1024px the art comes close to the text, so it is dimmer and fades
+   out over a longer distance */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .header-art {
+    --w-scale: 0.78;
+  }
+
+  .header-art .art-frame {
+    opacity: 0.85;
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      rgba(0, 0, 0, 0.2) 224px,
+      #000 515px
+    );
   }
 }
