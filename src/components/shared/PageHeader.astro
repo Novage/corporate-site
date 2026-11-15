@@ -11,6 +11,8 @@ interface Props {
   art?: HeaderArtKind;
   /** Size of the art (1 = home hero), chosen to fit this header */
   artSize?: number;
+  /** False where the art stays clear of the text: no fade on narrow screens */
+  artFade?: boolean;
 }
 
 const {
@@ -21,6 +23,7 @@ const {
   large = false,
   art,
   artSize,
+  artFade,
 } = Astro.props;
 ---
 
@@ -37,5 +40,5 @@ const {
     </h1>
     <slot />
   </div>
-  {art && <HeaderArt kind={art} size={artSize} />}
+  {art && <HeaderArt kind={art} size={artSize} fade={artFade} />}
 </header>
