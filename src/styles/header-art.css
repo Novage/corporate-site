@@ -767,7 +767,7 @@
 
 /* Upright, facing the viewer with a slight turn */
 .art-code .scene {
-  right: -20px;
+  right: -46px;
   width: 380px;
   height: 290px;
   margin-top: -140px;
@@ -1048,7 +1048,7 @@
   }
 
   .art-code .scene {
-    right: -10px;
+    right: -36px;
   }
 }
 
