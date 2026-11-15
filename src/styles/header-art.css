@@ -551,11 +551,32 @@
   }
 }
 
-/* The label sits far enough from the front edges that the slab above
-   covers it while the stack is closed; it comes into view with the drawing
-   as the slabs move apart */
+/* The label sits at the front edge, under the drawing. While the stack is
+   closed the slab above does not cover it there, so the lower labels fade
+   in as the slabs move apart and fade out before they close. The top label
+   stays. */
 .art-stack .slab span {
+  bottom: 12px;
+  left: 18px;
   letter-spacing: 0.01em;
+}
+
+.art-stack .slab:not(:last-child) span {
+  animation: art-label 7s linear infinite;
+}
+
+@keyframes art-label {
+  0%,
+  4%,
+  74%,
+  100% {
+    opacity: 0;
+  }
+
+  24%,
+  66% {
+    opacity: 1;
+  }
 }
 
 .art-stack .box,
