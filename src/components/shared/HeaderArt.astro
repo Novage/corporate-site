@@ -13,9 +13,14 @@ interface Props {
    * the art never grows when a narrower window wraps the text.
    */
   size?: number;
+  /**
+   * Below 1024px the art is dimmed and fades out over the text. Set false
+   * where the art stays clear of the text, so it does not fade away.
+   */
+  fade?: boolean;
 }
 
-const { kind, size = 1 } = Astro.props;
+const { kind, size = 1, fade = true } = Astro.props;
 
 // An SVG path from one point to another
 type Point = readonly [number, number, ...unknown[]];
@@ -127,7 +132,7 @@ const codeLines: [number, [number, string][]][] = [
 ---
 
 <div
-  class:list={["header-art", `art-${kind}`]}
+  class:list={["header-art", `art-${kind}`, { "no-fade": !fade }]}
   style={`--size: ${size}`}
   aria-hidden="true"
 >
