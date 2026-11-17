@@ -196,6 +196,54 @@ li {
   box-shadow: 0 0.25em 0.25em -0.25em rgba(var(--shadow-color), 0.45);
 }
 
+/* Reading progress under the header, on every page: a CSS scroll-driven
+   animation, no JavaScript. Browsers without support, and visitors who
+   prefer reduced motion, see no bar. Safari also sees none: it runs these
+   animations on a separate thread and showed wrong values after a jump to
+   an anchor; only Safari supports hanging-punctuation, so the test excludes
+   it. A page too short to scroll has no timeline, so the bar starts at zero
+   width and stays hidden there. Per-element scroll effects (cards rising
+   into view, a fading hero) were removed: they made scrolling stutter in
+   Chrome. */
+@supports (animation-timeline: scroll()) and (not (hanging-punctuation: first)) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* The timeline goes through a variable so the CSS minifier can't fold
+       it into the animation shorthand, which browsers would reject. The 1ms
+       duration is for Firefox, which won't run a scroll-driven animation
+       with the default 0s; other browsers ignore it. */
+    body {
+      --timeline-page: scroll(root);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      z-index: 101;
+      width: 100%;
+      height: 3px;
+      background: var(--brand);
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      animation-name: progress;
+      animation-duration: 1ms;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: var(--timeline-page);
+    }
+  }
+}
+
+@keyframes progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 #navbar {
   display: grid;
   grid-template-columns: 1fr auto;
