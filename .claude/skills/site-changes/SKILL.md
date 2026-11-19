@@ -21,6 +21,7 @@ end.
 | **Contact email** (`contact@novage.com.ua`) | `ContactBanner.astro`, `privacy.astro`, `src/data/organization.ts` |
 | **Company details** (founder, social profiles, LinkedIn) | `src/data/organization.ts` (`founder`, `sameAs`); the founder link in `ContactBanner.astro` (LinkedIn `https://www.linkedin.com/in/lysnevych/`); footer. Company page `https://www.linkedin.com/company/novage/` is in `organization.sameAs` and the footer |
 | **A page URL** | Don't change existing URLs, since they carry search ranking. If you must, keep the old page too and point its canonical at the new URL, update every internal link, and the GitHub READMEs of P2P Media Loader and wt-tracker, which link to the site |
+| **The "Setting up P2P video" blog post** (`src/content/blog/2019-03-22-…md`) | Its copy at the old URL, `src/pages/2019/03/22/Setting-up-P2P-video-on-a-web-page-in-5-minutes-for-free.md`: keep the title, descriptions and text the same (it keeps old links working; its canonical points to the blog post) |
 | **Header height** (menu items, logo size) | `--header-height` in `src/styles/main.css`; measure at 375px and 320px |
 
 ## 2. Repeated facts: change them everywhere at once
