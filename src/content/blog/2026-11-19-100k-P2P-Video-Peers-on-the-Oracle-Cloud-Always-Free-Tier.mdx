@@ -9,9 +9,11 @@ seoDescription: "How we serve ~100k WebTorrent peers on a free 2-core Oracle Clo
 
 import WtTrackerDiagram from "../../components/case-studies/WtTrackerDiagram.astro";
 
-Every viewer in a [P2P Media Loader](/p2p-media-loader/overview) network keeps a WebSocket connection to a **WebTorrent tracker**, which introduces viewers of the same stream to each other. In [P2P Video Delivery for up to 100k Viewers for Free](/blog/p2p-video-delivery-for-up-to-100k-viewers-for-free) we showed how to run a tracker for up to 100,000 simultaneous peers on the **Oracle Cloud Always Free Tier**, which then included an Arm-based Ampere A1 instance with **4 cores and 24 GB** of memory.
+[P2P Media Loader](/p2p-media-loader/overview) is our open-source JavaScript library for P2P video: viewers of the same HLS or MPEG-DASH stream share video segments with each other over WebRTC, so part of the video can come from other viewers instead of the CDN. To find each other, every viewer keeps a WebSocket connection to a **WebTorrent tracker**, which introduces viewers of the same stream to each other. The tracker in this article works for any WebTorrent-compatible client, including the [WebTorrent](https://webtorrent.io/) client itself. In [P2P Video Delivery for up to 100k Viewers for Free](/blog/p2p-video-delivery-for-up-to-100k-viewers-for-free) we showed how to run a tracker for up to 100,000 simultaneous peers on the **Oracle Cloud Always Free Tier**, which then included an Arm-based Ampere A1 instance with **4 cores and 24 GB** of memory.
 
-Oracle has since **halved** that allowance: the Always Free Ampere A1 instance now has **2 cores and 12 GB**. We set ourselves a goal: **100,000 peers on the reduced free tier, for €0 a month.** It is part of a bigger aim behind P2P Media Loader: to bring the cost of video delivery close to zero, so that streaming to a large audience is affordable for anyone.
+> **What the tracker does:** signaling only. It introduces peers to each other, and then they connect directly over WebRTC. How much video then travels between peers depends on other things, mostly on how many peers can reach each other over WebRTC and on the stream itself. The tracker's job is to do the signaling reliably, for every viewer, all the time.
+
+Oracle has since **halved** that allowance: the [Always Free Ampere A1 resources](https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm) are now **2 cores and 12 GB**. We set ourselves a goal: **100,000 peers on the reduced free tier, for €0 a month.** It is part of a bigger aim behind P2P Media Loader: to bring the cost of video delivery close to zero, so that streaming to a large audience is affordable for anyone.
 
 This article describes how we got there in a few days: a new multi-core tracker written in Rust with AI-assisted development, an Oracle network setting that is easy to miss, and tracker tuning to fit Oracle's free outbound traffic.
 
@@ -66,7 +68,7 @@ The design keeps what made wt-tracker fast and adds every CPU core:
 - **One worker per core, no locks:** each worker owns its own share of the swarms and never waits for another thread.
 - **Swarms follow the content:** the video, audio and every quality of one stream are kept on one worker, and a viewer's connection moves to that worker at its first announce. Almost every message is then handled on a single core, with no traffic between threads.
 - **Zero-copy messages:** WebRTC offers and answers are forwarded as slices of the received message, never copied or re-encoded.
-- **Its own WebSocket implementation instead of µWebSockets:** like µWebSockets, it reads every connection through one shared buffer per worker, so a connection costs about **5–9 KB** of memory. Because we control it, it can do something µWebSockets doesn't offer: **move a live connection, TLS session included, to another core**. That is what lets swarms follow the content.
+- **Its own WebSocket implementation instead of µWebSockets:** like µWebSockets, it reads every connection through one shared buffer per worker, so a connection costs about **12 KB** of memory with TLS (5–9 KB over plain WebSocket in our load tests). Because we control it, it can do something µWebSockets doesn't offer: **move a live connection, TLS session included, to another core**. That is what lets swarms follow the content.
 - **A drop-in replacement:** the same configuration file and the same protocol as wt-tracker, plus Prometheus metrics and structured logs.
 
 More about the design is in our [wt-tracker case study](/case-studies/wt-tracker).
@@ -155,18 +157,24 @@ After tuning, one peer costs about **31 bytes per second** of outbound traffic (
 
 ## How many peers can the server handle?
 
-In production on 17–19 October 2026, wt-tracker-rust reached **216,000 peers** (243,000 WebSocket connections) and served **150,000 peers on average over two days** on the same free server. At the peak it used **1.3–1.6 of its 2 CPU cores**, **2.9 GB** of memory (about 14 KB per peer) and about **7 MB/s** of outbound traffic. The limits of the free server:
+The server is our public tracker, `wss://tracker.novage.com.ua`. P2P Media Loader announces to it by default, so its peers are viewers on sites that use P2P Media Loader, and any WebTorrent-compatible client can connect to it too.
 
-| Limit                                     |            Peers it allows |
-| ----------------------------------------- | -------------------------: |
-| CPU (2 cores)                             | ~220,000 (216,000 reached) |
-| Memory (12 GB)                            |       500,000+ (estimated) |
-| Network bandwidth (2 Gbps)                |     far above any of these |
-| **Free outbound traffic (10 TB / month)** |    **~120,000 on average** |
+In production on 17–19 October 2026, wt-tracker-rust reached **216,000 peers** (243,000 secure WebSocket connections) and served **150,000 peers on average over two days** on the same free server. At the peak it used **1.45 of its 2 CPU cores** in total, **2.9 GB** of memory for the whole process (about 12 KB per connection, TLS included) and about **7 MB/s** of outbound traffic. The free traffic is a monthly budget, so days above the average of 120,000 are fine as long as the month evens out.
 
-The free server's hardware handled **216,000 peers**, close to the limit of its 2 cores. What limits it to about 120,000 on average is the free outbound traffic. Beyond that, extra traffic is billed per gigabyte, so the same free instance can grow with your audience without a larger server.
+The limits of the free server:
 
-These numbers are measured once a minute in production. The viewers of one big live event share one core, so a single huge event reaches the CPU limit earlier than many smaller streams; memory and traffic grow linearly with the number of peers.
+| Limit                                     |          Peers it allows |
+| ----------------------------------------- | -----------------------: |
+| CPU (2 cores)                             | ~216,000 (one core full) |
+| Memory (12 GB)                            |     500,000+ (estimated) |
+| Network bandwidth (2 Gbps)                |   far above any of these |
+| **Free outbound traffic (10 TB / month)** |  **~120,000 on average** |
+
+The CPU limit is reached when one worker's core is full, not when both are. Popular content stays on one worker, so the load is never split evenly. At 216,000 peers, one worker served 115,000 peers and was **97% busy**, while the other served 101,000 and was **45% busy**. A single huge live event reaches the limit even earlier: on another night, one worker was full with 58,000 of its own peers, at 99,000 peers in total.
+
+So the free server's hardware handled **216,000 peers**, at the limit of its busier core. What limits it to about 120,000 on average is the free outbound traffic. Beyond that, extra traffic is billed per gigabyte: at Oracle's list price for North America and Europe at the time of writing, $0.0085 per GB, an average of 216,000 peers (about 17 TB a month) would cost about **$60 a month**. The same free instance can grow with your audience without a larger server.
+
+These numbers are measured once a minute in production. Memory and traffic grow linearly with the number of peers.
 
 ## Run it yourself
 
@@ -174,9 +182,17 @@ These numbers are measured once a minute in production. The viewers of one big l
 2. Make the ingress rules for ports 80 and 443 **stateless** and add the matching egress rules (see Step 1).
 3. Open ports 80 and 443 in the instance's firewall and get a free TLS certificate from Let's Encrypt.
 4. Build and run [wt-tracker-rust](https://github.com/Novage/wt-tracker-rust) with the settings from Step 2.
-5. Point P2P Media Loader at your tracker's `wss://` address.
+5. Point P2P Media Loader at your tracker's `wss://` address with the `announceTrackers` setting, for example with hls.js:
 
-Installation and every setting are described in the [README on GitHub](https://github.com/Novage/wt-tracker-rust#readme). wt-tracker-rust is free and open source under the Apache-2.0 license, and it works with any WebTorrent-compatible client.
+   ```js
+   const hls = new HlsWithP2P({
+     p2p: {
+       core: { announceTrackers: ["wss://tracker.example.com"] },
+     },
+   });
+   ```
+
+Installation and every setting are described in the [README on GitHub](https://github.com/Novage/wt-tracker-rust#readme). wt-tracker-rust is free and open source under the Apache-2.0 license, and it works with any WebTorrent-compatible client, including the WebTorrent client itself.
 
 ## Conclusion
 
