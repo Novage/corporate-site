@@ -204,13 +204,14 @@ const schema = [
         <p>
           Instead of µWebSockets, wt-tracker has its own WebSocket and TLS layer
           built for this workload. Like µWebSockets, it reads every connection
-          through one shared buffer per worker, so a connection costs about 5–9
-          KB of memory. Because we control it, it can also move a live
-          connection, TLS session included, to another core — something
-          µWebSockets doesn't offer, and what lets swarms follow the content. In
-          our load tests on a single core, it needs up to a third less CPU per
-          message than the Node.js implementation on µWebSockets.js and about
-          3–5× less memory per connection.
+          through one shared buffer per worker, so a connection costs about 12
+          KB of memory with TLS (5–9 KB over plain WebSocket in load tests).
+          Because we control it, it can also move a live connection, TLS session
+          included, to another core — something µWebSockets doesn't offer, and
+          what lets swarms follow the content. In our load tests on a single
+          core, it needs up to a third less CPU per message than the Node.js
+          implementation on µWebSockets.js and about 3–5× less memory per
+          connection.
         </p>
 
         <h3>Zero-copy messages</h3>
@@ -266,8 +267,8 @@ const schema = [
         <ul>
           <li>
             <strong>Over 200,000 peers in production</strong> (216,000 at the
-            peak) on the free server's 2 cores, close to their limit; about
-            120,000 on average within the free 10 TB of monthly outbound
+            peak) on the free server's 2 cores, at the limit of the busier core;
+            about 120,000 on average within the free 10 TB of monthly outbound
             traffic.
           </li>
           <li>
