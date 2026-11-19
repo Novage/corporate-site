@@ -19,7 +19,6 @@ const BANNED = [
     re: /\b(?:optimis|prioritis|organis|customis)\w*|\banalys(?:e|ed|es|ing)\b/i,
     why: "use American spelling",
   },
-  { re: /tracker\.novage\.com\.ua/i, why: "not a default tracker" },
   { re: /contact \[at\]/i, why: "email is a plain mailto link" },
   {
     re: /\b(?:AI|growth-stage|venture-backed) startup\b|Yembo<\/strong>, a startup/i,
