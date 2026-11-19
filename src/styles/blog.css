@@ -18,6 +18,16 @@
   list-style: none;
 }
 
+/* Tiles in two columns from 992px, where each tile is wide enough for its
+   description; one column on narrower screens. The tiles in a row have the
+   same height. */
+@media (min-width: 992px) {
+  .post-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+}
+
 .post-card {
   display: flex;
   flex-direction: column;
@@ -58,11 +68,13 @@
   color: var(--brand-light);
 }
 
+/* At the bottom of the tile, so the links in a row line up */
 .post-card .read-more {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   align-self: flex-start;
+  margin-top: auto;
   color: var(--brand);
   text-decoration: none;
 }
