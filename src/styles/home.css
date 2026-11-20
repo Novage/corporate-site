@@ -665,9 +665,12 @@
     padding-top: 0;
   }
 
-  .reasons,
-  .case-grid {
+  .reasons {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .case-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .reason {
